@@ -26,50 +26,30 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO, format="%(levelname)s │ %(message)s")
 log = logging.getLogger(__name__)
 
-_client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY", "dummy"))
+_client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY_SCRIPT", "dummy"))
 GEMINI_MODEL = "gemini-2.0-flash-lite"
 
 DEFAULT_VOICE = os.getenv("TTS_VOICE", "en-US-AriaNeural")
 
-# ── STEP 15: Script generation ─────────────────────────────────────────────────
+# Token budget per call: ~500 input + ~700 output = ~1200 tokens total
 SCRIPT_PROMPT = """\
-You are a YouTube coding educator with an engaging, friendly teaching style.
+Write a YouTube narration script (3 minutes, ~400 words) for this LeetCode solution.
 
-Write a narration script for a short YouTube video (3–5 minutes) explaining the following
-LeetCode problem and solution.
-
-## Problem
-Title: {title}
-Difficulty: {difficulty}
-URL: {url}
-
-## Solution Code
+Problem: {title} ({difficulty})
+Solution:
 ```python
 {code}
 ```
+Notes: {explanation}
 
-## Explanation Notes
-{explanation}
+Structure with these labels on their own line:
+[INTRO] [PROBLEM BREAKDOWN] [INTUITION] [WALKTHROUGH] [CODE EXPLANATION] [COMPLEXITY] [OUTRO]
 
-## Script Rules
-- Write in a conversational, energetic tone (like a knowledgeable friend, not a textbook).
-- Structure the script in these LABELED sections (use these exact labels on their own line):
-  [INTRO]
-  [PROBLEM BREAKDOWN]
-  [INTUITION]
-  [WALKTHROUGH]
-  [CODE EXPLANATION]
-  [COMPLEXITY]
-  [OUTRO]
-- Each section should flow naturally into the next.
-- Do NOT include stage directions, [pause], or sound effects.
-- Write ONLY spoken words — no markdown, no asterisks, no bullet symbols.
-- End with a call to action to like, subscribe, and comment.
-- Target length: ~450–550 words (reads as ~3–4 minutes at normal pace).
+Rules: conversational tone, spoken words only, no markdown/bullets, end with like+subscribe CTA.
 """
 
 
-@retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
+# retry removed — pipeline.py already retries the full step
 def generate_script(problem: dict, solution: dict) -> dict:
     """Generate a structured YouTube script using Gemini."""
     log.info("Generating teaching script …")
@@ -77,15 +57,14 @@ def generate_script(problem: dict, solution: dict) -> dict:
     prompt = SCRIPT_PROMPT.format(
         title=problem["title"],
         difficulty=problem["difficulty"],
-        url=problem["url"],
-        code=solution["code"][:2000],
-        explanation=solution["explanation"][:1500],
+        code=solution["code"][:1000],           # ~250 tokens, full solution rarely needs more
+        explanation=solution["explanation"][:400],  # brief notes only
     )
 
     response = _client.models.generate_content(
         model=GEMINI_MODEL,
         contents=prompt,
-        config=types.GenerateContentConfig(temperature=0.7, max_output_tokens=3000),
+        config=types.GenerateContentConfig(temperature=0.7, max_output_tokens=1024),
     )
     script_text = response.text.strip()
 

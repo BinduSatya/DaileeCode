@@ -29,6 +29,12 @@ from tenacity import (
     stop_after_attempt,
     wait_exponential,
 )
+from agents.script_agent import generate_script, save_script, generate_audio
+from agents.fetch_potd import fetch_potd, save_problem
+from agents.solution_agent import generate_solution, save_solution
+from video.code_image import generate_all_slides
+from video.video_builder import build_video, generate_srt_with_whisper
+from agents.youtube_uploader import upload_to_youtube
 
 load_dotenv()
 
@@ -85,7 +91,6 @@ def step(name: str):
 )
 def run_fetch(out_dir: str) -> dict:
     sys.path.insert(0, str(Path(__file__).parent / "agents"))
-    from fetch_potd import fetch_potd, save_problem
     problem = fetch_potd()
     save_problem(problem, out_dir)
     return problem
@@ -99,7 +104,6 @@ def run_fetch(out_dir: str) -> dict:
 )
 def run_solution(problem: dict, out_dir: str) -> dict:
     sys.path.insert(0, str(Path(__file__).parent / "agents"))
-    from solution_agent import generate_solution, save_solution
     solution = generate_solution(problem)
     save_solution(solution, problem, out_dir)
     return solution
@@ -113,7 +117,6 @@ def run_solution(problem: dict, out_dir: str) -> dict:
 )
 def run_script(problem: dict, solution: dict, out_dir: str) -> tuple[dict, dict]:
     sys.path.insert(0, str(Path(__file__).parent / "agents"))
-    from script_agent import generate_script, save_script, generate_audio
     script = generate_script(problem, solution)
     save_script(script, problem, out_dir)
     audio_info = generate_audio(script, out_dir)
@@ -123,7 +126,6 @@ def run_script(problem: dict, solution: dict, out_dir: str) -> tuple[dict, dict]
 @step("STEP 18-19: Generate Code Images")
 def run_images(problem: dict, solution: dict, out_dir: str) -> list[str]:
     sys.path.insert(0, str(Path(__file__).parent / "video"))
-    from code_image import generate_all_slides
     return generate_all_slides(problem, solution, out_dir)
 
 
@@ -136,7 +138,6 @@ def run_video(
     date_str: str,
 ) -> str:
     sys.path.insert(0, str(Path(__file__).parent / "video"))
-    from video_builder import build_video, generate_srt_with_whisper
 
     srt_path = generate_srt_with_whisper(audio_path, out_dir)
     return build_video(
@@ -157,7 +158,6 @@ def run_video(
 )
 def run_upload(video_path: str, problem: dict, solution: dict, script: dict) -> dict:
     sys.path.insert(0, str(Path(__file__).parent / "agents"))
-    from youtube_uploader import upload_to_youtube
     thumbnail = str(Path("output/images/00_title.png"))
     return upload_to_youtube(video_path, problem, solution, script, thumbnail)
 

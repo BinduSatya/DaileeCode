@@ -30,36 +30,25 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s │ %(message)s")
 log = logging.getLogger(__name__)
 
 # ── Gemini setup ───────────────────────────────────────────────────────────────
-_client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY", "dummy"))
+_client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY_SOLUTION", "dummy"))
 GEMINI_MODEL = "gemini-2.0-flash-lite"
 
+# Token budget per call: ~600 input + ~800 output = ~1400 tokens total
 SOLUTION_PROMPT = """\
-You are an expert competitive programmer. Solve the following LeetCode problem.
+Solve this LeetCode problem in Python 3.
 
-## Problem
-Title: {title}
-Difficulty: {difficulty}
-URL: {url}
-
-## Description
+Problem: {title} ({difficulty})
 {description}
 
-## Starter Code
+Starter code:
 ```python
 {starter_code}
 ```
 
-## Requirements
-1. Write a COMPLETE, CORRECT Python 3 solution inside a ```python ... ``` block.
-2. Use the EXACT class/method signature from the starter code.
-3. After the code block, write a clear explanation covering:
-   - Intuition (1-2 sentences)
-   - Algorithm / approach
-   - Time complexity  O(?)
-   - Space complexity O(?)
-4. Keep the explanation concise but beginner-friendly.
-5. Do NOT add extra imports beyond what the solution needs.
-"""
+Return:
+1. Complete solution in a ```python``` block using the exact method signature.
+2. After the block: one line each for intuition, approach, time complexity, space complexity.
+Keep it concise."""
 
 VERIFY_PROMPT = """\
 The following Python solution for "{title}" failed during testing:
@@ -148,17 +137,17 @@ def run_code(code: str, problem: dict, timeout: int = 10) -> tuple[bool, str]:
 
 
 # ── Main agent ─────────────────────────────────────────────────────────────────
-@retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
+# retry removed — pipeline.py already retries the full step
 def _call_gemini(prompt: str) -> str:
     response = _client.models.generate_content(
         model=GEMINI_MODEL,
         contents=prompt,
-        config=types.GenerateContentConfig(temperature=0.2, max_output_tokens=4096),
+        config=types.GenerateContentConfig(temperature=0.2, max_output_tokens=1024),
     )
     return response.text
 
 
-def generate_solution(problem: dict, max_fix_attempts: int = 2) -> dict:
+def generate_solution(problem: dict, max_fix_attempts: int = 1) -> dict:
     """
     Full pipeline:
       generate → extract → compile-check → run → (fix loop) → return
@@ -168,8 +157,8 @@ def generate_solution(problem: dict, max_fix_attempts: int = 2) -> dict:
     prompt = SOLUTION_PROMPT.format(
         title=problem["title"],
         difficulty=problem["difficulty"],
-        url=problem["url"],
-        description=problem["description"][:3000],  # keep prompt manageable
+        
+        description=problem["description"][:800],  # ~200 tokens, enough for any problem
         starter_code=problem["starter_code"],
     )
 
