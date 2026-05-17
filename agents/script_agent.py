@@ -18,6 +18,7 @@ from pathlib import Path
 
 import edge_tts
 from google import genai
+from groq import Groq
 from google.genai import types
 from dotenv import load_dotenv
 from tenacity import retry, stop_after_attempt, wait_exponential
@@ -26,8 +27,10 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO, format="%(levelname)s │ %(message)s")
 log = logging.getLogger(__name__)
 
-_client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY_SCRIPT", "dummy"))
-GEMINI_MODEL = "gemini-2.0-flash-lite"
+# _client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY_SCRIPT", "dummy"))
+# GEMINI_MODEL = "gemini-2.0-flash-lite"
+_client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+
 
 DEFAULT_VOICE = os.getenv("TTS_VOICE", "en-US-AriaNeural")
 
@@ -48,6 +51,13 @@ Structure with these labels on their own line:
 Rules: conversational tone, spoken words only, no markdown/bullets, end with like+subscribe CTA.
 """
 
+def _call_gemini(prompt: str) -> str:
+    response = _client.chat.completions.create(
+        model="llama-3.3-70b-versatile",  # free, very capable
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=1024,
+    )
+    return response.choices[0].message.content
 
 # retry removed — pipeline.py already retries the full step
 def generate_script(problem: dict, solution: dict) -> dict:
@@ -61,12 +71,13 @@ def generate_script(problem: dict, solution: dict) -> dict:
         explanation=solution["explanation"][:400],  # brief notes only
     )
 
-    response = _client.models.generate_content(
-        model=GEMINI_MODEL,
-        contents=prompt,
-        config=types.GenerateContentConfig(temperature=0.7, max_output_tokens=1024),
-    )
-    script_text = response.text.strip()
+    # response = _client.models.generate_content(
+    #     model=GEMINI_MODEL,
+    #     contents=prompt,
+    #     config=types.GenerateContentConfig(temperature=0.7, max_output_tokens=1024),
+    # )
+    response = _call_gemini(prompt)
+    script_text = response.strip()
 
     # Parse sections
     section_labels = [

@@ -190,12 +190,15 @@ def run_pipeline(
     log.info(f"  LeetCode YouTube Bot — {date_str}")
     log.info(f"{'═'*60}")
 
+    state = load_state(out_dir)
+
     state_path = Path(out_dir) / "pipeline_state.json"
-    if state_path.exists():
-        state = json.loads(state_path.read_text())
-        if state.get("problem", {}).get("date") != date_str:
-            state_path.unlink()
-            log.info(f"Cleared stale cache from {state.get('problem', {}).get('date')}")
+    if state:
+        cached_date = state.get("problem", {}).get("date")
+        if cached_date and cached_date != date_str:
+            state_path.unlink(missing_ok=True)
+            log.info(f"Cleared stale cache from {cached_date}")
+            state = {}  # reset to empty after clearing
 
     results = {"date": date_str, "steps": {}}
     t_start = time.time()
@@ -252,8 +255,12 @@ def run_pipeline(
 
         results["steps"]["images"] = f"✓ ({len(slides)} slides)"
 
-        # ── STEP 20-23: Video ───────────────────────────────────────────────
-        if "video_path" not in state:
+        # ── STEP 20-23: Video ───────────────────────────────────────────────────────
+        cached_video = state.get("video_path")
+        if cached_video and Path(cached_video).exists():
+            log.info(f"⏭  Skipping video (cached) → {cached_video}")
+            video_path = cached_video
+        else:
             video_path = run_video(
                 slides,
                 audio_info["full_audio"],
@@ -263,9 +270,6 @@ def run_pipeline(
             )
             state["video_path"] = video_path
             save_state(state, out_dir)
-        else:
-            log.info("⏭  Skipping video (cached)")
-            video_path = state["video_path"]
 
         results["steps"]["video"] = "✓"
         results["video_path"] = video_path

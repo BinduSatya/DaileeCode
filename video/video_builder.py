@@ -207,18 +207,20 @@ def build_video(
     video = video.set_audio(audio)
 
     # STEP 23: Add subtitles
-    log.info("Adding subtitles …")
-    if srt_path and Path(srt_path).exists():
-        log.info(f"  Using SRT: {srt_path}")
-        sub_clips = _make_subtitle_clips(srt_path, VIDEO_W, VIDEO_H)
-    elif script_text:
-        log.info("  Using sentence-split subtitles")
-        sub_clips = _make_simple_subtitle_clips(script_text, video.duration, VIDEO_W, VIDEO_H)
-    else:
-        sub_clips = []
+    # log.info("Adding subtitles …")
+    # if srt_path and Path(srt_path).exists():
+    #     log.info(f"  Using SRT: {srt_path}")
+    #     sub_clips = _make_subtitle_clips(srt_path, VIDEO_W, VIDEO_H)
+    # elif script_text:
+    #     log.info("  Using sentence-split subtitles")
+    #     sub_clips = _make_simple_subtitle_clips(script_text, video.duration, VIDEO_W, VIDEO_H)
+    # else:
+    #     sub_clips = []
 
-    if sub_clips:
-        video = CompositeVideoClip([video] + sub_clips)
+    # if sub_clips:
+    #     video = CompositeVideoClip([video] + sub_clips)
+    # Subtitles require ImageMagick on Windows — skipping
+    log.info("Skipping subtitle overlay (ImageMagick not available)")
 
     # Render
     log.info(f"Rendering video → {out_path} …")

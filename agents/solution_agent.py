@@ -19,19 +19,21 @@ import tempfile
 import textwrap
 from pathlib import Path
 from typing import Optional
-
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 from tenacity import retry, stop_after_attempt, wait_exponential
+from groq import Groq
 
 load_dotenv()
 logging.basicConfig(level=logging.INFO, format="%(levelname)s │ %(message)s")
 log = logging.getLogger(__name__)
 
 # ── Gemini setup ───────────────────────────────────────────────────────────────
-_client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY_SOLUTION", "dummy"))
-GEMINI_MODEL = "gemini-2.0-flash-lite"
+# _client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY_SOLUTION", "dummy"))
+# GEMINI_MODEL = "gemini-2.0-flash-lite"
+_client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+
 
 # Token budget per call: ~600 input + ~800 output = ~1400 tokens total
 SOLUTION_PROMPT = """\
@@ -116,7 +118,7 @@ def run_code(code: str, problem: dict, timeout: int = 10) -> tuple[bool, str]:
     """Execute the test harness in a subprocess. Returns (passed, output)."""
     harness = build_test_harness(code, problem)
 
-    with tempfile.NamedTemporaryFile(suffix=".py", mode="w", delete=False) as f:
+    with tempfile.NamedTemporaryFile(suffix=".py", mode="w", delete=False, encoding="utf-8") as f:
         f.write(harness)
         tmp_path = f.name
 
@@ -138,13 +140,21 @@ def run_code(code: str, problem: dict, timeout: int = 10) -> tuple[bool, str]:
 
 # ── Main agent ─────────────────────────────────────────────────────────────────
 # retry removed — pipeline.py already retries the full step
+# def _call_gemini(prompt: str) -> str:
+#     response = _client.models.generate_content(
+#         model=GEMINI_MODEL,
+#         contents=prompt,
+#         config=types.GenerateContentConfig(temperature=0.2, max_output_tokens=1024),
+#     )
+#     return response.text
+
 def _call_gemini(prompt: str) -> str:
-    response = _client.models.generate_content(
-        model=GEMINI_MODEL,
-        contents=prompt,
-        config=types.GenerateContentConfig(temperature=0.2, max_output_tokens=1024),
+    response = _client.chat.completions.create(
+        model="llama-3.3-70b-versatile",  # free, very capable
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=1024,
     )
-    return response.text
+    return response.choices[0].message.content
 
 
 def generate_solution(problem: dict, max_fix_attempts: int = 1) -> dict:
@@ -183,7 +193,7 @@ def generate_solution(problem: dict, max_fix_attempts: int = 1) -> dict:
             code=code,
             error=run_output[:1000],
         )
-        fix_response = _call_gemini(fix_prompt)
+        fix_response = _call_gemini(fix_prompt).strip()
         try:
             code = extract_code(fix_response)
             compile_check(code)

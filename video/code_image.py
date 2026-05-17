@@ -40,12 +40,13 @@ PYGMENTS_STYLE = "monokai"
 
 
 def _load_font(size: int, bold: bool = False) -> ImageFont.ImageFont:
-    """Try common monospace / system fonts, fall back to default."""
     candidates = [
-        "/usr/share/fonts/truetype/dejavu/DejaVuSansMono{}.ttf".format("-Bold" if bold else ""),
-        "/usr/share/fonts/truetype/liberation/LiberationMono{}-Regular.ttf".format("-Bold" if bold else ""),
-        "/System/Library/Fonts/Menlo.ttc",
-        "DejaVuSansMono.ttf",
+        "C:/Windows/Fonts/consola.ttf",       # Consolas (Windows built-in, great for code)
+        "C:/Windows/Fonts/cour.ttf",           # Courier New regular
+        "C:/Windows/Fonts/courbd.ttf",         # Courier New bold
+        "C:/Windows/Fonts/arial.ttf",          # Arial fallback
+        "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",  # Linux
+        "/System/Library/Fonts/Menlo.ttc",     # macOS
     ]
     for path in candidates:
         try:
@@ -145,7 +146,7 @@ def make_code_slide(code: str, title: str = "Solution") -> Image.Image:
     # Pygments → PNG bytes
     formatter = ImageFormatter(
         style=PYGMENTS_STYLE,
-        font_name="DejaVu Sans Mono",
+        font_name="Courier New",
         font_size=22,
         line_numbers=True,
         line_pad=4,
