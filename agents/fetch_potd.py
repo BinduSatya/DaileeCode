@@ -100,10 +100,17 @@ def fetch_potd() -> dict:
     detail = _graphql(DETAIL_QUERY, {"titleSlug": slug})["question"]
 
     # Pick Python3 snippet (fallback to first available)
+    # Pick snippets for both Python3 and C++
     snippets = {s["langSlug"]: s["code"] for s in (detail.get("codeSnippets") or [])}
+
     starter_code = (
         snippets.get("python3")
         or snippets.get("python")
+        or next(iter(snippets.values()), "")
+    )
+
+    cpp_starter_code = (
+        snippets.get("cpp")
         or next(iter(snippets.values()), "")
     )
 
@@ -125,7 +132,8 @@ def fetch_potd() -> dict:
         "sample_testcase": detail.get("sampleTestCase") or "",
         "tags": [t["name"] for t in (detail.get("topicTags") or [])],
         "hints": detail.get("hints") or [],
-        "starter_code": starter_code,
+        "starter_code": starter_code,      
+        "starter_code_cpp": cpp_starter_code,
         "meta": meta,
     }
 

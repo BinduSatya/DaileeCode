@@ -35,6 +35,7 @@ from agents.solution_agent import generate_solution, save_solution
 from video.code_image import generate_all_slides
 from video.video_builder import build_video, generate_srt_with_whisper
 from agents.youtube_uploader import upload_to_youtube
+from agents.telegram_notifier import notify_success, notify_failure
 
 load_dotenv()
 
@@ -119,7 +120,19 @@ def run_script(problem: dict, solution: dict, out_dir: str) -> tuple[dict, dict]
     sys.path.insert(0, str(Path(__file__).parent / "agents"))
     script = generate_script(problem, solution)
     save_script(script, problem, out_dir)
-    audio_info = generate_audio(script, out_dir)
+
+    # Check if audio already exists before regenerating
+    audio_path = Path(out_dir) / "audio" / "narration.mp3"
+    if audio_path.exists():
+        log.info("⏭  Skipping audio (already exists)")
+        audio_info = {
+            "full_audio": str(audio_path),
+            "section_audio": {},
+            "voice": os.getenv("TTS_VOICE", "en-US-AriaNeural"),
+        }
+    else:
+        audio_info = generate_audio(script, out_dir)
+
     return script, audio_info
 
 
@@ -236,11 +249,21 @@ def run_pipeline(
             script, audio_info = run_script(problem, solution, out_dir)
             state["script"]     = script
             state["audio_info"] = audio_info
-            save_state(state, out_dir)
+            save_state(state, out_dir)  # saves immediately after both are done
         else:
-            log.info("⏭  Skipping script/audio (cached)")
+            # Restore from cache but verify audio file exists
             script     = state["script"]
-            audio_info = state["audio_info"]
+            audio_info = state.get("audio_info", {})
+            audio_path = Path(out_dir) / "audio" / "narration.mp3"
+            if not audio_path.exists():
+                log.info("Script cached but audio missing — regenerating audio only …")
+                sys.path.insert(0, str(Path(__file__).parent / "agents"))
+                audio_info = generate_audio(script, out_dir)
+                state["audio_info"] = audio_info
+                save_state(state, out_dir)
+            else:
+                log.info("⏭  Skipping script/audio (cached)")
+
 
         results["steps"]["script_audio"] = "✓"
 
@@ -302,6 +325,12 @@ def run_pipeline(
         summary_path.write_text(json.dumps(results, indent=2, ensure_ascii=True), encoding="utf-8")
         log.info(f"\nPipeline result → {summary_path}")
         log.info(f"Total time: {elapsed:.1f}s")
+
+        # Send Telegram notification
+        if "error" in results:
+            notify_failure(results)
+        else:
+            notify_success(results)
 
     log.info(f"\n{'═'*60}")
     log.info(f"  [OK] Pipeline complete!")

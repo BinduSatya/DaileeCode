@@ -36,26 +36,42 @@ DEFAULT_VOICE = os.getenv("TTS_VOICE", "en-US-AriaNeural")
 
 # Token budget per call: ~500 input + ~700 output = ~1200 tokens total
 SCRIPT_PROMPT = """\
-Write a YouTube narration script (3 minutes, ~400 words) for this LeetCode solution.
+You are an enthusiastic coding educator explaining a LeetCode solution on YouTube.
+
+Write a detailed narration script (~500 words, ~4 minutes) for this problem.
 
 Problem: {title} ({difficulty})
-Solution:
-```python
+
+C++ Solution:
+```cpp
 {code}
 ```
-Notes: {explanation}
 
-Structure with these labels on their own line:
-[INTRO] [PROBLEM BREAKDOWN] [INTUITION] [WALKTHROUGH] [CODE EXPLANATION] [COMPLEXITY] [OUTRO]
+Key Notes: {explanation}
 
-Rules: conversational tone, spoken words only, no markdown/bullets, end with like+subscribe CTA.
+Structure the script with these exact labels on their own line:
+[INTRO]
+[PROBLEM BREAKDOWN]
+[INTUITION]
+[WALKTHROUGH]
+[CODE EXPLANATION]
+[COMPLEXITY]
+[OUTRO]
+
+Critical rules:
+- Start with INTUITION before anything else in the walkthrough — explain the core insight first
+- Use simple analogies and real-world comparisons to build intuition
+- Walk through the C++ code line by line in CODE EXPLANATION
+- Spoken words only — no markdown, no bullet symbols, no asterisks
+- Conversational and energetic tone like explaining to a friend
+- End OUTRO with: like the video, subscribe, and comment your approach below
 """
 
 def _call_gemini(prompt: str) -> str:
     response = _client.chat.completions.create(
         model="llama-3.3-70b-versatile",  # free, very capable
         messages=[{"role": "user", "content": prompt}],
-        max_tokens=1024,
+        max_tokens=1500,                       
     )
     return response.choices[0].message.content
 
@@ -65,11 +81,12 @@ def generate_script(problem: dict, solution: dict) -> dict:
     log.info("Generating teaching script …")
 
     prompt = SCRIPT_PROMPT.format(
-        title=problem["title"],
-        difficulty=problem["difficulty"],
-        code=solution["code"][:1000],           # ~250 tokens, full solution rarely needs more
-        explanation=solution["explanation"][:400],  # brief notes only
-    )
+    title=problem["title"],
+    difficulty=problem["difficulty"],
+    code=solution["code"][:1500],          # C++ solutions can be slightly longer
+    explanation=solution["explanation"][:600],  # more explanation detail now
+)
+
 
     # response = _client.models.generate_content(
     #     model=GEMINI_MODEL,

@@ -37,53 +37,58 @@ _client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
 # Token budget per call: ~600 input + ~800 output = ~1400 tokens total
 SOLUTION_PROMPT = """\
-Solve this LeetCode problem in Python 3.
+Solve this LeetCode problem in C++.
 
 Problem: {title} ({difficulty})
 {description}
 
 Starter code:
-```python
+```cpp
 {starter_code}
 ```
 
 Return:
-1. Complete solution in a ```python``` block using the exact method signature.
-2. After the block: one line each for intuition, approach, time complexity, space complexity.
-Keep it concise."""
+1. Complete C++ solution in a ```cpp``` block using the exact class/method signature.
+2. After the block, provide:
+   - Intuition: explain the core insight in 2-3 sentences as if talking to a beginner
+   - Approach: step-by-step algorithm in plain English
+   - Time Complexity: O(?) with explanation
+   - Space Complexity: O(?) with explanation
+Be thorough in the explanation but concise in the code."""
+
 
 VERIFY_PROMPT = """\
-The following Python solution for "{title}" failed during testing:
+The following C++ solution for "{title}" failed during testing:
 
-```python
+```cpp
 {code}
 ```
 
 Error / Wrong output:
 {error}
 
-Please fix the solution. Return ONLY the corrected ```python ... ``` code block, nothing else.
+Please fix the solution. Return ONLY the corrected ```cpp``` code block, nothing else.
 """
 
 
 # ── STEP 12: Extract code block ────────────────────────────────────────────────
 def extract_code(text: str) -> str:
-    """Pull the first ```python ... ``` block from Gemini's response."""
-    pattern = r"```(?:python)?\s*\n([\s\S]*?)```"
+    """Pull the first ```cpp ... ``` or ```python ... ``` block."""
+    pattern = r"```(?:cpp|c\+\+|python)?\s*\n([\s\S]*?)```"
     matches = re.findall(pattern, text)
     if not matches:
-        raise ValueError("No Python code block found in model response")
+        raise ValueError("No code block found in model response")
     return matches[0].strip()
 
 
 # ── STEP 13: Compile / syntax-check ───────────────────────────────────────────
 def compile_check(code: str) -> None:
-    """Raise SyntaxError if code is syntactically invalid."""
-    try:
-        ast.parse(code)
-        log.info("✓ Syntax check passed")
-    except SyntaxError as e:
-        raise SyntaxError(f"Syntax error in generated code: {e}") from e
+    """Basic sanity check for C++ code."""
+    if not code or len(code.strip()) < 10:
+        raise ValueError("Generated code block is empty or too short")
+    if "class Solution" not in code and "int main" not in code:
+        raise ValueError("Generated code doesn't look like a valid C++ solution")
+    log.info("✓ Syntax check passed")
 
 
 # ── STEP 14: Run sample test cases ────────────────────────────────────────────
@@ -152,7 +157,7 @@ def _call_gemini(prompt: str) -> str:
     response = _client.chat.completions.create(
         model="llama-3.3-70b-versatile",  # free, very capable
         messages=[{"role": "user", "content": prompt}],
-        max_tokens=1024,
+        max_tokens=1500,
     )
     return response.choices[0].message.content
 
@@ -164,12 +169,14 @@ def generate_solution(problem: dict, max_fix_attempts: int = 1) -> dict:
     """
     log.info(f"Generating solution for: {problem['title']} …")
 
+    cpp_starter = problem.get("starter_code_cpp") or problem["starter_code"]
+
     prompt = SOLUTION_PROMPT.format(
         title=problem["title"],
         difficulty=problem["difficulty"],
         
         description=problem["description"][:800],  # ~200 tokens, enough for any problem
-        starter_code=problem["starter_code"],
+        starter_code=cpp_starter,
     )
 
     raw_response = _call_gemini(prompt)

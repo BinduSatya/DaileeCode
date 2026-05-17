@@ -69,13 +69,19 @@ jobs:
       # ── 6. Create .env ────────────────────────────────────────────────────────
       - name: Create .env
         run: |
-          cat > .env << EOF
-          GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}
-          YOUTUBE_CLIENT_SECRETS=client_secrets.json
-          YOUTUBE_TOKEN_FILE=youtube_token.json
-          YOUTUBE_PRIVACY=${{ vars.YOUTUBE_PRIVACY || 'public' }}
-          TTS_VOICE=${{ vars.TTS_VOICE || 'en-US-AriaNeural' }}
-          EOF
+          echo GROQ_API_KEY=${{ secrets.GROQ_API_KEY }} >> .env
+          echo TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }} >> .env
+          echo TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }} >> .env
+          echo YOUTUBE_CLIENT_SECRETS=client_secrets.json >> .env
+          echo YOUTUBE_TOKEN_FILE=youtube_token.json >> .env
+          echo YOUTUBE_PRIVACY=public >> .env
+          echo TTS_VOICE=en-US-AriaNeural >> .env
+
+      - name: Write credential files
+        run: |
+          echo '${{ secrets.YOUTUBE_CLIENT_SECRETS_JSON }}' > client_secrets.json
+          echo '${{ secrets.YOUTUBE_TOKEN_JSON }}' > youtube_token.json
+
 
       # ── 7. Run the pipeline ───────────────────────────────────────────────────
       - name: Run LeetCode YouTube pipeline
