@@ -26,6 +26,12 @@ jobs:
     timeout-minutes: 60
 
     steps:
+      # ── 0. Cleaning ──────────────────────────────────────────────────────────
+      - name: Clean output from previous runs
+        run: |
+          rm -rf output/
+          mkdir output
+          
       # ── 1. Checkout ──────────────────────────────────────────────────────────
       - name: Checkout repository
         uses: actions/checkout@v4
