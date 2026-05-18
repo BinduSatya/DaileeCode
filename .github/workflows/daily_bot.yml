@@ -1,10 +1,9 @@
 name: LeetCode Daily YouTube Bot
 
-# STEP 29: Cron — runs at 08:00 UTC every day (LeetCode resets POTD at 00:00 UTC)
 on:
   schedule:
     - cron: "0 8 * * *"
-  workflow_dispatch:           # Allow manual trigger from GitHub UI
+  workflow_dispatch:
     inputs:
       skip_upload:
         description: "Skip YouTube upload?"
@@ -26,24 +25,24 @@ jobs:
     timeout-minutes: 60
 
     steps:
-      # ── 0. Cleaning ──────────────────────────────────────────────────────────
-      - name: Clean output from previous runs
-        run: |
-          rm -rf output/
-          mkdir output
-          
-      # ── 1. Checkout ──────────────────────────────────────────────────────────
+      # ── 1. Checkout ───────────────────────────────────────────────────────
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # ── 2. Python setup ──────────────────────────────────────────────────────
+      # ── 2. Clean output ───────────────────────────────────────────────────
+      - name: Clean output from previous runs
+        run: |
+          rm -rf output/
+          mkdir -p output
+
+      # ── 3. Python setup ───────────────────────────────────────────────────
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
           cache: pip
 
-      # ── 3. System deps (ImageMagick needed by MoviePy TextClip) ──────────────
+      # ── 4. System dependencies ────────────────────────────────────────────
       - name: Install system dependencies
         run: |
           sudo apt-get update -qq
@@ -52,30 +51,30 @@ jobs:
             ffmpeg \
             fonts-dejavu-core \
             fonts-dejavu-extra
-
-          # Allow ImageMagick PDF/font policies needed by MoviePy
           sudo sed -i 's/rights="none" pattern="PDF"/rights="read|write" pattern="PDF"/' \
             /etc/ImageMagick-6/policy.xml || true
 
-      # ── 4. Python dependencies ────────────────────────────────────────────────
+      # ── 5. Python dependencies ────────────────────────────────────────────
       - name: Install Python dependencies
         run: |
-          pip install --upgrade pip
+          pip install --upgrade pip setuptools
           pip install -r requirements.txt
 
-      # ── 5. Restore secrets from GitHub Secrets ───────────────────────────────
+      # ── 6. Write credential files ─────────────────────────────────────────
       - name: Write secrets to disk
         env:
           YOUTUBE_CLIENT_SECRETS_JSON: ${{ secrets.YOUTUBE_CLIENT_SECRETS_JSON }}
-          YOUTUBE_TOKEN_JSON:          ${{ secrets.YOUTUBE_TOKEN_JSON }}
+          YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
         run: |
           echo "$YOUTUBE_CLIENT_SECRETS_JSON" > client_secrets.json
-          echo "$YOUTUBE_TOKEN_JSON"          > youtube_token.json
+          echo "$YOUTUBE_TOKEN_JSON" > youtube_token.json
 
-      # ── 6. Create .env ────────────────────────────────────────────────────────
+      # ── 7. Create .env ────────────────────────────────────────────────────
       - name: Create .env
         run: |
           echo GROQ_API_KEY=${{ secrets.GROQ_API_KEY }} >> .env
+          echo GROQ_API_KEY_SOLUTION=${{ secrets.GROQ_API_KEY }} >> .env
+          echo GROQ_API_KEY_SCRIPT=${{ secrets.GROQ_API_KEY }} >> .env
           echo TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }} >> .env
           echo TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }} >> .env
           echo YOUTUBE_CLIENT_SECRETS=client_secrets.json >> .env
@@ -83,25 +82,17 @@ jobs:
           echo YOUTUBE_PRIVACY=public >> .env
           echo TTS_VOICE=en-US-AriaNeural >> .env
 
-      - name: Write credential files
-        run: |
-          echo '${{ secrets.YOUTUBE_CLIENT_SECRETS_JSON }}' > client_secrets.json
-          echo '${{ secrets.YOUTUBE_TOKEN_JSON }}' > youtube_token.json
-
-
-      # ── 7. Run the pipeline ───────────────────────────────────────────────────
+      # ── 8. Run pipeline ───────────────────────────────────────────────────
       - name: Run LeetCode YouTube pipeline
         run: |
           SKIP_UPLOAD=${{ github.event.inputs.skip_upload || 'false' }}
           DRY_RUN=${{ github.event.inputs.dry_run || 'false' }}
-
           ARGS=""
           [ "$SKIP_UPLOAD" = "true" ] && ARGS="$ARGS --skip-upload"
           [ "$DRY_RUN"     = "true" ] && ARGS="$ARGS --dry-run"
-
           python pipeline.py $ARGS
 
-      # ── 8. Update cached YouTube token (token refreshes after upload) ─────────
+      # ── 9. Update YouTube token ───────────────────────────────────────────
       - name: Update YouTube token secret
         if: success()
         uses: gliech/create-github-secret-action@v1
@@ -109,9 +100,9 @@ jobs:
           name: YOUTUBE_TOKEN_JSON
           value: ${{ toJson(fromJson(steps.run-pipeline.outputs.token || '{}')) }}
           token: ${{ secrets.PAT_TOKEN }}
-        continue-on-error: true     # Don't fail if token hasn't changed
+        continue-on-error: true
 
-      # ── 9. Upload artifacts (pipeline output for debugging) ───────────────────
+      # ── 10. Upload artifacts ──────────────────────────────────────────────
       - name: Upload pipeline artifacts
         if: always()
         uses: actions/upload-artifact@v4
@@ -125,38 +116,23 @@ jobs:
             logs/
           retention-days: 7
 
-      # ── 10. Notify on failure ─────────────────────────────────────────────────
+      # ── 11. Post failure summary ──────────────────────────────────────────
       - name: Post failure summary
         if: failure()
         run: |
-          echo "## ❌ Pipeline Failed" >> $GITHUB_STEP_SUMMARY
+          echo "## Pipeline Failed" >> $GITHUB_STEP_SUMMARY
           echo "Check the pipeline-output artifact for logs." >> $GITHUB_STEP_SUMMARY
-          cat output/pipeline_result.json 2>/dev/null || echo "No result file" >> $GITHUB_STEP_SUMMARY
+          cat output/pipeline_result.json 2>/dev/null || echo "No result file"
 
-      # ── 11. Post success summary ──────────────────────────────────────────────
+      # ── 12. Post success summary ──────────────────────────────────────────
       - name: Post success summary
         if: success()
         run: |
-          python - <<'PY'
-          import json, pathlib
-          r = json.loads(pathlib.Path("output/pipeline_result.json").read_text())
-          steps = "\n".join(f"| {k} | {v} |" for k,v in r.get("steps",{}).items())
-          print(f"""## ✅ Pipeline Succeeded
-          **Problem:** {r.get('problem_title','N/A')}
-          **Video:** {r.get('video_path','N/A')}
-          **YouTube:** {r.get('youtube_url','(not uploaded)')}
-          **Duration:** {r.get('duration_seconds','?')}s
-
-          | Step | Status |
-          |------|--------|
-          {steps}
-          """)
-          PY
           python -c "
           import json, pathlib, os
           r = json.loads(pathlib.Path('output/pipeline_result.json').read_text())
           with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as f:
-              f.write(f'## ✅ LeetCode Daily Video Published\n')
+              f.write('## LeetCode Daily Video Published\n')
               f.write(f\"- **Problem:** {r.get('problem_title','N/A')}\n\")
               f.write(f\"- **YouTube:** {r.get('youtube_url','(skipped)')}\n\")
               f.write(f\"- **Duration:** {r.get('duration_seconds','?')}s\n\")
