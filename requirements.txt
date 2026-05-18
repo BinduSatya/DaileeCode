@@ -1,6 +1,5 @@
 requests==2.31.0
 python-dotenv==1.0.0
-google-generativeai==0.5.4
 moviepy==1.0.3
 edge-tts==6.1.9
 pygments==2.17.2
@@ -8,9 +7,6 @@ pillow==9.5.0
 google-api-python-client==2.118.0
 google-auth-httplib2==0.2.0
 google-auth-oauthlib==1.2.0
-openai-whisper==20231117
 tenacity==8.2.3
-dotenv
-tenacity
-requests
 groq
+google-genai
