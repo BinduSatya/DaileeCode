@@ -123,7 +123,7 @@ def run_script(problem: dict, solution: dict, out_dir: str) -> tuple[dict, dict]
 
     # Check if audio already exists before regenerating
     audio_path = Path(out_dir) / "audio" / "narration.mp3"
-    if audio_path.exists():
+    if audio_path.exists() and audio_path.stat().st_size > 10000:
         log.info("⏭  Skipping audio (already exists)")
         audio_info = {
             "full_audio": str(audio_path),
@@ -132,6 +132,9 @@ def run_script(problem: dict, solution: dict, out_dir: str) -> tuple[dict, dict]
         }
     else:
         audio_info = generate_audio(script, out_dir)
+        if not audio_path.exists() or audio_path.stat().st_size < 10000:
+            log.info("Script cached but audio missing/corrupt — regenerating audio only …")
+            audio_info = generate_audio(script, out_dir)
 
     return script, audio_info
 
