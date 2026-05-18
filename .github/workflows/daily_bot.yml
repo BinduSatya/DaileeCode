@@ -28,6 +28,11 @@ jobs:
       # ── 1. Checkout ───────────────────────────────────────────────────────
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 0
+      - name: Verify code_image.py font
+        run: grep "font_name" video/code_image.py
 
       # ── 2. Clean output ───────────────────────────────────────────────────
       - name: Clean output from previous runs
