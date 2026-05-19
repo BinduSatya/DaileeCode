@@ -10,3 +10,4 @@ google-auth-oauthlib==1.2.0
 tenacity==8.2.3
 groq
 google-genai
+gtts

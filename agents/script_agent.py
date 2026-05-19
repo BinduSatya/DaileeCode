@@ -15,8 +15,8 @@ import os
 import re
 import sys
 from pathlib import Path
-
-import edge_tts
+from gtts import gTTS
+# import edge_tts
 from google import genai
 from groq import Groq
 from google.genai import types
@@ -132,39 +132,72 @@ async def _synthesize(text: str, output_path: Path, voice: str) -> Path:
     return output_path
 
 
+# def generate_audio(
+#     script: dict,
+#     out_dir: str = "output",
+#     voice: str = DEFAULT_VOICE,
+# ) -> dict:
+#     """
+#     Convert the clean script to MP3 audio.
+#     Also generates per-section audio files for video timing.
+#     """
+#     base = Path(out_dir) / "audio"
+#     base.mkdir(parents=True, exist_ok=True)
+
+#     # Full narration
+#     full_path = base / "narration.mp3"
+#     log.info(f"Synthesizing full narration with voice={voice} …")
+#     asyncio.run(_synthesize(script["clean_script"], full_path, voice))
+#     log.info(f"✓ Audio saved → {full_path}")
+
+#     # Per-section audio (for scene timing)
+#     section_paths = {}
+#     for label, text in script.get("sections", {}).items():
+#         if not text.strip():
+#             continue
+#         safe_label = label.lower().replace(" ", "_")
+#         section_path = base / f"section_{safe_label}.mp3"
+#         asyncio.run(_synthesize(text, section_path, voice))
+#         section_paths[label] = str(section_path)
+#         log.info(f"  ✓ Section '{label}' → {section_path.name}")
+
+#     return {
+#         "full_audio": str(full_path),
+#         "section_audio": section_paths,
+#         "voice": voice,
+#     }
+
 def generate_audio(
     script: dict,
     out_dir: str = "output",
     voice: str = DEFAULT_VOICE,
 ) -> dict:
-    """
-    Convert the clean script to MP3 audio.
-    Also generates per-section audio files for video timing.
-    """
+    """Convert the clean script to MP3 audio using gTTS."""
     base = Path(out_dir) / "audio"
     base.mkdir(parents=True, exist_ok=True)
 
-    # Full narration
     full_path = base / "narration.mp3"
-    log.info(f"Synthesizing full narration with voice={voice} …")
-    asyncio.run(_synthesize(script["clean_script"], full_path, voice))
+    log.info("Synthesizing full narration with gTTS …")
+
+    tts = gTTS(text=script["clean_script"], lang="en", slow=False)
+    tts.save(str(full_path))
     log.info(f"✓ Audio saved → {full_path}")
 
-    # Per-section audio (for scene timing)
+    # Per-section audio
     section_paths = {}
     for label, text in script.get("sections", {}).items():
         if not text.strip():
             continue
         safe_label = label.lower().replace(" ", "_")
         section_path = base / f"section_{safe_label}.mp3"
-        asyncio.run(_synthesize(text, section_path, voice))
+        gTTS(text=text, lang="en", slow=False).save(str(section_path))
         section_paths[label] = str(section_path)
         log.info(f"  ✓ Section '{label}' → {section_path.name}")
 
     return {
         "full_audio": str(full_path),
         "section_audio": section_paths,
-        "voice": voice,
+        "voice": "gTTS-en",
     }
 
 
