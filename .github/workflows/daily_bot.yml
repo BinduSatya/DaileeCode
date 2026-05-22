@@ -2,7 +2,7 @@ name: LeetCode Daily YouTube Bot
 
 on:
   schedule:
-    - cron: "0 8 * * *"
+  - cron: "0 1 * * *"
   workflow_dispatch:
     inputs:
       skip_upload:
@@ -80,6 +80,9 @@ jobs:
         run: |
           echo "$YOUTUBE_CLIENT_SECRETS_JSON" > client_secrets.json
           echo "$YOUTUBE_TOKEN_JSON" > youtube_token.json
+          echo "=== Validating credential files ==="
+          python -c "import json; json.load(open('client_secrets.json')); print('client_secrets.json OK')"
+          python -c "import json; json.load(open('youtube_token.json')); print('youtube_token.json OK')"
 
       # ── 7. Create .env ────────────────────────────────────────────────────
       - name: Create .env

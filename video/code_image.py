@@ -182,6 +182,60 @@ def make_code_slide(code: str, title: str = "Solution") -> Image.Image:
 
     return frame
 
+def make_approach_slide(solution: dict) -> Image.Image:
+    """Slide 2 — Approach / algorithm explanation."""
+    img = Image.new("RGB", (VIDEO_W, VIDEO_H), BG_COLOR)
+    draw = ImageDraw.Draw(img)
+
+    font_header = _load_font(48, bold=True)
+    font_body   = _load_font(30)
+    font_step   = _load_font(32, bold=True)
+
+    draw.text((60, 50), "Approach & Intuition", font=font_header, fill=TEXT_WHITE)
+    draw.line([(60, 116), (VIDEO_W - 60, 116)], fill=ACCENT_GREEN, width=2)
+
+    explanation = solution.get("explanation", "")
+
+    # Extract key sections from explanation
+    import re
+
+    sections = {
+        "Intuition":         re.search(r"[Ii]ntuition[:\-]?\s*(.+?)(?=\n[A-Z]|\n\n|Approach|$)", explanation, re.DOTALL),
+        "Approach":          re.search(r"[Aa]pproach[:\-]?\s*(.+?)(?=\n[A-Z]|\n\n|Time|Space|$)", explanation, re.DOTALL),
+        "Time Complexity":   re.search(r"[Tt]ime[^:]*:?\s*(O\([^)]+\)[^\n]*)", explanation),
+        "Space Complexity":  re.search(r"[Ss]pace[^:]*:?\s*(O\([^)]+\)[^\n]*)", explanation),
+    }
+
+    colors = {
+        "Intuition":        ACCENT_BLUE,
+        "Approach":         ACCENT_GREEN,
+        "Time Complexity":  ACCENT_ORANGE,
+        "Space Complexity": (180, 120, 255),
+    }
+
+    y = 150
+    for label, match in sections.items():
+        if not match:
+            continue
+
+        # Section label
+        draw.text((60, y), f"▸  {label}", font=font_step, fill=colors[label])
+        y += 44
+
+        # Section content — word wrap
+        content = match.group(1).strip()[:300]
+        content = re.sub(r"\s+", " ", content)
+        wrapped = textwrap.fill(content, width=90)
+        for line in wrapped.split("\n")[:4]:
+            draw.text((80, y), line, font=font_body, fill=TEXT_WHITE)
+            y += 36
+
+        y += 20  # spacing between sections
+
+        if y > VIDEO_H - 100:
+            break
+
+    return img
 
 def make_complexity_slide(explanation: str) -> Image.Image:
     """Slide — Time & Space complexity summary."""
@@ -262,11 +316,12 @@ def generate_all_slides(problem: dict, solution: dict, out_dir: str = "output") 
         return str(path)
 
     log.info("Generating slides …")
-    slides.append(save(make_title_slide(problem),           "00_title.png"))
-    slides.append(save(make_problem_slide(problem),         "01_problem.png"))
-    slides.append(save(make_code_slide(solution["code"], "Python Solution"), "02_code.png"))
-    slides.append(save(make_complexity_slide(solution["explanation"]),       "03_complexity.png"))
-    slides.append(save(make_outro_slide(problem),           "04_outro.png"))
+    slides.append(save(make_title_slide(problem),                          "00_title.png"))
+    slides.append(save(make_problem_slide(problem),                        "01_problem.png"))
+    slides.append(save(make_approach_slide(solution),                      "02_approach.png"))  # NEW
+    slides.append(save(make_code_slide(solution["code"], "C++ Solution"),  "03_code.png"))
+    slides.append(save(make_complexity_slide(solution["explanation"]),      "04_complexity.png"))
+    slides.append(save(make_outro_slide(problem),                          "05_outro.png"))
 
     log.info(f"✓ {len(slides)} slides saved → {img_dir}")
     return slides
