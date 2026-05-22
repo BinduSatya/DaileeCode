@@ -78,7 +78,7 @@ def _get_credentials() -> Credentials:
 def _build_title(problem: dict) -> str:
     title = (
         f"LeetCode Daily {problem['date']} | "
-        f"#{problem['id']} {problem['title']} [{problem['difficulty']}] | Python Solution"
+        f"#{problem['id']} {problem['title']} [{problem['difficulty']}] | C++ Solution"
     )
     return title[:MAX_TITLE_LEN]
 
@@ -98,7 +98,7 @@ def _build_description(problem: dict, solution: dict, script: dict) -> str:
 📖 In this video:
 • Problem walkthrough
 • Intuition & approach
-• Python solution with explanation
+• C++ solution with explanation
 • Time & Space complexity analysis
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

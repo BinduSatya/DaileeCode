@@ -2,7 +2,7 @@
 solution_agent.py
 ─────────────────
 Uses Google Gemini to:
-  1. Generate a correct Python solution with explanation
+  1. Generate a correct C++ solution with explanation
   2. Extract the code block (STEP 12)
   3. Compile / syntax-check the code (STEP 13)
   4. Run sample test cases and verify output (STEP 14)

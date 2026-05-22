@@ -9,10 +9,10 @@ An end-to-end automated pipeline that fetches the LeetCode Problem of the Day, g
 Every day at 08:00 UTC, the bot:
 
 1. Fetches the LeetCode Problem of the Day via GraphQL
-2. Generates a correct Python solution using Google Gemini AI
-3. Validates the solution by compiling and running it locally
-4. Writes a structured YouTube teaching script using Gemini
-5. Converts the script to natural-sounding speech using Microsoft Edge TTS
+2. Generates a correct C++ solution using Groq's Llama 3.3 70B model
+3. Validates the solution by syntax-checking and testing it locally
+4. Writes a structured YouTube teaching script using Groq's Llama 3.3 70B model
+5. Converts the script to natural-sounding speech using Google Text-to-Speech (gTTS)
 6. Renders syntax-highlighted code slides using Pygments and Pillow
 7. Assembles everything into a 1080p MP4 video using MoviePy
 8. Adds auto-generated subtitles
@@ -30,9 +30,9 @@ Creating daily educational coding content is extremely time-consuming. A creator
 
 | Layer | Technology | Why |
 |---|---|---|
-| **AI — Solution** | Google Gemini 2.0 Flash | Fast, accurate code generation with large context window |
-| **AI — Script** | Google Gemini 2.0 Flash | Produces structured, beginner-friendly teaching scripts |
-| **Text-to-Speech** | Microsoft Edge TTS | Free, no API key needed, natural-sounding voices |
+| **AI — Solution** | Groq Llama 3.3 70B | Fast, accurate C++ code generation with large context window |
+| **AI — Script** | Groq Llama 3.3 70B | Produces structured, beginner-friendly teaching scripts |
+| **Text-to-Speech** | Google Text-to-Speech (gTTS) | Free, reliable, natural-sounding speech synthesis |
 | **Code Highlighting** | Pygments + Pillow | Industry-standard syntax highlighter; Pillow for compositing |
 | **Video Assembly** | MoviePy | Pure Python video editing, no external editor needed |
 | **Subtitles** | OpenAI Whisper | Word-level transcription directly from the generated audio |
@@ -87,20 +87,20 @@ LeetCode GraphQL API
   fetch_potd.py          -->  output/problem.json
         |
         v
-  solution_agent.py      -->  Generate solution via Gemini
+  solution_agent.py      -->  Generate C++ solution via Groq Llama 3.3 70B
                          -->  Extract code block (regex)
-                         -->  Compile check (Python ast)
+                         -->  Compile check (C++ syntax validation)
                          -->  Run smoke test (subprocess)
                          -->  output/solution.json
         |
         v
-  script_agent.py        -->  Generate teaching script via Gemini
-                         -->  Convert to audio via Edge TTS
+  script_agent.py        -->  Generate teaching script via Groq Llama 3.3 70B
+                         -->  Convert to audio via gTTS
                          -->  output/script.txt
                          -->  output/audio/narration.mp3
         |
         v
-  code_image.py          -->  Title slide, problem slide, code slide,
+  code_image.py          -->  Title slide, problem slide, C++ code slide,
                               complexity slide, outro slide
                          -->  output/images/*.png
         |
@@ -149,7 +149,7 @@ sudo apt install imagemagick
 ```
 
 **API access required:**
-- Google Gemini API key — free at [aistudio.google.com](https://aistudio.google.com)
+- Groq API key — free at [console.groq.com](https://console.groq.com)
 - Google Cloud project with YouTube Data API v3 enabled
 - OAuth 2.0 client credentials JSON from Google Cloud Console
 
@@ -186,11 +186,12 @@ pip install -r requirements.txt
 > `openai-whisper` is optional. If it fails to install, the pipeline automatically
 > falls back to sentence-split subtitles. Skip it with no impact on the rest of the pipeline.
 
-### 4. Get a Gemini API key
+### 4. Get a Groq API key
 
-1. Go to [aistudio.google.com](https://aistudio.google.com)
-2. Click **Get API key** → **Create API key**
-3. Copy the key
+1. Go to [console.groq.com](https://console.groq.com)
+2. Sign up or log in
+3. Navigate to **API Keys**
+4. Click **Create API Key** and copy it
 
 ### 5. Set up YouTube API credentials
 
@@ -215,7 +216,7 @@ cp .env.example .env
 Edit `.env` with your values:
 
 ```env
-GEMINI_API_KEY=your_gemini_api_key_here
+GROQ_API_KEY=your_groq_api_key_here
 YOUTUBE_CLIENT_SECRETS=client_secrets.json
 YOUTUBE_TOKEN_FILE=youtube_token.json
 YOUTUBE_PRIVACY=public
@@ -293,7 +294,7 @@ Go to your repository → **Settings** → **Secrets and variables** → **Actio
 
 | Secret | Value |
 |---|---|
-| `GEMINI_API_KEY` | Your Gemini API key |
+| `GROQ_API_KEY` | Your Groq API key from console.groq.com |
 | `YOUTUBE_CLIENT_SECRETS_JSON` | Paste the full contents of `client_secrets.json` |
 | `YOUTUBE_TOKEN_JSON` | Paste the full contents of `youtube_token.json` |
 | `PAT_TOKEN` | GitHub Personal Access Token with `secrets:write` scope |
@@ -315,16 +316,13 @@ The workflow runs automatically at **08:00 UTC every day**. You can also trigger
 
 | Variable | Required | Default | Description |
 |---|---|---|---|
-| `GEMINI_API_KEY` | Yes | — | Gemini API key from Google AI Studio |
+| `GROQ_API_KEY` | Yes | — | Groq API key from console.groq.com |
 | `YOUTUBE_CLIENT_SECRETS` | Yes | — | Path to OAuth client secrets JSON |
 | `YOUTUBE_TOKEN_FILE` | No | `youtube_token.json` | Where to cache the OAuth token |
 | `YOUTUBE_PRIVACY` | No | `public` | Video visibility: `public`, `unlisted`, or `private` |
-| `TTS_VOICE` | No | `en-US-AriaNeural` | Edge TTS voice name |
+| `TTS_VOICE` | No | `en-US-AriaNeural` | Note: Currently using gTTS for audio synthesis |
 
-List all available TTS voices:
-```bash
-edge-tts --list-voices
-```
+Note: The bot currently uses Google Text-to-Speech (gTTS) with English language support. The `TTS_VOICE` variable is reserved for future voice customization.
 
 ---
 
@@ -332,12 +330,12 @@ edge-tts --list-voices
 
 | What | Where |
 |---|---|
-| TTS voice | `TTS_VOICE` in `.env` |
+| TTS system | Currently uses gTTS in `agents/script_agent.py` |
 | Video resolution | `VIDEO_W` and `VIDEO_H` in `video/video_builder.py` |
 | Slide colour scheme | Constants at top of `video/code_image.py` |
 | Syntax highlight theme | `PYGMENTS_STYLE` in `video/code_image.py` |
 | Cron run time | `cron:` in `.github/workflows/daily_bot.yml` |
-| Gemini model | `GEMINI_MODEL` in `solution_agent.py` and `script_agent.py` |
+| LLM model | Model name in `_call_gemini()` in `solution_agent.py` and `script_agent.py` (currently Groq llama-3.3-70b-versatile) |
 
 ---
 
@@ -359,11 +357,11 @@ Every step uses `tenacity` for automatic retries with exponential backoff:
 **`No module named 'requests'` or similar**
 You have not installed dependencies into your virtual environment. Run `pip install -r requirements.txt` with the venv activated.
 
-**`429 RESOURCE_EXHAUSTED` from Gemini**
-Your free tier daily quota is exhausted. Wait until midnight US Pacific Time for it to reset, or enable billing at [console.cloud.google.com/billing](https://console.cloud.google.com/billing). The pipeline makes only 2 Gemini calls per day under normal use.
+**`429 RESOURCE_EXHAUSTED` from Groq**
+Your free tier rate limit has been exceeded. Wait a moment and retry. Groq's free tier is generous with 10k requests/day. If you hit limits frequently, consider enabling a paid plan at [console.groq.com](https://console.groq.com).
 
-**`404 NOT_FOUND` for a Gemini model**
-The model name is not supported by the installed SDK version. Change `GEMINI_MODEL` in both agent files to `gemini-2.0-flash-lite`.
+**`404 NOT_FOUND` for a Groq model**
+The model name is not supported. The default is `llama-3.3-70b-versatile`. You can change it in both `solution_agent.py` and `script_agent.py` in the `_call_gemini()` function.
 
 **`UnicodeEncodeError` on Windows**
 Ensure all `write_text()` calls in `pipeline.py` include `encoding="utf-8"`.
@@ -376,15 +374,15 @@ You must generate `youtube_token.json` locally first, then add its contents as t
 
 ---
 
-## Gemini Free Tier Limits
+## Groq Free Tier Limits
 
-| Model | Requests / minute | Requests / day |
-|---|---|---|
-| `gemini-2.0-flash` | 15 | 1,500 |
-| `gemini-2.0-flash-lite` | 30 | 1,500 |
-| `gemini-2.5-flash-preview-05-20` | 10 | 500 |
+| Metric | Limit |
+|---|---|
+| Requests / day | 10,000 |
+| Requests / minute | ~30 |
+| Tokens / day | 30,000,000 |
 
-This bot makes 2 Gemini API calls per daily run, well within all limits.
+This bot makes 2 Groq API calls per daily run, well within free tier limits.
 
 ---
 
