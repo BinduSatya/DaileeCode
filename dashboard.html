@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeetCode YouTube Bot - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #0F172A;
+            color: #F8FAFC;
+            min-height: 100vh;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 64px 0 48px;
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            margin-bottom: 48px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        header h1 {
+            font-size: 2.75em;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+            color: #FFFFFF;
+        }
+
+        header p {
+            font-size: 1.125rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 400;
+        }
+
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            padding: 16px 0;
+            margin: -48px 0 48px;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav button {
+            padding: 10px 24px;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 8px;
+            background: transparent;
+            color: #CBD5E1;
+            font-size: 0.938rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        nav button:hover {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: #6366F1;
+            color: #F8FAFC;
+        }
+
+        nav button.active {
+            background: #6366F1;
+            color: #FFFFFF;
+            border-color: #6366F1;
+        }
+
+        /* Main Content */
+        .content {
+            display: none;
+            animation: fadeIn 0.4s ease-in;
+            padding-bottom: 64px;
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        /* Card Styles */
+        .card {
+            background: #1E293B;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+        }
+
+        .card h2 {
+            color: #F8FAFC;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+
+        .card h3 {
+            color: #CBD5E1;
+            margin-top: 24px;
+            margin-bottom: 12px;
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .card p {
+            color: #94A3B8;
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+
+        .card ul {
+            color: #94A3B8;
+        }
+
+        .card li {
+            margin-bottom: 8px;
+        }
+
+        /* Tech Stack */
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .tech-item {
+            background: rgba(99, 102, 241, 0.08);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            color: #F8FAFC;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .tech-item:hover {
+            background: rgba(99, 102, 241, 0.12);
+            border-color: #6366F1;
+        }
+
+        .tech-item strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.938rem;
+            color: #CBD5E1;
+            font-weight: 500;
+        }
+
+        .tech-item p {
+            color: #F8FAFC;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        /* Status Dashboard */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .status-card {
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            color: white;
+            padding: 28px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+            transition: transform 0.2s ease;
+        }
+
+        .status-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
+        }
+
+        .status-card h3 {
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 16px;
+            font-size: 0.938rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .status-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #FFFFFF;
+        }
+
+        .status-label {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        /* Video Info */
+        .video-section {
+            background: #1E293B;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .video-section h2 {
+            color: #F8FAFC;
+            margin-bottom: 24px;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .video-info {
+            background: rgba(99, 102, 241, 0.05);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            border-left: 3px solid #6366F1;
+        }
+
+        .video-info strong {
+            color: #CBD5E1;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .video-info p {
+            color: #F8FAFC;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .youtube-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 28px;
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            font-weight: 600;
+            font-size: 0.938rem;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .youtube-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Problem Details */
+        .problem-details {
+            background: rgba(99, 102, 241, 0.05);
+            padding: 24px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(99, 102, 241, 0.15);
+        }
+
+        .problem-details strong {
+            color: #CBD5E1;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .problem-details p {
+            color: #F8FAFC;
+            margin-bottom: 16px;
+        }
+
+        .problem-details a {
+            color: #6366F1;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .problem-details a:hover {
+            color: #818CF8;
+        }
+
+        .difficulty {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-top: 8px;
+        }
+
+        .difficulty.easy {
+            background: rgba(34, 197, 94, 0.15);
+            color: #22C55E;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .difficulty.medium {
+            background: rgba(245, 158, 11, 0.15);
+            color: #F59E0B;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .difficulty.hard {
+            background: rgba(239, 68, 68, 0.15);
+            color: #EF4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        /* Code Block */
+        .code-block {
+            background: #111827;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            color: #F8FAFC;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-top: 16px;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        /* Pipeline Workflow */
+        .workflow {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .workflow-step {
+            background: rgba(99, 102, 241, 0.08);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: #F8FAFC;
+            padding: 20px 16px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+            font-size: 0.875rem;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .workflow-step:hover {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: #6366F1;
+        }
+
+        .workflow-step::after {
+            content: "→";
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.25rem;
+            color: rgba(99, 102, 241, 0.5);
+        }
+
+        .workflow-step:last-child::after {
+            display: none;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 48px;
+            color: #CBD5E1;
+        }
+
+        .spinner {
+            border: 3px solid rgba(99, 102, 241, 0.2);
+            border-top: 3px solid #6366F1;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Error State */
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            color: #FCA5A5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 3px solid #EF4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .success-message {
+            background: rgba(34, 197, 94, 0.1);
+            color: #86EFAC;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 3px solid #22C55E;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .stat {
+            background: rgba(99, 102, 241, 0.05);
+            padding: 24px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .stat:hover {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: #6366F1;
+        }
+
+        .stat-number {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: #6366F1;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: #CBD5E1;
+            font-size: 0.875rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 0;
+            }
+
+            .container {
+                padding: 0 16px;
+            }
+
+            header {
+                padding: 48px 16px 32px;
+            }
+
+            header h1 {
+                font-size: 2rem;
+            }
+
+            header p {
+                font-size: 1rem;
+            }
+
+            nav {
+                gap: 8px;
+                padding: 12px 16px;
+                margin: -32px 0 32px;
+            }
+
+            nav button {
+                padding: 8px 16px;
+                font-size: 0.875rem;
+            }
+
+            .card {
+                padding: 24px;
+            }
+
+            .workflow-step::after {
+                display: none;
+            }
+
+            .status-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .status-value {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tech-stack {
+                grid-template-columns: 1fr;
+            }
+
+            .workflow {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            color: #94A3B8;
+            margin-top: 64px;
+            padding: 32px 0 48px;
+            border-top: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        footer a {
+            color: #6366F1;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        footer a:hover {
+            color: #818CF8;
+        }
+
+        .refresh-btn {
+            background: rgba(99, 102, 241, 0.1);
+            color: #F8FAFC;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            font-size: 0.938rem;
+        }
+
+        .refresh-btn:hover {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: #6366F1;
+        }
+
+        .last-updated {
+            color: #64748B;
+            margin-top: 20px;
+            margin-bottom: 24px;
+            font-size: 0.875rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎓 LeetCode YouTube Bot</h1>
+            <p>Automated Daily Problem-Solving Content Generation</p>
+        </header>
+
+        <nav>
+            <button class="nav-btn active" onclick="showSection('overview')">Overview</button>
+            <button class="nav-btn" onclick="showSection('status')">Status & Dashboard</button>
+            <button class="nav-btn" onclick="showSection('latest')">Latest Video</button>
+            <button class="nav-btn" onclick="showSection('tech')">Technology Stack</button>
+            <button class="refresh-btn" onclick="refreshData()">🔄 Refresh</button>
+        </nav>
+
+        <!-- Overview Section -->
+        <div id="overview" class="content active">
+            <div class="card">
+                <h2>What Is This?</h2>
+                <p>
+                    An end-to-end automated pipeline that fetches the LeetCode Problem of the Day, generates a correct 
+                    C++ solution using AI, produces a narrated teaching video with subtitles, and uploads it to YouTube 
+                    <strong>every single day with zero manual intervention.</strong>
+                </p>
+            </div>
+
+            <div class="card">
+                <h2>How It Works</h2>
+                <div class="workflow">
+                    <div class="workflow-step">📥 Fetch POTD</div>
+                    <div class="workflow-step">🤖 Generate C++ Solution</div>
+                    <div class="workflow-step">📝 Create Script</div>
+                    <div class="workflow-step">🎙️ Generate Audio</div>
+                    <div class="workflow-step">🎬 Build Video</div>
+                    <div class="workflow-step">📺 Upload YouTube</div>
+                </div>
+                <p style="margin-top: 28px; padding: 16px; background: rgba(99, 102, 241, 0.08); border-radius: 8px; border-left: 3px solid #6366F1;">
+                    Each step saves its output to disk. If the pipeline crashes, re-running it resumes from where it left off.
+                    The cache automatically clears when the date changes so each new day starts fresh.
+                </p>
+            </div>
+
+            <div class="card">
+                <h2>Why Automate?</h2>
+                <p>
+                    Creating daily educational coding content is extremely time-consuming. Without automation, a creator would need to:
+                </p>
+                <ul style="margin-left: 24px; line-height: 1.8; margin-top: 16px;">
+                    <li>📖 Read and understand the problem</li>
+                    <li>💭 Think through an optimal solution</li>
+                    <li>✏️ Write and test the code</li>
+                    <li>🎙️ Record audio narration</li>
+                    <li>🎨 Design visual slides</li>
+                    <li>🎬 Edit the video</li>
+                    <li>📤 Upload with proper metadata</li>
+                </ul>
+                <p style="margin-top: 20px;">
+                    This bot automates the entire workflow so your channel publishes consistent, high-quality content daily with no effort.
+                </p>
+            </div>
+        </div>
+
+        <!-- Status & Dashboard Section -->
+        <div id="status" class="content">
+            <div class="status-grid">
+                <div class="status-card">
+                    <h3>Pipeline Status</h3>
+                    <div class="status-value" id="pipelineStatus">-</div>
+                    <div class="status-label">Last run status</div>
+                </div>
+                <div class="status-card">
+                    <h3>Last Updated</h3>
+                    <div class="status-value" id="lastRunDate">-</div>
+                    <div class="status-label">Date of last execution</div>
+                </div>
+                <div class="status-card">
+                    <h3>Videos Generated</h3>
+                    <div class="status-value" id="videosGenerated">-</div>
+                    <div class="status-label">Total videos created</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Current Problem</h2>
+                <div id="problemInfo" class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading problem data...</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Pipeline Steps</h2>
+                <div id="pipelineSteps" class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading pipeline state...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Latest Video Section -->
+        <div id="latest" class="content">
+            <div class="video-section">
+                <h2>📺 Latest Uploaded Video</h2>
+                <div id="videoInfo" class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading video information...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technology Stack Section -->
+        <div id="tech" class="content">
+            <div class="card">
+                <h2>Technology Stack</h2>
+                <div class="tech-stack">
+                    <div class="tech-item">
+                        <strong>AI — Solution</strong>
+                        <p>Groq Llama 3.3 70B</p>
+                    </div>
+                    <div class="tech-item">
+                        <strong>AI — Script</strong>
+                        <p>Groq Llama 3.3 70B</p>
+                    </div>
+                    <div class="tech-item">
+                        <strong>Text-to-Speech</strong>
+                        <p>Google gTTS</p>
+                    </div>
+                    <div class="tech-item">
+                        <strong>Code Highlighting</strong>
+                        <p>Pygments + Pillow</p>
+                    </div>
+                    <div class="tech-item">
+                        <strong>Video Assembly</strong>
+                        <p>MoviePy</p>
+                    </div>
+                    <div class="tech-item">
+                        <strong>Subtitles</strong>
+                        <p>OpenAI Whisper</p>
+                    </div>
+                    <div class="tech-item">
+                        <strong>YouTube Upload</strong>
+                        <p>YouTube Data API v3</p>
+                    </div>
+                    <div class="tech-item">
+                        <strong>Data Fetching</strong>
+                        <p>LeetCode GraphQL API</p>
+                    </div>
+                    <div class="tech-item">
+                        <strong>Retry Logic</strong>
+                        <p>Tenacity</p>
+                    </div>
+                    <div class="tech-item">
+                        <strong>Automation</strong>
+                        <p>GitHub Actions + Cron</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Project Features</h2>
+                <h3>✅ Fully Automated</h3>
+                <p>Runs daily at 07:00 IST via GitHub Actions with zero manual intervention required.</p>
+                
+                <h3>🔄 Resume-Safe</h3>
+                <p>Each step saves output to disk and records completion status. If any step fails, re-running the pipeline resumes from that point.</p>
+                
+                <h3>🎯 Production Quality</h3>
+                <p>Generates 1080p MP4 videos with syntax-highlighted code slides, natural TTS narration, and auto-generated subtitles.</p>
+                
+                <h3>🚀 Fast & Free</h3>
+                <p>Uses free-tier APIs (Groq, gTTS, YouTube Data API). Each daily run makes only 2 LLM calls.</p>
+                
+                <h3>📊 Transparent Logging</h3>
+                <p>Daily timestamped logs and pipeline state saved for full visibility into every run.</p>
+            </div>
+
+            <div class="card">
+                <h2>Getting Started</h2>
+                <ol style="line-height: 1.8; margin-left: 24px; margin-top: 16px;">
+                    <li>Clone the repository</li>
+                    <li>Create a Python 3.11+ virtual environment</li>
+                    <li>Run <code style="background: rgba(99, 102, 241, 0.1); color: #A5B4FC; padding: 4px 10px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.875rem;">pip install -r requirements.txt</code></li>
+                    <li>Get a free Groq API key at <a href="https://console.groq.com" target="_blank" style="color: #6366F1; text-decoration: none;">console.groq.com</a></li>
+                    <li>Set up YouTube OAuth credentials</li>
+                    <li>Configure <code style="background: rgba(99, 102, 241, 0.1); color: #A5B4FC; padding: 4px 10px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.875rem;">.env</code> with your keys</li>
+                    <li>Run <code style="background: rgba(99, 102, 241, 0.1); color: #A5B4FC; padding: 4px 10px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.875rem;">python pipeline.py</code></li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="last-updated" id="lastUpdated">Last updated: Never</div>
+
+        <footer>
+            <p>🚀 LeetCode YouTube Bot | <a href="https://github.com/BinduSatya/DailyCode">GitHub</a></p>
+        </footer>
+    </div>
+
+    <script>
+        // Navigation
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+
+            // Load data for that section
+            if (sectionId === 'status') {
+                loadStatusData();
+            } else if (sectionId === 'latest') {
+                loadLatestVideoData();
+            }
+        }
+
+        // Load data from output files
+        async function loadData() {
+            try {
+                // Try to load problem data
+                const problemResponse = await fetch('./output/problem.json');
+                if (problemResponse.ok) {
+                    const problem = await problemResponse.json();
+                    displayProblemInfo(problem);
+                }
+
+                // Try to load upload record
+                const uploadResponse = await fetch('./output/upload_record.json');
+                if (uploadResponse.ok) {
+                    const upload = await uploadResponse.json();
+                    displayVideoInfo(upload);
+                }
+
+                // Try to load pipeline state
+                const stateResponse = await fetch('./output/pipeline_state.json');
+                if (stateResponse.ok) {
+                    const state = await stateResponse.json();
+                    displayPipelineState(state);
+                }
+
+                updateLastUpdated();
+            } catch (error) {
+                console.log('Data loading note: Place output files in ./output/ directory for live updates');
+            }
+        }
+
+        function displayProblemInfo(problem) {
+            const container = document.getElementById('problemInfo');
+            if (!problem) {
+                container.innerHTML = '<p class="error-message">No problem data available yet</p>';
+                return;
+            }
+
+            const difficultyClass = problem.difficulty?.toLowerCase() || 'medium';
+            container.innerHTML = `
+                <div class="problem-details">
+                    <strong>Problem Title:</strong>
+                    <p>${problem.title || 'Not available'}</p>
+                    
+                    <strong>Difficulty:</strong>
+                    <span class="difficulty ${difficultyClass}">${problem.difficulty || 'Unknown'}</span>
+                    
+                    <strong>Description:</strong>
+                    <p>${(problem.description || 'Not available').substring(0, 300)}...</p>
+                    
+                    <strong>Link:</strong>
+                    <p><a href="${problem.url || '#'}" target="_blank">View on LeetCode</a></p>
+                </div>
+            `;
+        }
+
+        function displayVideoInfo(upload) {
+            const container = document.getElementById('videoInfo');
+            if (!upload || !upload.video_id) {
+                container.innerHTML = '<p class="error-message">No video uploaded yet</p>';
+                return;
+            }
+
+            const youtubeUrl = `https://www.youtube.com/watch?v=${upload.video_id}`;
+            container.innerHTML = `
+                <div class="success-message">✅ Video Successfully Uploaded!</div>
+                <div class="video-info">
+                    <strong>Video Title:</strong>
+                    <p>${upload.title || 'Not available'}</p>
+                </div>
+                <div class="video-info">
+                    <strong>Upload Time:</strong>
+                    <p>${upload.upload_time ? new Date(upload.upload_time).toLocaleString() : 'Not available'}</p>
+                </div>
+                <div class="video-info">
+                    <strong>Video Status:</strong>
+                    <p>${upload.status || 'Available'}</p>
+                </div>
+                <a href="${youtubeUrl}" target="_blank" class="youtube-link">🎬 Watch on YouTube</a>
+            `;
+        }
+
+        function displayPipelineState(state) {
+            const container = document.getElementById('pipelineSteps');
+            if (!state || !state.steps) {
+                container.innerHTML = '<p class="error-message">No pipeline state data available</p>';
+                return;
+            }
+
+            let html = '<div style="display: grid; gap: 15px;">';
+            const steps = [
+                'fetch_potd',
+                'solution_agent',
+                'script_agent',
+                'code_image',
+                'video_builder',
+                'youtube_uploader'
+            ];
+
+            steps.forEach(step => {
+                const completed = state.steps[step]?.completed || false;
+                const status = completed ? '✅' : '⏳';
+                const time = state.steps[step]?.timestamp ? new Date(state.steps[step].timestamp).toLocaleString() : '-';
+                html += `
+                    <div class="video-info">
+                        <strong>${status} ${step.replace(/_/g, ' ').toUpperCase()}</strong>
+                        <p>${completed ? 'Completed' : 'Pending'} - ${time}</p>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function loadStatusData() {
+            loadData();
+        }
+
+        function loadLatestVideoData() {
+            loadData();
+        }
+
+        function updateLastUpdated() {
+            const now = new Date();
+            document.getElementById('lastUpdated').textContent = `Last updated: ${now.toLocaleString()}`;
+        }
+
+        function refreshData() {
+            loadData();
+            updateLastUpdated();
+            alert('Dashboard refreshed!');
+        }
+
+        // Load data on page load
+        window.addEventListener('load', () => {
+            loadData();
+            // Refresh every 30 seconds
+            setInterval(loadData, 30000);
+        });
+    </script>
+</body>
+</html>

@@ -6,7 +6,7 @@ An end-to-end automated pipeline that fetches the LeetCode Problem of the Day, g
 
 ## What It Does
 
-Every day at 08:00 UTC, the bot:
+Every day at 07:00 IST, the bot:
 
 1. Fetches the LeetCode Problem of the Day via GraphQL
 2. Generates a correct C++ solution using Groq's Llama 3.3 70B model
@@ -71,6 +71,8 @@ leetcode-youtube-bot/
 │
 ├── logs/                          # Daily timestamped log files
 ├── pipeline.py                    # Main orchestrator with caching and retries
+├── dashboard.html                 # Single-page dashboard UI (open in browser)
+├── serve_dashboard.py             # Simple HTTP server to serve the dashboard
 ├── requirements.txt
 ├── .env.example
 └── .gitignore
@@ -231,6 +233,55 @@ mkdir output
 
 ---
 
+## Dashboard
+
+A beautiful single-page web application is included to visualize the bot's status and latest uploads.
+
+### Viewing the Dashboard
+
+#### Option 1: Using the HTTP Server (Recommended)
+
+```bash
+python serve_dashboard.py
+```
+
+This will:
+- Start a local HTTP server on `http://localhost:8000`
+- Automatically open the dashboard in your default browser
+- Serve the dashboard with proper file access permissions
+
+Press `CTRL+C` to stop the server.
+
+#### Option 2: Direct File Access
+
+Simply open `dashboard.html` directly in your browser (some features may be limited due to browser security).
+
+### Dashboard Features
+
+The dashboard has 4 main sections:
+
+1. **Overview** — Learn about the bot, workflow, and why automation matters
+2. **Status & Dashboard** — Real-time pipeline status with problem details
+3. **Latest Video** — Latest uploaded YouTube video with direct link
+4. **Technology Stack** — All technologies used and how to get started
+
+### Auto-Refresh
+
+- Dashboard automatically refreshes every 30 seconds
+- Manual refresh button available in the top-right
+- Shows latest problem, video status, and pipeline completion
+
+### Integration with Pipeline
+
+The dashboard reads data from:
+- `output/problem.json` — Current problem details
+- `output/upload_record.json` — Latest video info
+- `output/pipeline_state.json` — Completion status of each step
+
+After each pipeline run, these files are updated and the dashboard instantly reflects the new status.
+
+---
+
 ## Running the Pipeline
 
 ### Full run (recommended for first time)
@@ -272,60 +323,6 @@ python agents/youtube_uploader.py  # Upload to YouTube only
 
 ---
 
-## Daily Automation via GitHub Actions
-
-### Step 1 — Run locally first
-
-Run the full pipeline locally at least once so that `youtube_token.json` is generated. GitHub Actions needs this token to upload without a browser.
-
-### Step 2 — Push to GitHub
-
-```bash
-git init
-git add .
-git commit -m "Initial commit"
-git remote add origin https://github.com/your-username/leetcode-youtube-bot.git
-git push -u origin main
-```
-
-### Step 3 — Add GitHub Secrets
-
-Go to your repository → **Settings** → **Secrets and variables** → **Actions** → **New repository secret**:
-
-| Secret | Value |
-|---|---|
-| `GROQ_API_KEY` | Your Groq API key from console.groq.com |
-| `YOUTUBE_CLIENT_SECRETS_JSON` | Paste the full contents of `client_secrets.json` |
-| `YOUTUBE_TOKEN_JSON` | Paste the full contents of `youtube_token.json` |
-| `PAT_TOKEN` | GitHub Personal Access Token with `secrets:write` scope |
-
-### Step 4 — Add GitHub Variables (optional)
-
-Go to **Settings** → **Secrets and variables** → **Actions** → **Variables** tab:
-
-| Variable | Default |
-|---|---|
-| `YOUTUBE_PRIVACY` | `public` |
-| `TTS_VOICE` | `en-US-AriaNeural` |
-
-The workflow runs automatically at **08:00 UTC every day**. You can also trigger it manually from the **Actions** tab → select the workflow → **Run workflow**.
-
----
-
-## Environment Variables Reference
-
-| Variable | Required | Default | Description |
-|---|---|---|---|
-| `GROQ_API_KEY` | Yes | — | Groq API key from console.groq.com |
-| `YOUTUBE_CLIENT_SECRETS` | Yes | — | Path to OAuth client secrets JSON |
-| `YOUTUBE_TOKEN_FILE` | No | `youtube_token.json` | Where to cache the OAuth token |
-| `YOUTUBE_PRIVACY` | No | `public` | Video visibility: `public`, `unlisted`, or `private` |
-| `TTS_VOICE` | No | `en-US-AriaNeural` | Note: Currently using gTTS for audio synthesis |
-
-Note: The bot currently uses Google Text-to-Speech (gTTS) with English language support. The `TTS_VOICE` variable is reserved for future voice customization.
-
----
-
 ## Customisation
 
 | What | Where |
@@ -335,7 +332,7 @@ Note: The bot currently uses Google Text-to-Speech (gTTS) with English language 
 | Slide colour scheme | Constants at top of `video/code_image.py` |
 | Syntax highlight theme | `PYGMENTS_STYLE` in `video/code_image.py` |
 | Cron run time | `cron:` in `.github/workflows/daily_bot.yml` |
-| LLM model | Model name in `_call_gemini()` in `solution_agent.py` and `script_agent.py` (currently Groq llama-3.3-70b-versatile) |
+| LLM model | Model name in `_call_groq()` in `solution_agent.py` and `script_agent.py` (currently Groq llama-3.3-70b-versatile) |
 
 ---
 
@@ -361,7 +358,7 @@ You have not installed dependencies into your virtual environment. Run `pip inst
 Your free tier rate limit has been exceeded. Wait a moment and retry. Groq's free tier is generous with 10k requests/day. If you hit limits frequently, consider enabling a paid plan at [console.groq.com](https://console.groq.com).
 
 **`404 NOT_FOUND` for a Groq model**
-The model name is not supported. The default is `llama-3.3-70b-versatile`. You can change it in both `solution_agent.py` and `script_agent.py` in the `_call_gemini()` function.
+The model name is not supported. The default is `llama-3.3-70b-versatile`. You can change it in both `solution_agent.py` and `script_agent.py` in the `_call_groq()` function.
 
 **`UnicodeEncodeError` on Windows**
 Ensure all `write_text()` calls in `pipeline.py` include `encoding="utf-8"`.
@@ -373,19 +370,3 @@ The `output` folder does not exist. Run `mkdir output` once before the first pip
 You must generate `youtube_token.json` locally first, then add its contents as the `YOUTUBE_TOKEN_JSON` GitHub Secret.
 
 ---
-
-## Groq Free Tier Limits
-
-| Metric | Limit |
-|---|---|
-| Requests / day | 10,000 |
-| Requests / minute | ~30 |
-| Tokens / day | 30,000,000 |
-
-This bot makes 2 Groq API calls per daily run, well within free tier limits.
-
----
-
-## License
-
-MIT — free to use, modify, and distribute.
