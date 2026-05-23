@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Daily LeetCode POTD Bot — Dashboard</title>
+  <title>LeetCode Bot — Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
@@ -722,58 +722,114 @@
     const fetches = [
       fetch('./output/problem.json').then(r => r.ok ? r.json() : null).catch(() => null),
       fetch('./output/upload_record.json').then(r => r.ok ? r.json() : null).catch(() => null),
-      fetch('./output/pipeline_state.json').then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch('./output/pipeline_result.json').then(r => r.ok ? r.json() : null).catch(() => null),
     ];
-    const [problem, upload, state] = await Promise.all(fetches);
-    if (problem) renderProblem(problem);
-    if (upload)  renderVideo(upload);
-    if (state)   renderPipeline(state);
+    const [problem, uploadRecord, result] = await Promise.all(fetches);
+
+    // problem.json (flat) takes priority; fall back to result.problem (nested)
+    const prob = problem || (result && result.problem) || null;
+    if (prob) renderProblem(prob);
+
+    // upload_record.json takes priority; fall back to result.upload (nested)
+    const upload = uploadRecord || (result && result.upload ? result.upload : null);
+    if (upload) renderVideo(upload);
+
+    // pipeline steps derived from pipeline_result.json structure
+    if (result) renderPipeline(result);
+    else document.getElementById('pipelineSteps').innerHTML =
+      '<div class="banner-err">pipeline_result.json not found - run the pipeline first.</div>';
+
+    // populate status stat boxes from result
+    if (result) {
+      const hasUpload = !!(result.upload && result.upload.videoId);
+      document.getElementById('st-pipeline').textContent = hasUpload ? 'Done' : 'Partial';
+      document.getElementById('st-pipeline').className   = 'sv ' + (hasUpload ? 'green' : 'amber');
+      document.getElementById('st-note').textContent     = hasUpload ? 'all steps complete' : 'pipeline incomplete';
+      const date = result.problem && result.problem.date ? result.problem.date : '—';
+      document.getElementById('st-date').textContent = date;
+    }
     tick();
   }
 
+  // problem.json: { date, id, title, difficulty, url, description, tags[], hints[] }
   function renderProblem(p) {
     const diff = (p.difficulty || 'medium').toLowerCase();
+    const tags = Array.isArray(p.tags) ? p.tags.map(t =>
+      `<span style="background:var(--cyan-d);border:1px solid var(--cyan-m);color:var(--cyan);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;font-family:var(--mono)">${t}</span>`
+    ).join(' ') : '';
+    const hint = Array.isArray(p.hints) && p.hints[0]
+      ? `<p style="font-size:12px;color:var(--amber);margin-top:10px;font-style:italic">&#128161; ${p.hints[0]}</p>` : '';
     document.getElementById('problemInfo').innerHTML = `
       <div class="prob-head">
+        <span style="font-family:var(--mono);font-size:11px;color:var(--t3)">#${p.id || '?'}</span>
         <span class="prob-name">${p.title || 'Untitled'}</span>
         <span class="diff ${diff}">${p.difficulty || 'Unknown'}</span>
       </div>
-      <p class="prob-desc">${(p.description || '').substring(0, 290)}…</p>
-      <a class="prob-link" href="${p.url || '#'}" target="_blank">→ View on LeetCode</a>`;
+      ${tags ? `<div style="margin-bottom:10px;display:flex;flex-wrap:wrap;gap:5px">${tags}</div>` : ''}
+      <p class="prob-desc">${(p.description || '').substring(0, 320)}...</p>
+      ${hint}
+      <a class="prob-link" href="${p.url || '#'}" target="_blank">View on LeetCode</a>
+      ${p.date ? `<span style="font-size:11px;color:var(--t3);font-family:var(--mono);margin-left:14px">${p.date}</span>` : ''}`;
   }
 
+  // upload_record.json: { videoId, url, title, privacy }
   function renderVideo(u) {
     const el = document.getElementById('videoInfo');
-    if (!u || !u.video_id) {
-      el.innerHTML = '<div class="banner-err">No upload record found — run the pipeline first.</div>';
+    const upload = (u && u.upload) ? u.upload : u;
+    const vid = upload ? (upload.videoId || upload.video_id) : null;
+    if (!vid) {
+      el.innerHTML = '<div class="banner-err">No upload record found - run the pipeline first.</div>';
       return;
     }
-    const url = 'https://www.youtube.com/watch?v=' + u.video_id;
+    const url     = upload.url || 'https://www.youtube.com/watch?v=' + vid;
+    const title   = upload.title   || '-';
+    const privacy = upload.privacy || upload.status || 'public';
     el.innerHTML = `
-      <div class="banner-ok">✓ Upload successful</div>
+      <div class="banner-ok">&#10003; Upload successful</div>
       <div class="vm-list">
-        <div class="vm-row"><div class="vm-key">Title</div><div class="vm-val">${u.title || '—'}</div></div>
-        <div class="vm-row"><div class="vm-key">Uploaded</div><div class="vm-val">${u.upload_time ? new Date(u.upload_time).toLocaleString() : '—'}</div></div>
-        <div class="vm-row"><div class="vm-key">Status</div><div class="vm-val">${u.status || 'Public'}</div></div>
-        <div class="vm-row"><div class="vm-key">Video ID</div><div class="vm-val" style="font-family:var(--mono);font-size:11.5px;color:var(--cyan)">${u.video_id}</div></div>
+        <div class="vm-row"><div class="vm-key">Title</div><div class="vm-val">${title}</div></div>
+        <div class="vm-row"><div class="vm-key">Privacy</div><div class="vm-val" style="text-transform:capitalize">${privacy}</div></div>
+        <div class="vm-row"><div class="vm-key">Video ID</div><div class="vm-val" style="font-family:var(--mono);font-size:11.5px;color:var(--cyan)">${vid}</div></div>
+        <div class="vm-row"><div class="vm-key">URL</div><div class="vm-val" style="font-size:12px"><a href="${url}" target="_blank" style="color:var(--cyan);text-decoration:none">${url}</a></div></div>
       </div>
-      <a href="${url}" target="_blank" class="btn-yt">▶ Watch on YouTube</a>`;
+      <a href="${url}" target="_blank" class="btn-yt">&#9654; Watch on YouTube</a>`;
   }
 
-  function renderPipeline(state) {
+  // pipeline_result.json: derive step completion from presence of data fields
+  function renderPipeline(r) {
     const el = document.getElementById('pipelineSteps');
-    if (!state || !state.steps) {
-      el.innerHTML = '<div class="banner-err">No pipeline state found.</div>';
+    if (!r) {
+      el.innerHTML = '<div class="banner-err">No pipeline result found.</div>';
       return;
     }
-    el.innerHTML = '<div class="step-list">' + STEPS.map(s => {
-      const info = state.steps[s.key] || {};
-      const done = !!info.completed;
-      const ts   = info.timestamp ? new Date(info.timestamp).toLocaleString() : '—';
+
+    const derived = {
+      fetch_potd:       !!(r.problem && r.problem.title),
+      solution_agent:   !!(r.solution && r.solution.code),
+      script_agent:     !!(r.script && r.script.clean_script),
+      audio_builder:    !!(r.audio_info && r.audio_info.full_audio),
+      code_image:       !!(r.slides && r.slides.length > 0),
+      video_builder:    !!(r.video_path),
+      youtube_uploader: !!(r.upload && r.upload.videoId),
+    };
+
+    const STEP_LABELS = [
+      { key: 'fetch_potd',       label: 'Fetch POTD',       detail: r.problem ? r.problem.title : '' },
+      { key: 'solution_agent',   label: 'Solution Agent',   detail: r.solution && r.solution.code ? 'C++ solution generated' : '' },
+      { key: 'script_agent',     label: 'Script Agent',     detail: r.script ? r.script.word_count + ' words' : '' },
+      { key: 'audio_builder',    label: 'Audio TTS',        detail: r.audio_info ? r.audio_info.voice : '' },
+      { key: 'code_image',       label: 'Code Image',       detail: r.slides ? r.slides.length + ' slides' : '' },
+      { key: 'video_builder',    label: 'Video Builder',    detail: r.video_path || '' },
+      { key: 'youtube_uploader', label: 'YouTube Upload',   detail: r.upload ? r.upload.videoId : '' },
+    ];
+
+    el.innerHTML = '<div class="step-list">' + STEP_LABELS.map(s => {
+      const done = !!derived[s.key];
       return `<div class="step-row">
         <div class="step-dot ${done ? 'done' : 'pend'}"></div>
         <div class="step-name">${s.label}</div>
-        <div class="step-time">${ts}</div>
+        <div class="step-time" style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
+             title="${s.detail}">${s.detail}</div>
         <div class="step-pill ${done ? 'done' : 'pend'}">${done ? 'done' : 'pending'}</div>
       </div>`;
     }).join('') + '</div>';
