@@ -1,0 +1,15 @@
+{
+  "date": "2026-05-23",
+  "steps": {
+    "fetch": "\u2713",
+    "solution": "\u2713",
+    "script_audio": "\u2713",
+    "images": "\u2713 (6 slides)",
+    "video": "\u2713",
+    "upload": "\u2713"
+  },
+  "problem_title": "Check if Array Is Sorted and Rotated",
+  "video_path": "output/videos/final_2026-05-23.mp4",
+  "youtube_url": "https://www.youtube.com/watch?v=n7R0Sx2rwjw",
+  "duration_seconds": 153.7
+}

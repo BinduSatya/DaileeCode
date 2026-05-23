@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Daily LeetCode POTD Bot — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:        #0d1117;
+      --surface:   #161b22;
+      --card:      #1c2128;
+      --card-h:    #21262d;
+      --b0:        rgba(255,255,255,0.05);
+      --b1:        rgba(255,255,255,0.09);
+      --b2:        rgba(255,255,255,0.15);
+      --cyan:      #22d3ee;
+      --cyan-d:    rgba(34,211,238,0.10);
+      --cyan-m:    rgba(34,211,238,0.28);
+      --amber:     #f59e0b;
+      --amber-d:   rgba(245,158,11,0.10);
+      --green:     #3fb950;
+      --green-d:   rgba(63,185,80,0.10);
+      --red:       #f85149;
+      --red-d:     rgba(248,81,73,0.10);
+      --t1:        #e6edf3;
+      --t2:        #8b949e;
+      --t3:        #484f58;
+      --sans:      'Plus Jakarta Sans', sans-serif;
+      --mono:      'JetBrains Mono', monospace;
+      --r:         8px;
+      --r2:        12px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--t1);
+      min-height: 100vh;
+      font-size: 14px;
+      line-height: 1.65;
+      display: flex;
+    }
+
+    /* ─── SIDEBAR ─── */
+    .sidebar {
+      width: 230px;
+      flex-shrink: 0;
+      background: var(--surface);
+      border-right: 1px solid var(--b0);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      overflow-y: auto;
+    }
+
+    .brand {
+      padding: 24px 20px 20px;
+      border-bottom: 1px solid var(--b0);
+    }
+    .brand-mark {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .brand-icon {
+      width: 30px; height: 30px;
+      border-radius: 7px;
+      background: var(--cyan-d);
+      border: 1px solid var(--cyan-m);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+    }
+    .brand-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--t1);
+      letter-spacing: .01em;
+    }
+    .brand-tag {
+      font-size: 10.5px;
+      color: var(--t3);
+      font-family: var(--mono);
+      letter-spacing: .02em;
+    }
+
+    .nav-section {
+      padding: 16px 12px 8px;
+    }
+    .nav-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--t3);
+      padding: 0 8px;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      width: 100%;
+      padding: 8px 10px;
+      border: none;
+      border-radius: var(--r);
+      background: transparent;
+      color: var(--t2);
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: left;
+      transition: background .15s, color .15s;
+      margin-bottom: 2px;
+    }
+    .nav-btn .ni { font-size: 15px; line-height: 1; }
+    .nav-btn:hover { background: var(--b0); color: var(--t1); }
+    .nav-btn.active {
+      background: var(--cyan-d);
+      color: var(--cyan);
+      border: 1px solid rgba(34,211,238,.15);
+    }
+
+    .sidebar-foot {
+      margin-top: auto;
+      padding: 16px 20px;
+      border-top: 1px solid var(--b0);
+    }
+    .live-row {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 11px; color: var(--t3);
+      font-family: var(--mono);
+    }
+    .live-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--green);
+      animation: livepulse 2s infinite;
+      flex-shrink: 0;
+    }
+    @keyframes livepulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(63,185,80,.45); }
+      60%      { box-shadow: 0 0 0 5px rgba(63,185,80,0); }
+    }
+
+    /* ─── MAIN ─── */
+    .main {
+      flex: 1;
+      min-width: 0;
+      padding: 36px 40px 60px;
+      overflow-x: hidden;
+    }
+
+    .page { display: none; }
+    .page.active { display: block; animation: up .25s ease; }
+    @keyframes up { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
+
+    .toprow {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .page-title { font-size: 21px; font-weight: 700; color: var(--t1); letter-spacing: -.015em; }
+    .page-sub   { font-size: 13px; color: var(--t2); margin-top: 3px; }
+
+    /* ─── STAT STRIP ─── */
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(155px,1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .stat-box {
+      background: var(--card);
+      border: 1px solid var(--b0);
+      border-radius: var(--r2);
+      padding: 18px 20px;
+      transition: border-color .2s;
+    }
+    .stat-box:hover { border-color: var(--b2); }
+    .stat-box .sl { font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .09em; color: var(--t3); margin-bottom: 6px; }
+    .stat-box .sv { font-family: var(--mono); font-size: 26px; font-weight: 500; line-height: 1; }
+    .stat-box .sn { font-size: 11px; color: var(--t3); margin-top: 4px; font-family: var(--mono); }
+    .sv.cyan  { color: var(--cyan); }
+    .sv.amber { color: var(--amber); }
+    .sv.green { color: var(--green); }
+    .sv.plain { color: var(--t1); }
+
+    /* ─── CARDS ─── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--b0);
+      border-radius: var(--r2);
+      padding: 22px 24px;
+      transition: border-color .2s;
+      margin-bottom: 16px;
+    }
+    .card:hover { border-color: var(--b1); }
+    .card-h {
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--t3);
+      margin-bottom: 16px;
+    }
+    .card-title { font-size: 16px; font-weight: 700; color: var(--t1); margin-bottom: 10px; }
+
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+
+    /* ─── PIPELINE FLOW ─── */
+    .flow-wrap { overflow-x: auto; padding: 4px 0 8px; }
+    .flow {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      min-width: max-content;
+    }
+    .flow-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .flow-icon {
+      width: 46px; height: 46px;
+      border-radius: 11px;
+      background: var(--surface);
+      border: 1px solid var(--b1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 19px;
+      transition: all .2s;
+      cursor: default;
+    }
+    .flow-icon:hover { background: var(--cyan-d); border-color: var(--cyan-m); transform: translateY(-3px); }
+    .flow-text { font-size: 11px; color: var(--t2); font-weight: 600; text-align: center; white-space: nowrap; }
+    .flow-arrow { font-size: 12px; color: var(--t3); padding: 0 6px; margin-bottom: 22px; }
+
+    /* ─── WHY LIST ─── */
+    .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .why-item {
+      display: flex; align-items: center; gap: 9px;
+      padding: 9px 12px;
+      background: var(--surface);
+      border: 1px solid var(--b0);
+      border-radius: var(--r);
+      font-size: 12.5px;
+      color: var(--t2);
+    }
+    .why-item .wi { font-size: 14px; }
+
+    /* ─── PIPELINE STEPS ─── */
+    .step-list { display: flex; flex-direction: column; gap: 8px; }
+    .step-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 11px 14px;
+      background: var(--surface);
+      border: 1px solid var(--b0);
+      border-radius: var(--r);
+      transition: border-color .15s;
+    }
+    .step-row:hover { border-color: var(--b1); }
+    .step-dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    }
+    .step-dot.done { background: var(--green); }
+    .step-dot.pend { background: var(--t3); }
+    .step-name { font-size: 12.5px; font-weight: 600; color: var(--t1); flex: 1; }
+    .step-time { font-size: 10.5px; color: var(--t3); font-family: var(--mono); }
+    .step-pill {
+      font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .07em;
+      padding: 2px 8px; border-radius: 20px;
+    }
+    .step-pill.done { background: var(--green-d); color: var(--green); border: 1px solid rgba(63,185,80,.25); }
+    .step-pill.pend { background: var(--amber-d); color: var(--amber); border: 1px solid rgba(245,158,11,.25); }
+
+    /* ─── TECH GRID ─── */
+    .tech-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px,1fr)); gap: 10px; }
+    .tech-card {
+      background: var(--surface);
+      border: 1px solid var(--b0);
+      border-radius: var(--r);
+      padding: 13px 15px;
+      transition: border-color .2s, background .2s;
+    }
+    .tech-card:hover { background: var(--card-h); border-color: var(--cyan-m); }
+    .tc-cat { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--cyan); margin-bottom: 3px; }
+    .tc-name { font-size: 13px; font-weight: 600; color: var(--t1); }
+
+    /* ─── FEATURES ─── */
+    .feat-list { display: flex; flex-direction: column; gap: 12px; }
+    .feat-row { display: flex; gap: 13px; align-items: flex-start; }
+    .feat-badge {
+      width: 30px; height: 30px; border-radius: 7px; flex-shrink: 0;
+      background: var(--cyan-d); border: 1px solid var(--cyan-m);
+      display: flex; align-items: center; justify-content: center; font-size: 13px;
+    }
+    .feat-name { font-size: 13px; font-weight: 700; color: var(--t1); margin-bottom: 2px; }
+    .feat-desc { font-size: 12px; color: var(--t2); line-height: 1.6; }
+
+    /* ─── SETUP ─── */
+    .setup-list { display: flex; flex-direction: column; gap: 8px; counter-reset: st; }
+    .setup-item {
+      display: flex; gap: 12px; align-items: flex-start;
+      padding: 12px 14px;
+      background: var(--surface);
+      border: 1px solid var(--b0);
+      border-radius: var(--r);
+      counter-increment: st;
+    }
+    .setup-num {
+      width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
+      background: var(--cyan-d); border: 1px solid var(--cyan-m);
+      color: var(--cyan); font-size: 10.5px; font-weight: 700;
+      font-family: var(--mono); display: flex; align-items: center; justify-content: center;
+    }
+    .setup-txt { font-size: 13px; color: var(--t2); }
+    .setup-txt code {
+      background: rgba(34,211,238,.08);
+      border: 1px solid rgba(34,211,238,.2);
+      color: var(--cyan);
+      padding: 1px 6px; border-radius: 4px;
+      font-family: var(--mono); font-size: 11px;
+    }
+    .setup-txt a { color: var(--cyan); text-decoration: none; }
+    .setup-txt a:hover { text-decoration: underline; }
+
+    /* ─── ENV BLOCK ─── */
+    .env-block {
+      background: #090d12;
+      border: 1px solid var(--b1);
+      border-radius: var(--r);
+      padding: 18px 20px;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.75;
+      overflow-x: auto;
+    }
+    .ek { color: #79c0ff; }
+    .ev { color: #a5d6ff; }
+    .es { color: #56d364; }
+    .ec { color: var(--t3); }
+
+    /* ─── VIDEO META ─── */
+    .vm-list { display: flex; flex-direction: column; gap: 8px; }
+    .vm-row {
+      display: flex; gap: 12px; align-items: flex-start;
+      padding: 11px 14px;
+      background: var(--surface);
+      border: 1px solid var(--b0);
+      border-radius: var(--r);
+    }
+    .vm-key { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--t3); min-width: 80px; padding-top: 1px; }
+    .vm-val { font-size: 13px; color: var(--t1); }
+
+    /* ─── PROBLEM ─── */
+    .prob-head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .prob-name { font-size: 16px; font-weight: 700; color: var(--t1); }
+    .diff {
+      font-size: 10px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+      padding: 3px 9px; border-radius: 20px;
+    }
+    .diff.easy   { background: var(--green-d); color: var(--green); border: 1px solid rgba(63,185,80,.3); }
+    .diff.medium { background: var(--amber-d); color: var(--amber); border: 1px solid rgba(245,158,11,.3); }
+    .diff.hard   { background: var(--red-d);   color: var(--red);   border: 1px solid rgba(248,81,73,.3); }
+    .prob-desc {
+      font-size: 12.5px; color: var(--t2); line-height: 1.7;
+      border-left: 2px solid var(--cyan-m); padding-left: 14px;
+    }
+    .prob-link { display: inline-flex; align-items: center; gap: 5px; margin-top: 10px; font-size: 12px; color: var(--cyan); text-decoration: none; }
+    .prob-link:hover { text-decoration: underline; }
+
+    /* ─── BUTTONS ─── */
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 14px;
+      background: var(--surface);
+      border: 1px solid var(--b1);
+      border-radius: var(--r);
+      color: var(--t2);
+      font-family: var(--sans);
+      font-size: 12px; font-weight: 600;
+      cursor: pointer;
+      transition: border-color .15s, color .15s;
+    }
+    .btn-secondary:hover { border-color: var(--b2); color: var(--t1); }
+
+    .btn-yt {
+      display: inline-flex; align-items: center; gap: 8px;
+      margin-top: 16px;
+      padding: 10px 20px;
+      background: var(--cyan-d);
+      border: 1px solid var(--cyan-m);
+      border-radius: var(--r);
+      color: var(--cyan);
+      font-family: var(--sans);
+      font-size: 13px; font-weight: 700;
+      cursor: pointer; text-decoration: none;
+      transition: background .15s, transform .15s;
+    }
+    .btn-yt:hover { background: rgba(34,211,238,.18); transform: translateY(-1px); }
+
+    /* ─── LOADING ─── */
+    .loading-row { display: flex; align-items: center; gap: 9px; padding: 18px 0; color: var(--t3); font-size: 12px; font-family: var(--mono); }
+    .spin {
+      width: 15px; height: 15px;
+      border: 2px solid var(--b1);
+      border-top-color: var(--cyan);
+      border-radius: 50%;
+      animation: spinr .65s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes spinr { to { transform: rotate(360deg); } }
+
+    /* ─── SUCCESS/ERROR BANNERS ─── */
+    .banner-ok {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: var(--green-d);
+      border: 1px solid rgba(63,185,80,.28);
+      border-radius: var(--r);
+      padding: 7px 13px;
+      font-size: 12px; font-weight: 700; color: var(--green);
+      margin-bottom: 14px;
+    }
+    .banner-err {
+      background: var(--red-d);
+      border: 1px solid rgba(248,81,73,.28);
+      border-radius: var(--r);
+      padding: 12px 14px;
+      font-size: 12.5px; color: var(--red);
+    }
+
+    /* ─── TIMESTAMP ─── */
+    .ts-bar { margin-top: 20px; font-size: 11px; color: var(--t3); font-family: var(--mono); text-align: right; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      body { flex-direction: column; }
+      .sidebar { width: 100%; height: auto; flex-direction: row; flex-wrap: wrap; align-items: center; padding: 12px 16px; border-right: none; border-bottom: 1px solid var(--b0); gap: 4px; position: static; }
+      .brand { padding: 0 12px 0 0; border-bottom: none; border-right: 1px solid var(--b0); margin-right: 4px; }
+      .brand-mark { margin-bottom: 0; }
+      .brand-tag, .brand-name { display: none; }
+      .nav-section { padding: 0; display: flex; flex-wrap: wrap; gap: 4px; }
+      .nav-label { display: none; }
+      .nav-btn { padding: 7px 12px; }
+      .sidebar-foot { display: none; }
+      .main { padding: 20px 16px 40px; }
+      .grid2 { grid-template-columns: 1fr; }
+      .why-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 540px) {
+      .stat-row { grid-template-columns: 1fr 1fr; }
+      .tech-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ── -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-mark">
+      <div class="brand-icon">⚙️</div>
+      <div>
+        <div class="brand-name">LeetCode Bot</div>
+        <div class="brand-tag">v1.0 · daily</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <span class="nav-label">Navigate</span>
+    <button class="nav-btn active" data-page="overview" onclick="navigate('overview',this)">
+      <span class="ni">🗂</span> Overview
+    </button>
+    <button class="nav-btn" data-page="status" onclick="navigate('status',this)">
+      <span class="ni">📊</span> Status
+    </button>
+    <button class="nav-btn" data-page="latest" onclick="navigate('latest',this)">
+      <span class="ni">📺</span> Latest Video
+    </button>
+    <button class="nav-btn" data-page="tech" onclick="navigate('tech',this)">
+      <span class="ni">🔧</span> Tech Stack
+    </button>
+    <button class="nav-btn" data-page="setup" onclick="navigate('setup',this)">
+      <span class="ni">🚀</span> Setup
+    </button>
+  </div>
+
+  <div class="sidebar-foot">
+    <div class="live-row">
+      <div class="live-dot"></div>
+      pipeline running
+    </div>
+  </div>
+</aside>
+
+<!-- ── MAIN ── -->
+<main class="main">
+
+  <!-- ── OVERVIEW ── -->
+  <div id="overview" class="page active">
+    <div class="toprow">
+      <div>
+        <div class="page-title">Overview</div>
+        <div class="page-sub">Automated daily LeetCode content pipeline</div>
+      </div>
+      <button class="btn-secondary" onclick="refreshData()">↻ Refresh</button>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-box"><div class="sl">Status</div><div class="sv green">Live</div><div class="sn">pipeline running</div></div>
+      <div class="stat-box"><div class="sl">Schedule</div><div class="sv amber">07:00</div><div class="sn">IST via GH Actions</div></div>
+      <div class="stat-box"><div class="sl">LLM Calls</div><div class="sv cyan">2</div><div class="sn">per daily run</div></div>
+      <div class="stat-box"><div class="sl">Output</div><div class="sv plain">1080p</div><div class="sn">narrated MP4 + subs</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">Pipeline Flow</div>
+      <div class="flow-wrap">
+        <div class="flow">
+          <div class="flow-node"><div class="flow-icon">📥</div><div class="flow-text">Fetch POTD</div></div>
+          <div class="flow-arrow">›</div>
+          <div class="flow-node"><div class="flow-icon">🤖</div><div class="flow-text">C++ Solution</div></div>
+          <div class="flow-arrow">›</div>
+          <div class="flow-node"><div class="flow-icon">📝</div><div class="flow-text">Script</div></div>
+          <div class="flow-arrow">›</div>
+          <div class="flow-node"><div class="flow-icon">🎙️</div><div class="flow-text">Audio TTS</div></div>
+          <div class="flow-arrow">›</div>
+          <div class="flow-node"><div class="flow-icon">🎬</div><div class="flow-text">Build Video</div></div>
+          <div class="flow-arrow">›</div>
+          <div class="flow-node"><div class="flow-icon">📺</div><div class="flow-text">Upload YT</div></div>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--t3);margin-top:14px;font-family:var(--mono)">
+        Each step persists to disk. Re-runs resume from last success. Cache clears at midnight.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="card-h">Why Automate</div>
+      <div class="why-grid">
+        <div class="why-item"><span class="wi">📖</span> Understand the problem</div>
+        <div class="why-item"><span class="wi">💭</span> Design optimal solution</div>
+        <div class="why-item"><span class="wi">✏️</span> Write and test code</div>
+        <div class="why-item"><span class="wi">🎙️</span> Record audio narration</div>
+        <div class="why-item"><span class="wi">🎨</span> Design visual slides</div>
+        <div class="why-item"><span class="wi">🎬</span> Edit the video</div>
+        <div class="why-item"><span class="wi">📤</span> Upload with metadata</div>
+        <div class="why-item" style="border-color:var(--cyan-m);background:var(--cyan-d);color:var(--cyan)"><span class="wi">🤖</span> All automated, zero effort</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STATUS ── -->
+  <div id="status" class="page">
+    <div class="toprow">
+      <div>
+        <div class="page-title">Status</div>
+        <div class="page-sub">Current pipeline run and problem state</div>
+      </div>
+      <button class="btn-secondary" onclick="loadStatusData()">↻ Refresh</button>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-box"><div class="sl">Pipeline</div><div class="sv green" id="st-pipeline">—</div><div class="sn" id="st-note">awaiting data</div></div>
+      <div class="stat-box"><div class="sl">Last Run</div><div class="sv plain" id="st-date" style="font-size:16px">—</div><div class="sn">execution date</div></div>
+      <div class="stat-box"><div class="sl">Videos</div><div class="sv cyan" id="st-videos">—</div><div class="sn">total generated</div></div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="card-h">Today's Problem</div>
+        <div id="problemInfo"><div class="loading-row"><div class="spin"></div> loading problem.json…</div></div>
+      </div>
+      <div class="card">
+        <div class="card-h">Pipeline Steps</div>
+        <div id="pipelineSteps"><div class="loading-row"><div class="spin"></div> loading pipeline_state.json…</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── LATEST VIDEO ── -->
+  <div id="latest" class="page">
+    <div class="toprow">
+      <div>
+        <div class="page-title">Latest Video</div>
+        <div class="page-sub">Most recently uploaded to YouTube</div>
+      </div>
+      <button class="btn-secondary" onclick="loadLatestVideoData()">↻ Refresh</button>
+    </div>
+    <div class="card">
+      <div class="card-h">Upload Record</div>
+      <div id="videoInfo"><div class="loading-row"><div class="spin"></div> loading upload_record.json…</div></div>
+    </div>
+  </div>
+
+  <!-- ── TECH STACK ── -->
+  <div id="tech" class="page">
+    <div class="toprow">
+      <div>
+        <div class="page-title">Tech Stack</div>
+        <div class="page-sub">Services and libraries powering the pipeline</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">Services & Libraries</div>
+      <div class="tech-grid">
+        <div class="tech-card"><div class="tc-cat">AI — Solution</div><div class="tc-name">Groq Llama 3.3 70B</div></div>
+        <div class="tech-card"><div class="tc-cat">AI — Script</div><div class="tc-name">Groq Llama 3.3 70B</div></div>
+        <div class="tech-card"><div class="tc-cat">Text-to-Speech</div><div class="tc-name">Google gTTS</div></div>
+        <div class="tech-card"><div class="tc-cat">Code Highlight</div><div class="tc-name">Pygments + Pillow</div></div>
+        <div class="tech-card"><div class="tc-cat">Video Assembly</div><div class="tc-name">MoviePy</div></div>
+        <div class="tech-card"><div class="tc-cat">Subtitles</div><div class="tc-name">OpenAI Whisper</div></div>
+        <div class="tech-card"><div class="tc-cat">YouTube Upload</div><div class="tc-name">YouTube Data API v3</div></div>
+        <div class="tech-card"><div class="tc-cat">Data Fetching</div><div class="tc-name">LeetCode GraphQL API</div></div>
+        <div class="tech-card"><div class="tc-cat">Retry Logic</div><div class="tc-name">Tenacity</div></div>
+        <div class="tech-card"><div class="tc-cat">Automation</div><div class="tc-name">GitHub Actions + Cron</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">Key Features</div>
+      <div class="feat-list">
+        <div class="feat-row">
+          <div class="feat-badge">✅</div>
+          <div><div class="feat-name">Fully Automated</div><div class="feat-desc">Runs daily at 07:00 IST via GitHub Actions. No manual steps, no babysitting.</div></div>
+        </div>
+        <div class="feat-row">
+          <div class="feat-badge">🔄</div>
+          <div><div class="feat-name">Resume-Safe</div><div class="feat-desc">Each step persists its output and logs completion. Re-runs pick up from the last successful checkpoint.</div></div>
+        </div>
+        <div class="feat-row">
+          <div class="feat-badge">🎯</div>
+          <div><div class="feat-name">Production Quality</div><div class="feat-desc">1080p MP4 with syntax-highlighted code frames, natural TTS narration, and auto-generated subtitles.</div></div>
+        </div>
+        <div class="feat-row">
+          <div class="feat-badge">🚀</div>
+          <div><div class="feat-name">Fast & Free-Tier</div><div class="feat-desc">Groq, gTTS, and the YouTube Data API are all free. Only 2 LLM calls per run.</div></div>
+        </div>
+        <div class="feat-row">
+          <div class="feat-badge">📊</div>
+          <div><div class="feat-name">Transparent Logging</div><div class="feat-desc">Timestamped run logs and pipeline state saved for full visibility into every daily execution.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SETUP ── -->
+  <div id="setup" class="page">
+    <div class="toprow">
+      <div>
+        <div class="page-title">Setup</div>
+        <div class="page-sub">Get the pipeline running locally or on CI</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">Quick Start</div>
+      <div class="setup-list">
+        <div class="setup-item"><div class="setup-num">1</div><div class="setup-txt">Clone the repository from <a href="https://github.com/BinduSatya/DailyCode" target="_blank">GitHub ↗</a></div></div>
+        <div class="setup-item"><div class="setup-num">2</div><div class="setup-txt">Create a Python 3.11+ virtual environment: <code>python -m venv .venv</code></div></div>
+        <div class="setup-item"><div class="setup-num">3</div><div class="setup-txt">Install dependencies: <code>pip install -r requirements.txt</code></div></div>
+        <div class="setup-item"><div class="setup-num">4</div><div class="setup-txt">Get a free Groq API key at <a href="https://console.groq.com" target="_blank">console.groq.com ↗</a></div></div>
+        <div class="setup-item"><div class="setup-num">5</div><div class="setup-txt">Set up YouTube OAuth 2.0 credentials in <a href="https://console.cloud.google.com" target="_blank">Google Cloud Console ↗</a></div></div>
+        <div class="setup-item"><div class="setup-num">6</div><div class="setup-txt">Configure your <code>.env</code> with the keys shown below</div></div>
+        <div class="setup-item"><div class="setup-num">7</div><div class="setup-txt">Run locally: <code>python pipeline.py</code></div></div>
+        <div class="setup-item"><div class="setup-num">8</div><div class="setup-txt">Push to GitHub and enable the Actions workflow for daily automation at 07:00 IST</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">Environment Variables</div>
+      <div class="env-block">
+<span class="ec"># .env — required keys</span>
+<span class="ek">GROQ_API_KEY</span>=<span class="es">gsk_xxxxxxxxxxxxxxxxxxxx</span>
+<span class="ek">YOUTUBE_CLIENT_SECRETS</span>=<span class="ev">client_secrets.json</span>
+<span class="ek">YOUTUBE_CREDENTIALS</span>=<span class="ev">youtube_credentials.json</span>
+<span class="ek">CHANNEL_ID</span>=<span class="ev">UCxxxxxxxxxxxxxx</span>
+<span class="ek">VIDEO_CATEGORY_ID</span>=<span class="ev">27</span>   <span class="ec"># 27 = Education</span>
+<span class="ek">VIDEO_PRIVACY</span>=<span class="ev">public</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="lastUpdated" class="ts-bar"></div>
+</main>
+
+<script>
+  const STEPS = [
+    { key:'fetch_potd',       label:'Fetch POTD' },
+    { key:'solution_agent',   label:'Solution Agent' },
+    { key:'script_agent',     label:'Script Agent' },
+    { key:'code_image',       label:'Code Image' },
+    { key:'video_builder',    label:'Video Builder' },
+    { key:'youtube_uploader', label:'YouTube Upload' },
+  ];
+
+  function navigate(id, btn) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+    if (id === 'status') loadStatusData();
+    if (id === 'latest') loadLatestVideoData();
+  }
+
+  async function loadData() {
+    const fetches = [
+      fetch('./output/problem.json').then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch('./output/upload_record.json').then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch('./output/pipeline_state.json').then(r => r.ok ? r.json() : null).catch(() => null),
+    ];
+    const [problem, upload, state] = await Promise.all(fetches);
+    if (problem) renderProblem(problem);
+    if (upload)  renderVideo(upload);
+    if (state)   renderPipeline(state);
+    tick();
+  }
+
+  function renderProblem(p) {
+    const diff = (p.difficulty || 'medium').toLowerCase();
+    document.getElementById('problemInfo').innerHTML = `
+      <div class="prob-head">
+        <span class="prob-name">${p.title || 'Untitled'}</span>
+        <span class="diff ${diff}">${p.difficulty || 'Unknown'}</span>
+      </div>
+      <p class="prob-desc">${(p.description || '').substring(0, 290)}…</p>
+      <a class="prob-link" href="${p.url || '#'}" target="_blank">→ View on LeetCode</a>`;
+  }
+
+  function renderVideo(u) {
+    const el = document.getElementById('videoInfo');
+    if (!u || !u.video_id) {
+      el.innerHTML = '<div class="banner-err">No upload record found — run the pipeline first.</div>';
+      return;
+    }
+    const url = 'https://www.youtube.com/watch?v=' + u.video_id;
+    el.innerHTML = `
+      <div class="banner-ok">✓ Upload successful</div>
+      <div class="vm-list">
+        <div class="vm-row"><div class="vm-key">Title</div><div class="vm-val">${u.title || '—'}</div></div>
+        <div class="vm-row"><div class="vm-key">Uploaded</div><div class="vm-val">${u.upload_time ? new Date(u.upload_time).toLocaleString() : '—'}</div></div>
+        <div class="vm-row"><div class="vm-key">Status</div><div class="vm-val">${u.status || 'Public'}</div></div>
+        <div class="vm-row"><div class="vm-key">Video ID</div><div class="vm-val" style="font-family:var(--mono);font-size:11.5px;color:var(--cyan)">${u.video_id}</div></div>
+      </div>
+      <a href="${url}" target="_blank" class="btn-yt">▶ Watch on YouTube</a>`;
+  }
+
+  function renderPipeline(state) {
+    const el = document.getElementById('pipelineSteps');
+    if (!state || !state.steps) {
+      el.innerHTML = '<div class="banner-err">No pipeline state found.</div>';
+      return;
+    }
+    el.innerHTML = '<div class="step-list">' + STEPS.map(s => {
+      const info = state.steps[s.key] || {};
+      const done = !!info.completed;
+      const ts   = info.timestamp ? new Date(info.timestamp).toLocaleString() : '—';
+      return `<div class="step-row">
+        <div class="step-dot ${done ? 'done' : 'pend'}"></div>
+        <div class="step-name">${s.label}</div>
+        <div class="step-time">${ts}</div>
+        <div class="step-pill ${done ? 'done' : 'pend'}">${done ? 'done' : 'pending'}</div>
+      </div>`;
+    }).join('') + '</div>';
+  }
+
+  function loadStatusData()    { loadData(); }
+  function loadLatestVideoData(){ loadData(); }
+
+  function tick() {
+    document.getElementById('lastUpdated').textContent =
+      'last updated ' + new Date().toLocaleTimeString();
+  }
+
+  function refreshData() {
+    loadData();
+  }
+
+  window.addEventListener('load', () => {
+    loadData();
+    setInterval(loadData, 30000);
+  });
+</script>
+</body>
+</html>

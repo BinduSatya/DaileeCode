@@ -1,0 +1,9 @@
+{
+  "problem_id": "1878",
+  "title": "Check if Array Is Sorted and Rotated",
+  "difficulty": "Easy",
+  "code": "class Solution {\npublic:\n    bool check(vector<int>& nums) {\n        int count = 0;\n        for (int i = 0; i < nums.size() - 1; i++) {\n            if (nums[i] > nums[i + 1]) {\n                count++;\n            }\n        }\n        if (nums.back() > nums.front()) {\n            count++;\n        }\n        return count <= 1;\n    }\n};",
+  "explanation": "* Intuition: The core insight behind this problem is to understand that a rotated sorted array will have at most one point where the values decrease (i.e., a rotation point), except in cases where the original array was already sorted (no rotation). The presence of duplicate values doesn't affect this analysis.\n* Approach: We iterate over the array to count the number of times the value at an index is greater than the value at the next index (which indicates a potential rotation point). After the loop, we check if the last value is greater than the first value, which would indicate a rotation point at the start of the array. If we have found more than one rotation point (count > 1), the array was not originally sorted.\n* Time Complexity: O(n) where n is the number of elements in the array, because we make a single pass over the array to check for rotation points.\n* Space Complexity: O(1) because we use a constant amount of space to store the count of rotation points, regardless of the size of the input array.",
+  "test_passed": false,
+  "test_output": "  File \"/tmp/tmpqlrg02bm.py\", line 1\n    class Solution {\nIndentationError: unexpected indent\n"
+}
