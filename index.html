@@ -726,27 +726,24 @@
     ];
     const [problem, uploadRecord, result] = await Promise.all(fetches);
 
-    // problem.json (flat) takes priority; fall back to result.problem (nested)
-    const prob = problem || (result && result.problem) || null;
-    if (prob) renderProblem(prob);
+    // Render problem info from problem.json
+    if (problem) renderProblem(problem);
 
-    // upload_record.json takes priority; fall back to result.upload (nested)
-    const upload = uploadRecord || (result && result.upload ? result.upload : null);
-    if (upload) renderVideo(upload);
+    // Render video info from upload_record.json
+    if (uploadRecord) renderVideo(uploadRecord);
 
-    // pipeline steps derived from pipeline_result.json structure
+    // Render pipeline steps from pipeline_result.json
     if (result) renderPipeline(result);
     else document.getElementById('pipelineSteps').innerHTML =
       '<div class="banner-err">pipeline_result.json not found - run the pipeline first.</div>';
 
-    // populate status stat boxes from result
+    // Update status stat boxes
     if (result) {
-      const hasUpload = !!(result.upload && result.upload.videoId);
-      document.getElementById('st-pipeline').textContent = hasUpload ? 'Done' : 'Partial';
-      document.getElementById('st-pipeline').className   = 'sv ' + (hasUpload ? 'green' : 'amber');
-      document.getElementById('st-note').textContent     = hasUpload ? 'all steps complete' : 'pipeline incomplete';
-      const date = result.problem && result.problem.date ? result.problem.date : '—';
-      document.getElementById('st-date').textContent = date;
+      const allDone = result.steps && Object.values(result.steps).every(s => s && s.startsWith('✓'));
+      document.getElementById('st-pipeline').textContent = allDone ? 'Done' : 'Partial';
+      document.getElementById('st-pipeline').className   = 'sv ' + (allDone ? 'green' : 'amber');
+      document.getElementById('st-note').textContent     = allDone ? 'all steps complete' : 'pipeline incomplete';
+      document.getElementById('st-date').textContent     = result.date || '—';
     }
     tick();
   }
@@ -795,41 +792,30 @@
       <a href="${url}" target="_blank" class="btn-yt">&#9654; Watch on YouTube</a>`;
   }
 
-  // pipeline_result.json: derive step completion from presence of data fields
+  // pipeline_result.json: { date, steps: {fetch, solution, script_audio, images, video, upload}, ... }
   function renderPipeline(r) {
     const el = document.getElementById('pipelineSteps');
-    if (!r) {
+    if (!r || !r.steps) {
       el.innerHTML = '<div class="banner-err">No pipeline result found.</div>';
       return;
     }
 
-    const derived = {
-      fetch_potd:       !!(r.problem && r.problem.title),
-      solution_agent:   !!(r.solution && r.solution.code),
-      script_agent:     !!(r.script && r.script.clean_script),
-      audio_builder:    !!(r.audio_info && r.audio_info.full_audio),
-      code_image:       !!(r.slides && r.slides.length > 0),
-      video_builder:    !!(r.video_path),
-      youtube_uploader: !!(r.upload && r.upload.videoId),
+    const stepMap = {
+      'fetch':         { label: 'Fetch POTD',      key: 'fetch' },
+      'solution':      { label: 'Solution Agent',  key: 'solution' },
+      'script_audio':  { label: 'Script & Audio',  key: 'script_audio' },
+      'images':        { label: 'Code Images',     key: 'images' },
+      'video':         { label: 'Video Builder',   key: 'video' },
+      'upload':        { label: 'YouTube Upload',  key: 'upload' },
     };
 
-    const STEP_LABELS = [
-      { key: 'fetch_potd',       label: 'Fetch POTD',       detail: r.problem ? r.problem.title : '' },
-      { key: 'solution_agent',   label: 'Solution Agent',   detail: r.solution && r.solution.code ? 'C++ solution generated' : '' },
-      { key: 'script_agent',     label: 'Script Agent',     detail: r.script ? r.script.word_count + ' words' : '' },
-      { key: 'audio_builder',    label: 'Audio TTS',        detail: r.audio_info ? r.audio_info.voice : '' },
-      { key: 'code_image',       label: 'Code Image',       detail: r.slides ? r.slides.length + ' slides' : '' },
-      { key: 'video_builder',    label: 'Video Builder',    detail: r.video_path || '' },
-      { key: 'youtube_uploader', label: 'YouTube Upload',   detail: r.upload ? r.upload.videoId : '' },
-    ];
-
-    el.innerHTML = '<div class="step-list">' + STEP_LABELS.map(s => {
-      const done = !!derived[s.key];
+    el.innerHTML = '<div class="step-list">' + Object.entries(stepMap).map(([k, s]) => {
+      const status = r.steps[s.key] || '—';
+      const done = status && status.startsWith('✓');
       return `<div class="step-row">
         <div class="step-dot ${done ? 'done' : 'pend'}"></div>
         <div class="step-name">${s.label}</div>
-        <div class="step-time" style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
-             title="${s.detail}">${s.detail}</div>
+        <div class="step-time" style="max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;color:var(--t2)">${status}</div>
         <div class="step-pill ${done ? 'done' : 'pend'}">${done ? 'done' : 'pending'}</div>
       </div>`;
     }).join('') + '</div>';
