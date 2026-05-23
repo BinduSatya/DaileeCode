@@ -117,7 +117,23 @@ jobs:
           token: ${{ secrets.PAT_TOKEN }}
         continue-on-error: true
 
-      # ── 10. Upload artifacts ──────────────────────────────────────────────
+      # ── 10. Deploy dashboard data to GitHub Pages ────────────────────
+      - name: Copy index and output files
+        if: success()
+        run: |
+          mkdir -p gh-pages
+          cp index.html gh-pages/index.html
+          cp -r output gh-pages/output
+
+      - name: Deploy to GitHub Pages
+        if: success()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./gh-pages
+          keep_files: false
+
+      # ── 11. Upload artifacts ──────────────────────────────────────────────
       - name: Upload pipeline artifacts
         if: always()
         uses: actions/upload-artifact@v4
@@ -131,7 +147,7 @@ jobs:
             logs/
           retention-days: 7
 
-      # ── 11. Post failure summary ──────────────────────────────────────────
+      # ── 12. Post failure summary ──────────────────────────────────────────
       - name: Post failure summary
         if: failure()
         run: |
@@ -139,7 +155,7 @@ jobs:
           echo "Check the pipeline-output artifact for logs." >> $GITHUB_STEP_SUMMARY
           cat output/pipeline_result.json 2>/dev/null || echo "No result file"
 
-      # ── 12. Post success summary ──────────────────────────────────────────
+      # ── 13. Post success summary ──────────────────────────────────────────
       - name: Post success summary
         if: success()
         run: |
