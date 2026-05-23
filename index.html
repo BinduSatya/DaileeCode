@@ -739,10 +739,10 @@
 
     // Update status stat boxes
     if (result) {
-      const allDone = result.steps && Object.values(result.steps).every(s => s && s.startsWith('✓'));
-      document.getElementById('st-pipeline').textContent = allDone ? 'Done' : 'Partial';
-      document.getElementById('st-pipeline').className   = 'sv ' + (allDone ? 'green' : 'amber');
-      document.getElementById('st-note').textContent     = allDone ? 'all steps complete' : 'pipeline incomplete';
+      const allStepsDone = result.steps && Object.values(result.steps).every(s => s && s.startsWith('✓'));
+      document.getElementById('st-pipeline').textContent = allStepsDone ? 'Done' : 'Partial';
+      document.getElementById('st-pipeline').className   = 'sv ' + (allStepsDone ? 'green' : 'amber');
+      document.getElementById('st-note').textContent     = allStepsDone ? 'all steps complete' : 'pipeline incomplete';
       document.getElementById('st-date').textContent     = result.date || '—';
     }
     tick();
@@ -800,16 +800,16 @@
       return;
     }
 
-    const stepMap = {
-      'fetch':         { label: 'Fetch POTD',      key: 'fetch' },
-      'solution':      { label: 'Solution Agent',  key: 'solution' },
-      'script_audio':  { label: 'Script & Audio',  key: 'script_audio' },
-      'images':        { label: 'Code Images',     key: 'images' },
-      'video':         { label: 'Video Builder',   key: 'video' },
-      'upload':        { label: 'YouTube Upload',  key: 'upload' },
-    };
+    const stepMap = [
+      { key: 'fetch',        label: 'Fetch POTD' },
+      { key: 'solution',     label: 'Solution Agent' },
+      { key: 'script_audio', label: 'Script & Audio' },
+      { key: 'images',       label: 'Code Images' },
+      { key: 'video',        label: 'Video Builder' },
+      { key: 'upload',       label: 'YouTube Upload' },
+    ];
 
-    el.innerHTML = '<div class="step-list">' + Object.entries(stepMap).map(([k, s]) => {
+    el.innerHTML = '<div class="step-list">' + stepMap.map(s => {
       const status = r.steps[s.key] || '—';
       const done = status && status.startsWith('✓');
       return `<div class="step-row">
