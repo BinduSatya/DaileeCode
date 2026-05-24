@@ -152,7 +152,7 @@ def _make_simple_subtitle_clips(script_text: str, total_dur: float, video_w: int
     return clips
 
 
-# ── STEP 20-22: Video assembly ─────────────────────────────────────────────────
+# ── STEP 5: Video assembly ─────────────────────────────────────────────────
 
 def build_video(
     slide_paths: list[str],
@@ -242,7 +242,7 @@ def build_video(
     return out_path
 
 
-# ── STEP 23b: Whisper subtitle generation (production) ────────────────────────
+# ── STEP 5: Whisper subtitle generation (production) ────────────────────────
 
 def generate_srt_with_whisper(audio_path: str, out_dir: str = "output") -> str | None:
     """

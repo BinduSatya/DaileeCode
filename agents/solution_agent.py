@@ -10,7 +10,6 @@ Uses Google Gemini to:
 
 import ast
 import json
-import logging
 import os
 import re
 import subprocess
@@ -24,18 +23,17 @@ from google import genai
 from google.genai import types
 from tenacity import retry, stop_after_attempt, wait_exponential
 from groq import Groq
+from logger import log
 
 load_dotenv()
-logging.basicConfig(level=logging.INFO, format="%(levelname)s │ %(message)s")
-log = logging.getLogger(__name__)
 
 # ── Gemini setup ───────────────────────────────────────────────────────────────
 # _client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY_SOLUTION", "dummy"))
 # GEMINI_MODEL = "gemini-2.0-flash-lite"
+# ── GROQ setup ───────────────────────────────────────────────────────────────
 _client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
 
-# Token budget per call: ~600 input + ~800 output = ~1400 tokens total
 SOLUTION_PROMPT = """\
 Solve this LeetCode problem in C++.
 
@@ -71,7 +69,7 @@ Please fix the solution. Return ONLY the corrected ```cpp``` code block, nothing
 """
 
 
-# ── STEP 12: Extract code block ────────────────────────────────────────────────
+# ── STEP 2: Extract code block ────────────────────────────────────────────────
 def extract_code(text: str) -> str:
     """Pull the first ```cpp ... ``` or ```python ... ``` block."""
     pattern = r"```(?:cpp|c\+\+|python)?\s*\n([\s\S]*?)```"
@@ -91,56 +89,131 @@ def compile_check(code: str) -> None:
     log.info("✓ Syntax check passed")
 
 
-# ── STEP 14: Run sample test cases ────────────────────────────────────────────
-def build_test_harness(code: str, problem: dict) -> str:
+# ── STEP 2: Run sample test cases ────────────────────────────────────────────
+def build_test_harness(code: str, problem: dict, language: str = "cpp") -> str:
     """
-    Wrap the solution in a minimal test harness.
-    We inject the sample_testcase inputs as a smoke-test.
+    Wrap solution code in a minimal smoke-test harness.
+
+    Supports:
+    - C++
+    - Python
     """
-    # Extract class name (usually 'Solution')
-    class_match = re.search(r"class (\w+)", code)
-    class_name = class_match.group(1) if class_match else "Solution"
 
-    # Extract method name from starter code
-    method_match = re.search(r"def (\w+)\(self", code)
-    method_name = method_match.group(1) if method_match else None
+    # ───────────────────────────────────────────────────────────
+    # PYTHON HARNESS
+    # ───────────────────────────────────────────────────────────
+    if language.lower() in ["python","python3"]:
 
-    harness = textwrap.dedent(f"""\
-        {code}
+        # Extract class name
+        class_match = re.search(r"class\s+(\w+)", code)
+        class_name = class_match.group(1) if class_match else "Solution"
 
-        # ── Auto-generated smoke test ──────────────────────────
-        import sys, json, traceback
+        # Extract method name
+        method_match = re.search(r"def\s+(\w+)\s*\(\s*self", code)
+        method_name = method_match.group(1) if method_match else "unknown_method"
 
-        sol = {class_name}()
-        print("Solution instantiated successfully")
-        print("Method: {method_name}")
-        print("SMOKE_TEST_PASSED")
-    """)
-    return harness
+        harness = textwrap.dedent(f"""\
+            {code}
+
+            # ── Auto-generated smoke test ──────────────────────
+            import traceback
+
+            try:
+                sol = {class_name}()
+                print("Solution instantiated successfully")
+                print("Method detected: {method_name}")
+                print("SMOKE_TEST_PASSED")
+
+            except Exception as e:
+                print("SMOKE_TEST_FAILED")
+                traceback.print_exc()
+        """)
+
+        return harness
+
+    # ───────────────────────────────────────────────────────────
+    # C++ HARNESS
+    # ───────────────────────────────────────────────────────────
+    elif language.lower() in ["cpp", "c++"]:
+
+        # Extract class name
+        class_match = re.search(r"class\s+(\w+)", code)
+        class_name = class_match.group(1) if class_match else "Solution"
+
+        harness = textwrap.dedent(f"""\
+            #include <bits/stdc++.h>
+            using namespace std;
+
+            {code}
+
+            // ── Auto-generated smoke test ──────────────────────
+            int main() {{
+                try {{
+                    {class_name} sol;
+
+                    cout << "Solution instantiated successfully" << endl;
+                    cout << "SMOKE_TEST_PASSED" << endl;
+
+                }} catch (...) {{
+                    cout << "SMOKE_TEST_FAILED" << endl;
+                }}
+
+                return 0;
+            }}
+        """)
+
+        return harness
+
+    # ───────────────────────────────────────────────────────────
+    # UNKNOWN LANGUAGE
+    # ───────────────────────────────────────────────────────────
+    else:
+        raise ValueError(f"Unsupported language: {language}")
 
 
 def run_code(code: str, problem: dict, timeout: int = 10) -> tuple[bool, str]:
     """Execute the test harness in a subprocess. Returns (passed, output)."""
-    harness = build_test_harness(code, problem)
+    harness = build_test_harness(code, problem, "cpp")
 
-    with tempfile.NamedTemporaryFile(suffix=".py", mode="w", delete=False, encoding="utf-8") as f:
+    with tempfile.NamedTemporaryFile(suffix=".cpp", mode="w", delete=False, encoding="utf-8") as f:
         f.write(harness)
         tmp_path = f.name
 
+    exe_path = tmp_path.replace(".cpp", "")
+    
     try:
-        result = subprocess.run(
-            [sys.executable, tmp_path],
+        compile_result = subprocess.run(
+            ["g++", tmp_path, "-o", exe_path],
             capture_output=True,
             text=True,
             timeout=timeout,
         )
+
+        if compile_result.returncode != 0:
+            return False, compile_result.stderr
+
+        result = subprocess.run(
+            [exe_path],
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+        )
+
         output = result.stdout + result.stderr
-        passed = result.returncode == 0 and "SMOKE_TEST_PASSED" in output
+
+        passed = (
+            result.returncode == 0
+            and "SMOKE_TEST_PASSED" in output
+        )
+
         return passed, output
+
     except subprocess.TimeoutExpired:
         return False, "TimeoutError: Code ran too long"
+
     finally:
         Path(tmp_path).unlink(missing_ok=True)
+        Path(exe_path).unlink(missing_ok=True)
 
 
 # ── Main agent ─────────────────────────────────────────────────────────────────
@@ -153,9 +226,9 @@ def run_code(code: str, problem: dict, timeout: int = 10) -> tuple[bool, str]:
 #     )
 #     return response.text
 
-def _call_gemini(prompt: str) -> str:
+def _call_groq(prompt: str) -> str:
     response = _client.chat.completions.create(
-        model="llama-3.3-70b-versatile",  # free, very capable
+        model="llama-3.3-70b-versatile",
         messages=[{"role": "user", "content": prompt}],
         max_tokens=1500,
     )
@@ -175,11 +248,11 @@ def generate_solution(problem: dict, max_fix_attempts: int = 1) -> dict:
         title=problem["title"],
         difficulty=problem["difficulty"],
         
-        description=problem["description"][:800],  # ~200 tokens, enough for any problem
+        description=problem["description"],
         starter_code=cpp_starter,
     )
 
-    raw_response = _call_gemini(prompt)
+    raw_response = _call_groq(prompt)
     code = extract_code(raw_response)
     compile_check(code)
 
@@ -200,7 +273,7 @@ def generate_solution(problem: dict, max_fix_attempts: int = 1) -> dict:
             code=code,
             error=run_output[:1000],
         )
-        fix_response = _call_gemini(fix_prompt).strip()
+        fix_response = _call_groq(fix_prompt).strip()
         try:
             code = extract_code(fix_response)
             compile_check(code)
@@ -226,8 +299,8 @@ def save_solution(solution: dict, problem: dict, out_dir: str = "output") -> Pat
     base = Path(out_dir)
     base.mkdir(parents=True, exist_ok=True)
 
-    # Save raw Python file
-    code_path = base / "solution.py"
+    # Save raw CPP file
+    code_path = base / "solution.cpp"
     code_path.write_text(solution["code"])
 
     # Save full JSON

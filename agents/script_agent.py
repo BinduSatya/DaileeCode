@@ -10,7 +10,6 @@ Script file → output/script.txt
 
 import asyncio
 import json
-import logging
 import os
 import re
 import sys
@@ -22,10 +21,10 @@ from groq import Groq
 from google.genai import types
 from dotenv import load_dotenv
 from tenacity import retry, stop_after_attempt, wait_exponential
+from logger import log
 
 load_dotenv()
-logging.basicConfig(level=logging.INFO, format="%(levelname)s │ %(message)s")
-log = logging.getLogger(__name__)
+
 
 # _client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY_SCRIPT", "dummy"))
 # GEMINI_MODEL = "gemini-2.0-flash-lite"
@@ -36,7 +35,7 @@ DEFAULT_VOICE = os.getenv("TTS_VOICE", "en-US-AriaNeural")
 
 # Token budget per call: ~500 input + ~700 output = ~1200 tokens total
 SCRIPT_PROMPT = """\
-You are an enthusiastic coding educator explaining a LeetCode solution on YouTube.
+You are an 10+ experienced software engineer and enthusiastic coding educator explaining a LeetCode solution on YouTube.
 
 Write a detailed narration script (~500 words, ~4 minutes) for this problem.
 
@@ -67,7 +66,7 @@ Critical rules:
 - End OUTRO with: like the video, subscribe, and comment your approach below
 """
 
-def _call_gemini(prompt: str) -> str:
+def _call_groq(prompt: str) -> str:
     response = _client.chat.completions.create(
         model="llama-3.3-70b-versatile",  # free, very capable
         messages=[{"role": "user", "content": prompt}],
@@ -77,14 +76,14 @@ def _call_gemini(prompt: str) -> str:
 
 # retry removed — pipeline.py already retries the full step
 def generate_script(problem: dict, solution: dict) -> dict:
-    """Generate a structured YouTube script using Gemini."""
+    """Generates a structured YouTube script using GROQ."""
     log.info("Generating teaching script …")
 
     prompt = SCRIPT_PROMPT.format(
     title=problem["title"],
     difficulty=problem["difficulty"],
-    code=solution["code"][:1500],          # C++ solutions can be slightly longer
-    explanation=solution["explanation"][:600],  # more explanation detail now
+    code=solution["code"],
+    explanation=solution["explanation"]
 )
 
 
@@ -93,7 +92,7 @@ def generate_script(problem: dict, solution: dict) -> dict:
     #     contents=prompt,
     #     config=types.GenerateContentConfig(temperature=0.7, max_output_tokens=1024),
     # )
-    response = _call_gemini(prompt)
+    response = _call_groq(prompt)
     script_text = response.strip()
 
     # Parse sections
@@ -123,7 +122,7 @@ def generate_script(problem: dict, solution: dict) -> dict:
     }
 
 
-# ── STEP 16-17: Edge-TTS narration ────────────────────────────────────────────
+# ── STEP 3: Edge-TTS narration ────────────────────────────────────────────
 async def _synthesize(text: str, output_path: Path, voice: str) -> Path:
     """Async Edge-TTS synthesis."""
     communicate = edge_tts.Communicate(text=text, voice=voice)

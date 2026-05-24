@@ -13,22 +13,22 @@ Usage:
 
 import argparse
 import json
-import logging
+
 import os
 import sys
 import time
 import traceback
-from datetime import date, datetime
+from datetime import date
 from pathlib import Path
 
 from dotenv import load_dotenv
 from tenacity import (
-    RetryError,
     retry,
     retry_if_exception_type,
     stop_after_attempt,
     wait_exponential,
 )
+from logger import log
 from agents.script_agent import generate_script, save_script, generate_audio
 from agents.fetch_potd import fetch_potd, save_problem
 from agents.solution_agent import generate_solution, save_solution
@@ -39,21 +39,6 @@ from agents.telegram_notifier import notify_success, notify_failure
 
 load_dotenv()
 
-# ── Logging setup ──────────────────────────────────────────────────────────────
-LOG_DIR = Path("logs")
-LOG_DIR.mkdir(exist_ok=True)
-log_file = LOG_DIR / f"pipeline_{date.today().isoformat()}.log"
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s  %(levelname)-8s │ %(message)s",
-    datefmt="%H:%M:%S",
-    handlers=[
-        logging.StreamHandler(sys.stdout),
-        logging.FileHandler(str(log_file), encoding="utf-8"),
-    ],
-)
-log = logging.getLogger("pipeline")
 
 
 # ── Step wrappers ──────────────────────────────────────────────────────────────
@@ -83,7 +68,7 @@ def step(name: str):
 
 # ── Individual steps ───────────────────────────────────────────────────────────
 
-@step("STEP 1-7: Fetch LeetCode POTD")
+@step("STEP 1: Fetch LeetCode POTD")
 @retry(
     stop=stop_after_attempt(4),
     wait=wait_exponential(multiplier=1, min=3, max=30),
@@ -97,7 +82,7 @@ def run_fetch(out_dir: str) -> dict:
     return problem
 
 
-@step("STEP 9-14: Generate Solution + Test")
+@step("STEP 2: Generate Solution + Test")
 @retry(
     stop=stop_after_attempt(3),
     wait=wait_exponential(multiplier=2, min=5, max=60),
@@ -110,7 +95,7 @@ def run_solution(problem: dict, out_dir: str) -> dict:
     return solution
 
 
-@step("STEP 15-17: Generate Script + Audio")
+@step("STEP 3: Generate Script + Audio")
 @retry(
     stop=stop_after_attempt(3),
     wait=wait_exponential(multiplier=2, min=5, max=60),
@@ -139,13 +124,13 @@ def run_script(problem: dict, solution: dict, out_dir: str) -> tuple[dict, dict]
     return script, audio_info
 
 
-@step("STEP 18-19: Generate Code Images")
+@step("STEP 4: Generate Code Images")
 def run_images(problem: dict, solution: dict, out_dir: str) -> list[str]:
     sys.path.insert(0, str(Path(__file__).parent / "video"))
     return generate_all_slides(problem, solution, out_dir)
 
 
-@step("STEP 20-23: Build Video + Subtitles")
+@step("STEP 5: Build Video + Subtitles")
 def run_video(
     slides: list[str],
     audio_path: str,
@@ -166,7 +151,7 @@ def run_video(
     )
 
 
-@step("STEP 25-26: Upload to YouTube")
+@step("STEP 6: Upload to YouTube")
 @retry(
     stop=stop_after_attempt(3),
     wait=wait_exponential(multiplier=5, min=10, max=120),
@@ -200,7 +185,7 @@ def run_pipeline(
     date_str: str | None = None,
 ) -> dict:
     date_str = date_str or date.today().isoformat()
-    out_dir = f"output"   # can be parameterized per-date if needed
+    out_dir = f"output"
 
     log.info(f"{'═'*60}")
     log.info(f"  LeetCode YouTube Bot — {date_str}")
@@ -220,7 +205,7 @@ def run_pipeline(
     t_start = time.time()
 
     try:
-        # ── STEP 1-7: Fetch POTD ────────────────────────────────────────────
+        # ── STEP 1: Fetch POTD ────────────────────────────────────────────
         if "problem" not in state:
             problem = run_fetch(out_dir)
             state["problem"] = problem
@@ -232,7 +217,7 @@ def run_pipeline(
         results["steps"]["fetch"] = "✓"
         results["problem_title"] = problem["title"]
 
-        # ── STEP 9-14: Solution ─────────────────────────────────────────────
+        # ── STEP 2: Solution ─────────────────────────────────────────────
         if "solution" not in state:
             solution = run_solution(problem, out_dir)
             state["solution"] = solution
@@ -247,7 +232,7 @@ def run_pipeline(
             log.info("Dry-run mode: stopping after solution generation.")
             return results
 
-        # ── STEP 15-17: Script + Audio ──────────────────────────────────────
+        # ── STEP 3: Script + Audio ──────────────────────────────────────
         if "script" not in state:
             script, audio_info = run_script(problem, solution, out_dir)
             state["script"]     = script
@@ -270,7 +255,7 @@ def run_pipeline(
 
         results["steps"]["script_audio"] = "✓"
 
-        # ── STEP 18-19: Images ──────────────────────────────────────────────
+        # ── STEP 4: Images ──────────────────────────────────────────────
         if "slides" not in state:
             slides = run_images(problem, solution, out_dir)
             state["slides"] = slides
@@ -281,7 +266,7 @@ def run_pipeline(
 
         results["steps"]["images"] = f"✓ ({len(slides)} slides)"
 
-        # ── STEP 20-23: Video ───────────────────────────────────────────────────────
+        # ── STEP 5: Video ───────────────────────────────────────────────────────
         cached_video = state.get("video_path")
         if cached_video and Path(cached_video).exists():
             log.info(f"⏭  Skipping video (cached) → {cached_video}")
@@ -300,7 +285,7 @@ def run_pipeline(
         results["steps"]["video"] = "✓"
         results["video_path"] = video_path
 
-        # ── STEP 25-26: Upload ──────────────────────────────────────────────
+        # ── STEP 6: Upload ──────────────────────────────────────────────
         if skip_upload:
             log.info("⏭  Skipping YouTube upload (--skip-upload)")
             results["steps"]["upload"] = "skipped"

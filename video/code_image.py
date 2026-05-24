@@ -38,26 +38,45 @@ DIFFICULTY_COLORS = {
 
 PYGMENTS_STYLE = "monokai"
 
+def _load_font(size: int, bold: bool = False, emoji: bool = False) -> ImageFont.ImageFont:
+    """
+    Cross-platform font loader with optional emoji support.
+    """
 
-def _load_font(size: int, bold: bool = False) -> ImageFont.ImageFont:
-    candidates = [
-        # Linux (GitHub Actions)
-        "/usr/share/fonts/truetype/dejavu/DejaVuSansMono{}.ttf".format("-Bold" if bold else ""),
-        "/usr/share/fonts/truetype/liberation/LiberationMono-Regular.ttf",
-        # Windows (local machine)
-        "C:/Windows/Fonts/consola.ttf",
-        "C:/Windows/Fonts/cour.ttf",
-        "C:/Windows/Fonts/courbd.ttf",
-        # macOS
-        "/System/Library/Fonts/Menlo.ttc",
-    ]
+    if emoji:
+        candidates = [
+            # Linux
+            "/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf",
+            "/usr/share/fonts/truetype/emoji/NotoColorEmoji.ttf",
+
+            # Windows
+            "C:/Windows/Fonts/seguiemj.ttf",
+
+            # macOS
+            "/System/Library/Fonts/Apple Color Emoji.ttc",
+        ]
+    else:
+        candidates = [
+            # Linux
+            f"/usr/share/fonts/truetype/dejavu/DejaVuSans{'-Bold' if bold else ''}.ttf",
+            "/usr/share/fonts/truetype/liberation2/LiberationSans-Regular.ttf",
+
+            # Windows
+            "C:/Windows/Fonts/arialbd.ttf" if bold else "C:/Windows/Fonts/arial.ttf",
+            "C:/Windows/Fonts/segoeui.ttf",
+
+            # macOS
+            "/System/Library/Fonts/Supplemental/Arial.ttf",
+            "/System/Library/Fonts/Menlo.ttc",
+        ]
+
     for path in candidates:
         try:
             return ImageFont.truetype(path, size)
         except (IOError, OSError):
             continue
-    return ImageFont.load_default()
 
+    return ImageFont.load_default()
 
 # ── Slide builders ─────────────────────────────────────────────────────────────
 
@@ -283,6 +302,7 @@ def make_outro_slide(problem: dict) -> Image.Image:
     font_big  = _load_font(80, bold=True)
     font_med  = _load_font(40)
     font_sm   = _load_font(30)
+    emoji_font = _load_font(72, emoji=True)
 
     cx = VIDEO_W // 2
 
@@ -291,9 +311,33 @@ def make_outro_slide(problem: dict) -> Image.Image:
         w = bbox[2] - bbox[0]
         draw.text(((VIDEO_W - w) // 2, y), text, font=font, fill=fill)
 
-    centered(200,  "Thanks for watching! 🎉",  font_big, TEXT_WHITE)
+    centered(200, "Thanks for watching!", font_big, TEXT_WHITE)
+    draw.text(
+        (VIDEO_W // 2 + 350, 190),
+        "🎉",
+        font=emoji_font,
+        embedded_color=True
+    )
+
     centered(320,  f"Problem: {problem['title']}", font_med, ACCENT_BLUE)
-    centered(420,  "👍  Like  •  🔔  Subscribe  •  💬  Comment your approach", font_med, ACCENT_GREEN)
+    cta_text = "Like  •  Subscribe  •  Comment your approach"
+
+    bbox = draw.textbbox((0, 0), cta_text, font=font_med)
+    text_w = bbox[2] - bbox[0]
+
+    x = (VIDEO_W - text_w) // 2
+    y = 420
+
+    # Draw normal text
+    draw.text((x, y), cta_text, font=font_med, fill=ACCENT_GREEN)
+
+    # Emoji font
+    emoji_font = _load_font(42, emoji=True)
+
+    # Draw emojis separately
+    draw.text((x - 60, y - 4), "👍", font=emoji_font, embedded_color=True)
+    draw.text((x + 170, y - 4), "🔔", font=emoji_font, embedded_color=True)
+    draw.text((x + 470, y - 4), "💬", font=emoji_font, embedded_color=True)
     centered(530,  problem["url"], font_sm, TEXT_MUTED)
     centered(VIDEO_H - 100, "New LeetCode Daily Solution every day!", font_sm, TEXT_MUTED)
 
@@ -318,7 +362,7 @@ def generate_all_slides(problem: dict, solution: dict, out_dir: str = "output") 
     log.info("Generating slides …")
     slides.append(save(make_title_slide(problem),                          "00_title.png"))
     slides.append(save(make_problem_slide(problem),                        "01_problem.png"))
-    slides.append(save(make_approach_slide(solution),                      "02_approach.png"))  # NEW
+    slides.append(save(make_approach_slide(solution),                      "02_approach.png"))
     slides.append(save(make_code_slide(solution["code"], "C++ Solution"),  "03_code.png"))
     slides.append(save(make_complexity_slide(solution["explanation"]),      "04_complexity.png"))
     slides.append(save(make_outro_slide(problem),                          "05_outro.png"))

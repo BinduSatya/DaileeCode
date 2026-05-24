@@ -18,7 +18,6 @@ Environment variables (from .env):
 """
 
 import json
-import logging
 import os
 import sys
 from pathlib import Path
@@ -29,10 +28,9 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
+from logger import log
 
 load_dotenv()
-logging.basicConfig(level=logging.INFO, format="%(levelname)s │ %(message)s")
-log = logging.getLogger(__name__)
 
 SCOPES = ["https://www.googleapis.com/auth/youtube.upload"]
 

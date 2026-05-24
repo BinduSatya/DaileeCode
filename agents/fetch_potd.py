@@ -1,27 +1,20 @@
 """
-fetch_potd.py
-─────────────
+fetch_potd.py:
 Fetches LeetCode's Problem of the Day (POTD) using the public GraphQL API.
-Returns a structured dict with title, slug, difficulty, description, and examples.
 """
 
 import json
-import logging
 import re
-import time
-from datetime import date
 from pathlib import Path
 from typing import Optional
 
 import requests
 from tenacity import retry, stop_after_attempt, wait_exponential
-
-logging.basicConfig(level=logging.INFO, format="%(levelname)s │ %(message)s")
-log = logging.getLogger(__name__)
+from logger import log
 
 GRAPHQL_URL = "https://leetcode.com/graphql"
 
-# ── GraphQL query ──────────────────────────────────────────────────────────────
+# ── GraphQL query
 POTD_QUERY = """
 query questionOfToday {
   activeDailyCodingChallengeQuestion {
@@ -89,6 +82,7 @@ def fetch_potd() -> dict:
     """Return today's POTD as a clean Python dict."""
     log.info("Fetching POTD from LeetCode …")
     data = _graphql(POTD_QUERY)
+    log.info(f"Data fetched from POTD LeetCode: {data}")
     challenge = data["activeDailyCodingChallengeQuestion"]
 
     slug = challenge["question"]["titleSlug"]
@@ -98,10 +92,12 @@ def fetch_potd() -> dict:
 
     # Fetch full detail (includes code snippets)
     detail = _graphql(DETAIL_QUERY, {"titleSlug": slug})["question"]
+    log.info(f"Data fetched from  Detail Query: {detail}")
 
     # Pick Python3 snippet (fallback to first available)
     # Pick snippets for both Python3 and C++
     snippets = {s["langSlug"]: s["code"] for s in (detail.get("codeSnippets") or [])}
+    log.info(f"Code snippets fetched are:, {snippets}")
 
     starter_code = (
         snippets.get("python3")
