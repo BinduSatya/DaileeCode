@@ -1,31 +1,38 @@
 {
-  "date": "2026-05-23",
-  "id": "1878",
-  "title": "Check if Array Is Sorted and Rotated",
-  "slug": "check-if-array-is-sorted-and-rotated",
-  "difficulty": "Easy",
-  "url": "https://leetcode.com/problems/check-if-array-is-sorted-and-rotated/",
-  "description": "Given an array nums, return true if the array was originally sorted in non-decreasing order, then rotated some number of positions (including zero). Otherwise, return false.\n\nThere may be duplicates in the original array.\n\nNote: An array A rotated by x positions results in an array B of the same length such that B[i] == A[(i+x) % A.length] for every valid index i.\n\n \nExample 1:\n\nInput: nums = [3,4,5,1,2]\nOutput: true\nExplanation: [1,2,3,4,5] is the original sorted array.\nYou can rotate the array by x = 2 positions to begin on the element of value 3: [3,4,5,1,2].\n\nExample 2:\n\nInput: nums = [2,1,3,4]\nOutput: false\nExplanation: There is no sorted array once rotated that can make nums.\n\nExample 3:\n\nInput: nums = [1,2,3]\nOutput: true\nExplanation: [1,2,3] is the original sorted array.\nYou can rotate the array by x = 0 positions (i.e. no rotation) to make nums.\n\n \nConstraints:\n\n\t1 <= nums.length <= 100\n\t1 <= nums[i] <= 100",
-  "example_testcases": "[3,4,5,1,2]\n[2,1,3,4]\n[1,2,3]",
-  "sample_testcase": "[3,4,5,1,2]",
+  "date": "2026-05-24",
+  "id": "1466",
+  "title": "Jump Game V",
+  "slug": "jump-game-v",
+  "difficulty": "Hard",
+  "url": "https://leetcode.com/problems/jump-game-v/",
+  "description": "Given an array of integers arr and an integer d. In one step you can jump from index i to index:\n\n\ti + x where: i + x < arr.length and  0 < x <= d.\n\ti - x where: i - x >= 0 and  0 < x <= d.\n\nIn addition, you can only jump from index i to index j if arr[i] > arr[j] and arr[i] > arr[k] for all indices k between i and j (More formally min(i, j) < k < max(i, j)).\n\nYou can choose any index of the array and start jumping. Return the maximum number of indices you can visit.\n\nNotice that you can not jump outside of the array at any time.\n\n \nExample 1:\n\nInput: arr = [6,4,14,6,8,13,9,7,10,6,12], d = 2\nOutput: 4\nExplanation: You can start at index 10. You can jump 10 --> 8 --> 6 --> 7 as shown.\nNote that if you start at index 6 you can only jump to index 7. You cannot jump to index 5 because 13 > 9. You cannot jump to index 4 because index 5 is between index 4 and 6 and 13 > 9.\nSimilarly You cannot jump from index 3 to index 2 or index 1.\n\nExample 2:\n\nInput: arr = [3,3,3,3,3], d = 3\nOutput: 1\nExplanation: You can start at any index. You always cannot jump to any index.\n\nExample 3:\n\nInput: arr = [7,6,5,4,3,2,1], d = 1\nOutput: 7\nExplanation: Start at index 0. You can visit all the indicies. \n\n \nConstraints:\n\n\t1 <= arr.length <= 1000\n\t1 <= arr[i] <= 105\n\t1 <= d <= arr.length",
+  "example_testcases": "[6,4,14,6,8,13,9,7,10,6,12]\n2\n[3,3,3,3,3]\n3\n[7,6,5,4,3,2,1]\n1",
+  "sample_testcase": "[6,4,14,6,8,13,9,7,10,6,12]\n2",
   "tags": [
-    "Array"
+    "Array",
+    "Dynamic Programming",
+    "Sorting"
   ],
   "hints": [
-    "Brute force and check if it is possible for a sorted array to start from each position."
+    "Use dynamic programming. dp[i] is max jumps you can do starting from index i. Answer is max(dp[i]).",
+    "dp[i] = 1 + max (dp[j]) where j is all indices you can reach from i."
   ],
-  "starter_code": "class Solution:\n    def check(self, nums: List[int]) -> bool:\n        ",
-  "starter_code_cpp": "class Solution {\npublic:\n    bool check(vector<int>& nums) {\n        \n    }\n};",
+  "starter_code": "class Solution:\n    def maxJumps(self, arr: List[int], d: int) -> int:\n        ",
+  "starter_code_cpp": "class Solution {\npublic:\n    int maxJumps(vector<int>& arr, int d) {\n        \n    }\n};",
   "meta": {
-    "name": "check",
+    "name": "maxJumps",
     "params": [
       {
-        "name": "nums",
+        "name": "arr",
         "type": "integer[]"
+      },
+      {
+        "type": "integer",
+        "name": "d"
       }
     ],
     "return": {
-      "type": "boolean"
+      "type": "integer"
     }
   }
 }
