@@ -1,5 +1,5 @@
 {
-  "date": "2026-05-24",
+  "date": "2026-05-28",
   "steps": {
     "fetch": "\u2713",
     "solution": "\u2713",
@@ -8,8 +8,8 @@
     "video": "\u2713",
     "upload": "\u2713"
   },
-  "problem_title": "Jump Game V",
-  "video_path": "output/videos/final_2026-05-24.mp4",
-  "youtube_url": "https://www.youtube.com/watch?v=j7qAT86GAwk",
-  "duration_seconds": 176.6
+  "problem_title": "Longest Common Suffix Queries",
+  "video_path": "output/videos/final_2026-05-28.mp4",
+  "youtube_url": "https://www.youtube.com/watch?v=dxnG4Ys2TgA",
+  "duration_seconds": 184.4
 }
