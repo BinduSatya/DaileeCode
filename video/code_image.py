@@ -10,7 +10,7 @@ import logging
 import sys
 import textwrap
 from pathlib import Path
-
+import platform
 from PIL import Image, ImageDraw, ImageFont
 from pygments import highlight
 from pygments.lexers import PythonLexer
@@ -76,7 +76,9 @@ def _load_font(size: int, bold: bool = False, emoji: bool = False) -> ImageFont.
         except (IOError, OSError):
             continue
 
-    return ImageFont.load_default()
+    raise RuntimeError(
+        f"Could not load {'emoji' if emoji else 'regular'} font"
+    )
 
 # ── Slide builders ─────────────────────────────────────────────────────────────
 
@@ -164,11 +166,12 @@ def make_problem_slide(problem: dict) -> Image.Image:
 
 
 def make_code_slide(code: str, title: str = "Solution") -> Image.Image:
-    """Slide 2+ — Syntax-highlighted Python code using Pygments."""
+    """Slide 3 — Syntax-highlighted C++ code using Pygments."""
     # Pygments → PNG bytes
+    FONT_NAME = "Consolas" if platform.system() == "Windows" else "DejaVu Sans Mono"
     formatter = ImageFormatter(
         style=PYGMENTS_STYLE,
-        font_name="DejaVu Sans Mono",
+        font_name=FONT_NAME,
         font_size=22,
         line_numbers=True,
         line_pad=4,
@@ -295,16 +298,14 @@ def make_complexity_slide(explanation: str) -> Image.Image:
 
 
 def make_outro_slide(problem: dict) -> Image.Image:
-    """Final slide — subscribe CTA."""
+    """Final slide — subscribe PAGE."""
+    
     img = Image.new("RGB", (VIDEO_W, VIDEO_H), BG_COLOR)
     draw = ImageDraw.Draw(img)
 
-    font_big  = _load_font(80, bold=True)
-    font_med  = _load_font(40)
-    font_sm   = _load_font(30)
-    emoji_font = _load_font(72, emoji=True)
-
-    cx = VIDEO_W // 2
+    font_big = _load_font(80, bold=True)
+    font_med = _load_font(40)
+    font_sm  = _load_font(30)
 
     def centered(y: int, text: str, font, fill):
         bbox = draw.textbbox((0, 0), text, font=font)
@@ -312,34 +313,29 @@ def make_outro_slide(problem: dict) -> Image.Image:
         draw.text(((VIDEO_W - w) // 2, y), text, font=font, fill=fill)
 
     centered(200, "Thanks for watching!", font_big, TEXT_WHITE)
-    draw.text(
-        (VIDEO_W // 2 + 350, 190),
-        "🎉",
-        font=emoji_font,
-        embedded_color=True
+
+    centered(
+        320,
+        f"Problem: {problem['title']}",
+        font_med,
+        ACCENT_BLUE
     )
 
-    centered(320,  f"Problem: {problem['title']}", font_med, ACCENT_BLUE)
-    cta_text = "Like  •  Subscribe  •  Comment your approach"
+    centered(
+        420,
+        "Like  •  Subscribe  •  Comment your approach",
+        font_med,
+        ACCENT_GREEN
+    )
 
-    bbox = draw.textbbox((0, 0), cta_text, font=font_med)
-    text_w = bbox[2] - bbox[0]
+    centered(530, problem["url"], font_sm, TEXT_MUTED)
 
-    x = (VIDEO_W - text_w) // 2
-    y = 420
-
-    # Draw normal text
-    draw.text((x, y), cta_text, font=font_med, fill=ACCENT_GREEN)
-
-    # Emoji font
-    emoji_font = _load_font(42, emoji=True)
-
-    # Draw emojis separately
-    draw.text((x - 60, y - 4), "👍", font=emoji_font, embedded_color=True)
-    draw.text((x + 170, y - 4), "🔔", font=emoji_font, embedded_color=True)
-    draw.text((x + 470, y - 4), "💬", font=emoji_font, embedded_color=True)
-    centered(530,  problem["url"], font_sm, TEXT_MUTED)
-    centered(VIDEO_H - 100, "New LeetCode Daily Solution every day!", font_sm, TEXT_MUTED)
+    centered(
+        VIDEO_H - 100,
+        "New LeetCode Daily Solution every day!",
+        font_sm,
+        TEXT_MUTED
+    )
 
     return img
 

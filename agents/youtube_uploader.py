@@ -21,6 +21,7 @@ import json
 import os
 import sys
 from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parent.parent))
 
 from dotenv import load_dotenv
 from google.auth.transport.requests import Request
@@ -63,7 +64,11 @@ def _get_credentials() -> Credentials:
                 )
             log.info("Opening browser for YouTube OAuth consent …")
             flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRETS, SCOPES)
-            creds = flow.run_local_server(port=0)
+            creds = flow.run_local_server(
+                        port=0,
+                        access_type="offline",
+                        prompt="consent"
+                    )
 
         Path(TOKEN_FILE).write_text(creds.to_json())
         log.info(f"Token saved → {TOKEN_FILE}")
