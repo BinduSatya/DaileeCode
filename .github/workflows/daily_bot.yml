@@ -83,9 +83,9 @@ jobs:
           YOUTUBE_CLIENT_SECRETS: ${{ secrets.YOUTUBE_CLIENT_SECRETS }}
           YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
         run: |
-          echo "$YOUTUBE_CLIENT_SECRETS" > client_secrets.json
-          echo "$YOUTUBE_TOKEN_JSON" > youtube_token.json
-          echo "=== Validating credential files ==="
+          printf "%s" "$YOUTUBE_CLIENT_SECRETS" > client_secrets.json
+          printf "%s" "$YOUTUBE_TOKEN_JSON" > youtube_token.json
+          printf "%s" "=== Validating credential files ==="
           python -c "import json; json.load(open('client_secrets.json')); print('client_secrets.json OK')"
           python -c "import json; json.load(open('youtube_token.json')); print('youtube_token.json OK')"
 
@@ -111,16 +111,6 @@ jobs:
           [ "$SKIP_UPLOAD" = "true" ] && ARGS="$ARGS --skip-upload"
           [ "$DRY_RUN"     = "true" ] && ARGS="$ARGS --dry-run"
           python pipeline.py $ARGS
-
-      # ── 9. Update YouTube token ───────────────────────────────────────────
-      - name: Update YouTube token secret
-        if: success()
-        uses: gliech/create-github-secret-action@v1
-        with:
-          name: YOUTUBE_TOKEN_JSON
-          value: ${{ toJson(fromJson(steps.run-pipeline.outputs.token || '{}')) }}
-          token: ${{ secrets.PAT_TOKEN }}
-        continue-on-error: true
 
       # ── 10. Deploy dashboard data to GitHub Pages ────────────────────
       - name: Copy index and output files
