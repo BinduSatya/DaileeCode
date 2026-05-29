@@ -1,38 +1,32 @@
 {
-  "date": "2026-05-28",
-  "id": "3376",
-  "title": "Longest Common Suffix Queries",
-  "slug": "longest-common-suffix-queries",
-  "difficulty": "Hard",
-  "url": "https://leetcode.com/problems/longest-common-suffix-queries/",
-  "description": "You are given two arrays of strings wordsContainer and wordsQuery.\n\nFor each wordsQuery[i], you need to find a string from wordsContainer that has the longest common suffix with wordsQuery[i]. If there are two or more strings in wordsContainer that share the longest common suffix, find the string that is the smallest in length. If there are two or more such strings that have the same smallest length, find the one that occurred earlier in wordsContainer.\n\nReturn an array of integers ans, where ans[i] is the index of the string in wordsContainer that has the longest common suffix with wordsQuery[i].\n\n \nExample 1:\n\nInput: wordsContainer = [\"abcd\",\"bcd\",\"xbcd\"], wordsQuery = [\"cd\",\"bcd\",\"xyz\"]\n\nOutput: [1,1,1]\n\nExplanation:\n\nLet's look at each wordsQuery[i] separately:\n\n\tFor wordsQuery[0] = \"cd\", strings from wordsContainer that share the longest common suffix \"cd\" are at indices 0, 1, and 2. Among these, the answer is the string at index 1 because it has the shortest length of 3.\n\tFor wordsQuery[1] = \"bcd\", strings from wordsContainer that share the longest common suffix \"bcd\" are at indices 0, 1, and 2. Among these, the answer is the string at index 1 because it has the shortest length of 3.\n\tFor wordsQuery[2] = \"xyz\", there is no string from wordsContainer that shares a common suffix. Hence the longest common suffix is \"\", that is shared with strings at index 0, 1, and 2. Among these, the answer is the string at index 1 because it has the shortest length of 3.\n\nExample 2:\n\nInput: wordsContainer = [\"abcdefgh\",\"poiuygh\",\"ghghgh\"], wordsQuery = [\"gh\",\"acbfgh\",\"acbfegh\"]\n\nOutput: [2,0,2]\n\nExplanation:\n\nLet's look at each wordsQuery[i] separately:\n\n\tFor wordsQuery[0] = \"gh\", strings from wordsContainer that share the longest common suffix \"gh\" are at indices 0, 1, and 2. Among these, the answer is the string at index 2 because it has the shortest length of 6.\n\tFor wordsQuery[1] = \"acbfgh\", only the string at index 0 shares the longest common suffix \"fgh\". Hence it is the answer, even though the string at index 2 is shorter.\n\tFor wordsQuery[2] = \"acbfegh\", strings from wordsContainer that share the longest common suffix \"gh\" are at indices 0, 1, and 2. Among these, the answer is the string at index 2 because it has the shortest length of 6.\n\n \nConstraints:\n\n\t1 <= wordsContainer.length, wordsQuery.length <= 104\n\t1 <= wordsContainer[i].length <= 5 * 103\n\t1 <= wordsQuery[i].length <= 5 * 103\n\twordsContainer[i] consists only of lowercase English letters.\n\twordsQuery[i] consists only of lowercase English letters.\n\tSum of wordsContainer[i].length is at most 5 * 105.\n\tSum of wordsQuery[i].length is at most 5 * 105.",
-  "example_testcases": "[\"abcd\",\"bcd\",\"xbcd\"]\n[\"cd\",\"bcd\",\"xyz\"]\n[\"abcdefgh\",\"poiuygh\",\"ghghgh\"]\n[\"gh\",\"acbfgh\",\"acbfegh\"]",
-  "sample_testcase": "[\"abcd\",\"bcd\",\"xbcd\"]\n[\"cd\",\"bcd\",\"xyz\"]",
+  "date": "2026-05-29",
+  "id": "3606",
+  "title": "Minimum Element After Replacement With Digit Sum",
+  "slug": "minimum-element-after-replacement-with-digit-sum",
+  "difficulty": "Easy",
+  "url": "https://leetcode.com/problems/minimum-element-after-replacement-with-digit-sum/",
+  "description": "You are given an integer array nums.\n\nYou replace each element in nums with the sum of its digits.\n\nReturn the minimum element in nums after all replacements.\n\n \nExample 1:\n\nInput: nums = [10,12,13,14]\n\nOutput: 1\n\nExplanation:\n\nnums becomes [1, 3, 4, 5] after all replacements, with minimum element 1.\n\nExample 2:\n\nInput: nums = [1,2,3,4]\n\nOutput: 1\n\nExplanation:\n\nnums becomes [1, 2, 3, 4] after all replacements, with minimum element 1.\n\nExample 3:\n\nInput: nums = [999,19,199]\n\nOutput: 10\n\nExplanation:\n\nnums becomes [27, 10, 19] after all replacements, with minimum element 10.\n\n \nConstraints:\n\n\t1 <= nums.length <= 100\n\t1 <= nums[i] <= 104",
+  "example_testcases": "[10,12,13,14]\n[1,2,3,4]\n[999,19,199]",
+  "sample_testcase": "[10,12,13,14]",
   "tags": [
     "Array",
-    "String",
-    "Trie"
+    "Math"
   ],
   "hints": [
-    "If we reverse the strings, the problem changes to finding the longest common prefix.",
-    "Build a Trie, each node is a letter and only saves the best word’s index in each node, based on the criteria."
+    "Convert to string and calculate the sum for each element."
   ],
-  "starter_code": "class Solution:\n    def stringIndices(self, wordsContainer: List[str], wordsQuery: List[str]) -> List[int]:\n        ",
-  "starter_code_cpp": "class Solution {\npublic:\n    vector<int> stringIndices(vector<string>& wordsContainer, vector<string>& wordsQuery) {\n        \n    }\n};",
+  "starter_code": "class Solution:\n    def minElement(self, nums: List[int]) -> int:\n        ",
+  "starter_code_cpp": "class Solution {\npublic:\n    int minElement(vector<int>& nums) {\n        \n    }\n};",
   "meta": {
-    "name": "stringIndices",
+    "name": "minElement",
     "params": [
       {
-        "name": "wordsContainer",
-        "type": "string[]"
-      },
-      {
-        "type": "string[]",
-        "name": "wordsQuery"
+        "name": "nums",
+        "type": "integer[]"
       }
     ],
     "return": {
-      "type": "integer[]"
+      "type": "integer"
     }
   }
 }
