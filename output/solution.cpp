@@ -1,15 +1,32 @@
 class Solution {
 public:
-    int minElement(vector<int>& nums) {
-        int min_sum = INT_MAX;
-        for (int num : nums) {
-            int sum = 0;
-            while (num > 0) {
-                sum += num % 10;
-                num /= 10;
+    vector<bool> getResults(vector<vector<int>>& queries) {
+        vector<bool> results;
+        set<int> obstacles;
+        for (auto& query : queries) {
+            if (query[0] == 1) {
+                obstacles.insert(query[1]);
+            } else {
+                bool canPlace = true;
+                int x = query[1], sz = query[2];
+                auto it = obstacles.lower_bound(0);
+                int prev = 0;
+                while (it != obstacles.end() && *it <= x) {
+                    if (*it - prev < sz) {
+                        canPlace = false;
+                        break;
+                    }
+                    prev = *it;
+                    ++it;
+                }
+                if (canPlace && prev + sz <= x) {
+                    canPlace = true;
+                } else {
+                    canPlace = false;
+                }
+                results.push_back(canPlace);
             }
-            min_sum = min(min_sum, sum);
         }
-        return min_sum;
+        return results;
     }
 };

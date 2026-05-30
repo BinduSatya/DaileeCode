@@ -1,5 +1,5 @@
 {
-  "date": "2026-05-29",
+  "date": "2026-05-30",
   "steps": {
     "fetch": "\u2713",
     "solution": "\u2713",
@@ -8,8 +8,8 @@
     "video": "\u2713",
     "upload": "\u2713"
   },
-  "problem_title": "Minimum Element After Replacement With Digit Sum",
-  "video_path": "output/videos/final_2026-05-29.mp4",
-  "youtube_url": "https://www.youtube.com/watch?v=jbfstd93kEE",
-  "duration_seconds": 154.8
+  "problem_title": "Block Placement Queries",
+  "video_path": "output/videos/final_2026-05-30.mp4",
+  "youtube_url": "https://www.youtube.com/watch?v=xz531iMmfek",
+  "duration_seconds": 141.0
 }

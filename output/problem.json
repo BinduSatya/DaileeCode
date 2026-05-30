@@ -1,32 +1,36 @@
 {
-  "date": "2026-05-29",
-  "id": "3606",
-  "title": "Minimum Element After Replacement With Digit Sum",
-  "slug": "minimum-element-after-replacement-with-digit-sum",
-  "difficulty": "Easy",
-  "url": "https://leetcode.com/problems/minimum-element-after-replacement-with-digit-sum/",
-  "description": "You are given an integer array nums.\n\nYou replace each element in nums with the sum of its digits.\n\nReturn the minimum element in nums after all replacements.\n\n \nExample 1:\n\nInput: nums = [10,12,13,14]\n\nOutput: 1\n\nExplanation:\n\nnums becomes [1, 3, 4, 5] after all replacements, with minimum element 1.\n\nExample 2:\n\nInput: nums = [1,2,3,4]\n\nOutput: 1\n\nExplanation:\n\nnums becomes [1, 2, 3, 4] after all replacements, with minimum element 1.\n\nExample 3:\n\nInput: nums = [999,19,199]\n\nOutput: 10\n\nExplanation:\n\nnums becomes [27, 10, 19] after all replacements, with minimum element 10.\n\n \nConstraints:\n\n\t1 <= nums.length <= 100\n\t1 <= nums[i] <= 104",
-  "example_testcases": "[10,12,13,14]\n[1,2,3,4]\n[999,19,199]",
-  "sample_testcase": "[10,12,13,14]",
+  "date": "2026-05-30",
+  "id": "3435",
+  "title": "Block Placement Queries",
+  "slug": "block-placement-queries",
+  "difficulty": "Hard",
+  "url": "https://leetcode.com/problems/block-placement-queries/",
+  "description": "There exists an infinite number line, with its origin at 0 and extending towards the positive x-axis.\n\nYou are given a 2D array queries, which contains two types of queries:\n\n\tFor a query of type 1, queries[i] = [1, x]. Build an obstacle at distance x from the origin. It is guaranteed that there is no obstacle at distance x when the query is asked.\n\tFor a query of type 2, queries[i] = [2, x, sz]. Check if it is possible to place a block of size sz anywhere in the range [0, x] on the line, such that the block entirely lies in the range [0, x]. A block cannot be placed if it intersects with any obstacle, but it may touch it. Note that you do not actually place the block. Queries are separate.\n\nReturn a boolean array results, where results[i] is true if you can place the block specified in the ith query of type 2, and false otherwise.\n\n \nExample 1:\n\nInput: queries = [[1,2],[2,3,3],[2,3,1],[2,2,2]]\n\nOutput: [false,true,true]\n\nExplanation:\n\nFor query 0, place an obstacle at x = 2. A block of size at most 2 can be placed before x = 3.\n\nExample 2:\n\nInput: queries = [[1,7],[2,7,6],[1,2],[2,7,5],[2,7,6]]\n\nOutput: [true,true,false]\n\nExplanation:\n\n\tPlace an obstacle at x = 7 for query 0. A block of size at most 7 can be placed before x = 7.\n\tPlace an obstacle at x = 2 for query 2. Now, a block of size at most 5 can be placed before x = 7, and a block of size at most 2 before x = 2.\n\n \nConstraints:\n\n\t1 <= queries.length <= 15 * 104\n\t2 <= queries[i].length <= 3\n\t1 <= queries[i][0] <= 2\n\t1 <= x, sz <= min(5 * 104, 3 * queries.length)\n\tThe input is generated such that for queries of type 1, no obstacle exists at distance x when the query is asked.\n\tThe input is generated such that there is at least one query of type 2.",
+  "example_testcases": "[[1,2],[2,3,3],[2,3,1],[2,2,2]]\n[[1,7],[2,7,6],[1,2],[2,7,5],[2,7,6]]",
+  "sample_testcase": "[[1,2],[2,3,3],[2,3,1],[2,2,2]]",
   "tags": [
     "Array",
-    "Math"
+    "Binary Search",
+    "Binary Indexed Tree",
+    "Segment Tree"
   ],
   "hints": [
-    "Convert to string and calculate the sum for each element."
+    "Let <code>d[x]</code> be the distance of the next obstacle after <code>x</code>.",
+    "For each query of type 2, we just need to check if <code>max(d[0], d[1], d[2], …d[x - sz]) > sz</code>.",
+    "Use segment tree to maintain <code>d[x]</code>."
   ],
-  "starter_code": "class Solution:\n    def minElement(self, nums: List[int]) -> int:\n        ",
-  "starter_code_cpp": "class Solution {\npublic:\n    int minElement(vector<int>& nums) {\n        \n    }\n};",
+  "starter_code": "class Solution:\n    def getResults(self, queries: List[List[int]]) -> List[bool]:\n        ",
+  "starter_code_cpp": "class Solution {\npublic:\n    vector<bool> getResults(vector<vector<int>>& queries) {\n        \n    }\n};",
   "meta": {
-    "name": "minElement",
+    "name": "getResults",
     "params": [
       {
-        "name": "nums",
-        "type": "integer[]"
+        "name": "queries",
+        "type": "integer[][]"
       }
     ],
     "return": {
-      "type": "integer"
+      "type": "list<boolean>"
     }
   }
 }
