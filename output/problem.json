@@ -1,36 +1,40 @@
 {
-  "date": "2026-05-30",
-  "id": "3435",
-  "title": "Block Placement Queries",
-  "slug": "block-placement-queries",
-  "difficulty": "Hard",
-  "url": "https://leetcode.com/problems/block-placement-queries/",
-  "description": "There exists an infinite number line, with its origin at 0 and extending towards the positive x-axis.\n\nYou are given a 2D array queries, which contains two types of queries:\n\n\tFor a query of type 1, queries[i] = [1, x]. Build an obstacle at distance x from the origin. It is guaranteed that there is no obstacle at distance x when the query is asked.\n\tFor a query of type 2, queries[i] = [2, x, sz]. Check if it is possible to place a block of size sz anywhere in the range [0, x] on the line, such that the block entirely lies in the range [0, x]. A block cannot be placed if it intersects with any obstacle, but it may touch it. Note that you do not actually place the block. Queries are separate.\n\nReturn a boolean array results, where results[i] is true if you can place the block specified in the ith query of type 2, and false otherwise.\n\n \nExample 1:\n\nInput: queries = [[1,2],[2,3,3],[2,3,1],[2,2,2]]\n\nOutput: [false,true,true]\n\nExplanation:\n\nFor query 0, place an obstacle at x = 2. A block of size at most 2 can be placed before x = 3.\n\nExample 2:\n\nInput: queries = [[1,7],[2,7,6],[1,2],[2,7,5],[2,7,6]]\n\nOutput: [true,true,false]\n\nExplanation:\n\n\tPlace an obstacle at x = 7 for query 0. A block of size at most 7 can be placed before x = 7.\n\tPlace an obstacle at x = 2 for query 2. Now, a block of size at most 5 can be placed before x = 7, and a block of size at most 2 before x = 2.\n\n \nConstraints:\n\n\t1 <= queries.length <= 15 * 104\n\t2 <= queries[i].length <= 3\n\t1 <= queries[i][0] <= 2\n\t1 <= x, sz <= min(5 * 104, 3 * queries.length)\n\tThe input is generated such that for queries of type 1, no obstacle exists at distance x when the query is asked.\n\tThe input is generated such that there is at least one query of type 2.",
-  "example_testcases": "[[1,2],[2,3,3],[2,3,1],[2,2,2]]\n[[1,7],[2,7,6],[1,2],[2,7,5],[2,7,6]]",
-  "sample_testcase": "[[1,2],[2,3,3],[2,3,1],[2,2,2]]",
+  "date": "2026-05-31",
+  "id": "2245",
+  "title": "Destroying Asteroids",
+  "slug": "destroying-asteroids",
+  "difficulty": "Medium",
+  "url": "https://leetcode.com/problems/destroying-asteroids/",
+  "description": "You are given an integer mass, which represents the original mass of a planet. You are further given an integer array asteroids, where asteroids[i] is the mass of the ith asteroid.\n\nYou can arrange for the planet to collide with the asteroids in any arbitrary order. If the mass of the planet is greater than or equal to the mass of the asteroid, the asteroid is destroyed and the planet gains the mass of the asteroid. Otherwise, the planet is destroyed.\n\nReturn true if all asteroids can be destroyed. Otherwise, return false.\n\n \nExample 1:\n\nInput: mass = 10, asteroids = [3,9,19,5,21]\nOutput: true\nExplanation: One way to order the asteroids is [9,19,5,3,21]:\n- The planet collides with the asteroid with a mass of 9. New planet mass: 10 + 9 = 19\n- The planet collides with the asteroid with a mass of 19. New planet mass: 19 + 19 = 38\n- The planet collides with the asteroid with a mass of 5. New planet mass: 38 + 5 = 43\n- The planet collides with the asteroid with a mass of 3. New planet mass: 43 + 3 = 46\n- The planet collides with the asteroid with a mass of 21. New planet mass: 46 + 21 = 67\nAll asteroids are destroyed.\n\nExample 2:\n\nInput: mass = 5, asteroids = [4,9,23,4]\nOutput: false\nExplanation: \nThe planet cannot ever gain enough mass to destroy the asteroid with a mass of 23.\nAfter the planet destroys the other asteroids, it will have a mass of 5 + 4 + 9 + 4 = 22.\nThis is less than 23, so a collision would not destroy the last asteroid.\n\n \nConstraints:\n\n\t1 <= mass <= 105\n\t1 <= asteroids.length <= 105\n\t1 <= asteroids[i] <= 105",
+  "example_testcases": "10\n[3,9,19,5,21]\n5\n[4,9,23,4]",
+  "sample_testcase": "10\n[3,9,19,5,21]",
   "tags": [
     "Array",
-    "Binary Search",
-    "Binary Indexed Tree",
-    "Segment Tree"
+    "Greedy",
+    "Sorting"
   ],
   "hints": [
-    "Let <code>d[x]</code> be the distance of the next obstacle after <code>x</code>.",
-    "For each query of type 2, we just need to check if <code>max(d[0], d[1], d[2], …d[x - sz]) > sz</code>.",
-    "Use segment tree to maintain <code>d[x]</code>."
+    "Choosing the asteroid to collide with can be done greedily.",
+    "If an asteroid will destroy the planet, then every bigger asteroid will also destroy the planet.",
+    "You only need to check the smallest asteroid at each collision. If it will destroy the planet, then every other asteroid will also destroy the planet.",
+    "Sort the asteroids in non-decreasing order by mass, then greedily try to collide with the asteroids in that order."
   ],
-  "starter_code": "class Solution:\n    def getResults(self, queries: List[List[int]]) -> List[bool]:\n        ",
-  "starter_code_cpp": "class Solution {\npublic:\n    vector<bool> getResults(vector<vector<int>>& queries) {\n        \n    }\n};",
+  "starter_code": "class Solution:\n    def asteroidsDestroyed(self, mass: int, asteroids: List[int]) -> bool:\n        ",
+  "starter_code_cpp": "class Solution {\npublic:\n    bool asteroidsDestroyed(int mass, vector<int>& asteroids) {\n        \n    }\n};",
   "meta": {
-    "name": "getResults",
+    "name": "asteroidsDestroyed",
     "params": [
       {
-        "name": "queries",
-        "type": "integer[][]"
+        "name": "mass",
+        "type": "integer"
+      },
+      {
+        "type": "integer[]",
+        "name": "asteroids"
       }
     ],
     "return": {
-      "type": "list<boolean>"
+      "type": "boolean"
     }
   }
 }
