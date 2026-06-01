@@ -1,40 +1,35 @@
 {
-  "date": "2026-05-31",
-  "id": "2245",
-  "title": "Destroying Asteroids",
-  "slug": "destroying-asteroids",
-  "difficulty": "Medium",
-  "url": "https://leetcode.com/problems/destroying-asteroids/",
-  "description": "You are given an integer mass, which represents the original mass of a planet. You are further given an integer array asteroids, where asteroids[i] is the mass of the ith asteroid.\n\nYou can arrange for the planet to collide with the asteroids in any arbitrary order. If the mass of the planet is greater than or equal to the mass of the asteroid, the asteroid is destroyed and the planet gains the mass of the asteroid. Otherwise, the planet is destroyed.\n\nReturn true if all asteroids can be destroyed. Otherwise, return false.\n\n \nExample 1:\n\nInput: mass = 10, asteroids = [3,9,19,5,21]\nOutput: true\nExplanation: One way to order the asteroids is [9,19,5,3,21]:\n- The planet collides with the asteroid with a mass of 9. New planet mass: 10 + 9 = 19\n- The planet collides with the asteroid with a mass of 19. New planet mass: 19 + 19 = 38\n- The planet collides with the asteroid with a mass of 5. New planet mass: 38 + 5 = 43\n- The planet collides with the asteroid with a mass of 3. New planet mass: 43 + 3 = 46\n- The planet collides with the asteroid with a mass of 21. New planet mass: 46 + 21 = 67\nAll asteroids are destroyed.\n\nExample 2:\n\nInput: mass = 5, asteroids = [4,9,23,4]\nOutput: false\nExplanation: \nThe planet cannot ever gain enough mass to destroy the asteroid with a mass of 23.\nAfter the planet destroys the other asteroids, it will have a mass of 5 + 4 + 9 + 4 = 22.\nThis is less than 23, so a collision would not destroy the last asteroid.\n\n \nConstraints:\n\n\t1 <= mass <= 105\n\t1 <= asteroids.length <= 105\n\t1 <= asteroids[i] <= 105",
-  "example_testcases": "10\n[3,9,19,5,21]\n5\n[4,9,23,4]",
-  "sample_testcase": "10\n[3,9,19,5,21]",
+  "date": "2026-06-01",
+  "id": "2248",
+  "title": "Minimum Cost of Buying Candies With Discount",
+  "slug": "minimum-cost-of-buying-candies-with-discount",
+  "difficulty": "Easy",
+  "url": "https://leetcode.com/problems/minimum-cost-of-buying-candies-with-discount/",
+  "description": "A shop is selling candies at a discount. For every two candies sold, the shop gives a third candy for free.\n\nThe customer can choose any candy to take away for free as long as the cost of the chosen candy is less than or equal to the minimum cost of the two candies bought.\n\n\tFor example, if there are 4 candies with costs 1, 2, 3, and 4, and the customer buys candies with costs 2 and 3, they can take the candy with cost 1 for free, but not the candy with cost 4.\n\nGiven a 0-indexed integer array cost, where cost[i] denotes the cost of the ith candy, return the minimum cost of buying all the candies.\n\n \nExample 1:\n\nInput: cost = [1,2,3]\nOutput: 5\nExplanation: We buy the candies with costs 2 and 3, and take the candy with cost 1 for free.\nThe total cost of buying all candies is 2 + 3 = 5. This is the only way we can buy the candies.\nNote that we cannot buy candies with costs 1 and 3, and then take the candy with cost 2 for free.\nThe cost of the free candy has to be less than or equal to the minimum cost of the purchased candies.\n\nExample 2:\n\nInput: cost = [6,5,7,9,2,2]\nOutput: 23\nExplanation: The way in which we can get the minimum cost is described below:\n- Buy candies with costs 9 and 7\n- Take the candy with cost 6 for free\n- We buy candies with costs 5 and 2\n- Take the last remaining candy with cost 2 for free\nHence, the minimum cost to buy all candies is 9 + 7 + 5 + 2 = 23.\n\nExample 3:\n\nInput: cost = [5,5]\nOutput: 10\nExplanation: Since there are only 2 candies, we buy both of them. There is not a third candy we can take for free.\nHence, the minimum cost to buy all candies is 5 + 5 = 10.\n\n \nConstraints:\n\n\t1 <= cost.length <= 100\n\t1 <= cost[i] <= 100",
+  "example_testcases": "[1,2,3]\n[6,5,7,9,2,2]\n[5,5]",
+  "sample_testcase": "[1,2,3]",
   "tags": [
     "Array",
     "Greedy",
     "Sorting"
   ],
   "hints": [
-    "Choosing the asteroid to collide with can be done greedily.",
-    "If an asteroid will destroy the planet, then every bigger asteroid will also destroy the planet.",
-    "You only need to check the smallest asteroid at each collision. If it will destroy the planet, then every other asteroid will also destroy the planet.",
-    "Sort the asteroids in non-decreasing order by mass, then greedily try to collide with the asteroids in that order."
+    "If we consider costs from high to low, what is the maximum cost of a single candy that we can get for free?",
+    "How can we generalize this approach to maximize the costs of the candies we get for free?",
+    "Can “sorting” the array help us find the minimum cost?"
   ],
-  "starter_code": "class Solution:\n    def asteroidsDestroyed(self, mass: int, asteroids: List[int]) -> bool:\n        ",
-  "starter_code_cpp": "class Solution {\npublic:\n    bool asteroidsDestroyed(int mass, vector<int>& asteroids) {\n        \n    }\n};",
+  "starter_code": "class Solution:\n    def minimumCost(self, cost: List[int]) -> int:\n        ",
+  "starter_code_cpp": "class Solution {\npublic:\n    int minimumCost(vector<int>& cost) {\n        \n    }\n};",
   "meta": {
-    "name": "asteroidsDestroyed",
+    "name": "minimumCost",
     "params": [
       {
-        "name": "mass",
-        "type": "integer"
-      },
-      {
-        "type": "integer[]",
-        "name": "asteroids"
+        "name": "cost",
+        "type": "integer[]"
       }
     ],
     "return": {
-      "type": "boolean"
+      "type": "integer"
     }
   }
 }

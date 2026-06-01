@@ -1,5 +1,5 @@
 {
-  "date": "2026-05-31",
+  "date": "2026-06-01",
   "steps": {
     "fetch": "\u2713",
     "solution": "\u2713",
@@ -8,8 +8,8 @@
     "video": "\u2713",
     "upload": "\u2713"
   },
-  "problem_title": "Destroying Asteroids",
-  "video_path": "output/videos/final_2026-05-31.mp4",
-  "youtube_url": "https://www.youtube.com/watch?v=FtGHc8k5v1E",
-  "duration_seconds": 150.5
+  "problem_title": "Minimum Cost of Buying Candies With Discount",
+  "video_path": "output/videos/final_2026-06-01.mp4",
+  "youtube_url": "https://www.youtube.com/watch?v=adfeVUBjt4k",
+  "duration_seconds": 180.3
 }
