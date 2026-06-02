@@ -1,31 +1,43 @@
 {
-  "date": "2026-06-01",
-  "id": "2248",
-  "title": "Minimum Cost of Buying Candies With Discount",
-  "slug": "minimum-cost-of-buying-candies-with-discount",
+  "date": "2026-06-02",
+  "id": "3965",
+  "title": "Earliest Finish Time for Land and Water Rides I",
+  "slug": "earliest-finish-time-for-land-and-water-rides-i",
   "difficulty": "Easy",
-  "url": "https://leetcode.com/problems/minimum-cost-of-buying-candies-with-discount/",
-  "description": "A shop is selling candies at a discount. For every two candies sold, the shop gives a third candy for free.\n\nThe customer can choose any candy to take away for free as long as the cost of the chosen candy is less than or equal to the minimum cost of the two candies bought.\n\n\tFor example, if there are 4 candies with costs 1, 2, 3, and 4, and the customer buys candies with costs 2 and 3, they can take the candy with cost 1 for free, but not the candy with cost 4.\n\nGiven a 0-indexed integer array cost, where cost[i] denotes the cost of the ith candy, return the minimum cost of buying all the candies.\n\n \nExample 1:\n\nInput: cost = [1,2,3]\nOutput: 5\nExplanation: We buy the candies with costs 2 and 3, and take the candy with cost 1 for free.\nThe total cost of buying all candies is 2 + 3 = 5. This is the only way we can buy the candies.\nNote that we cannot buy candies with costs 1 and 3, and then take the candy with cost 2 for free.\nThe cost of the free candy has to be less than or equal to the minimum cost of the purchased candies.\n\nExample 2:\n\nInput: cost = [6,5,7,9,2,2]\nOutput: 23\nExplanation: The way in which we can get the minimum cost is described below:\n- Buy candies with costs 9 and 7\n- Take the candy with cost 6 for free\n- We buy candies with costs 5 and 2\n- Take the last remaining candy with cost 2 for free\nHence, the minimum cost to buy all candies is 9 + 7 + 5 + 2 = 23.\n\nExample 3:\n\nInput: cost = [5,5]\nOutput: 10\nExplanation: Since there are only 2 candies, we buy both of them. There is not a third candy we can take for free.\nHence, the minimum cost to buy all candies is 5 + 5 = 10.\n\n \nConstraints:\n\n\t1 <= cost.length <= 100\n\t1 <= cost[i] <= 100",
-  "example_testcases": "[1,2,3]\n[6,5,7,9,2,2]\n[5,5]",
-  "sample_testcase": "[1,2,3]",
+  "url": "https://leetcode.com/problems/earliest-finish-time-for-land-and-water-rides-i/",
+  "description": "You are given two categories of theme park attractions: land rides and water rides.\n\n\tLand rides\n\n\t\n\t\tlandStartTime[i] &ndash; the earliest time the ith land ride can be boarded.\n\t\tlandDuration[i] &ndash; how long the ith land ride lasts.\n\t\n\t\n\tWater rides\n\t\n\t\twaterStartTime[j] &ndash; the earliest time the jth water ride can be boarded.\n\t\twaterDuration[j] &ndash; how long the jth water ride lasts.\n\t\n\t\n\nA tourist must experience exactly one ride from each category, in either order.\n\n\tA ride may be started at its opening time or any later moment.\n\tIf a ride is started at time t, it finishes at time t + duration.\n\tImmediately after finishing one ride the tourist may board the other (if it is already open) or wait until it opens.\n\nReturn the earliest possible time at which the tourist can finish both rides.\n\n \nExample 1:\n\nInput: landStartTime = [2,8], landDuration = [4,1], waterStartTime = [6], waterDuration = [3]\n\nOutput: 9\n\nExplanation:​​​​​​​\n\n\tPlan A (land ride 0 &rarr; water ride 0):\n\t\n\t\tStart land ride 0 at time landStartTime[0] = 2. Finish at 2 + landDuration[0] = 6.\n\t\tWater ride 0 opens at time waterStartTime[0] = 6. Start immediately at 6, finish at 6 + waterDuration[0] = 9.\n\t\n\t\n\tPlan B (water ride 0 &rarr; land ride 1):\n\t\n\t\tStart water ride 0 at time waterStartTime[0] = 6. Finish at 6 + waterDuration[0] = 9.\n\t\tLand ride 1 opens at landStartTime[1] = 8. Start at time 9, finish at 9 + landDuration[1] = 10.\n\t\n\t\n\tPlan C (land ride 1 &rarr; water ride 0):\n\t\n\t\tStart land ride 1 at time landStartTime[1] = 8. Finish at 8 + landDuration[1] = 9.\n\t\tWater ride 0 opened at waterStartTime[0] = 6. Start at time 9, finish at 9 + waterDuration[0] = 12.\n\t\n\t\n\tPlan D (water ride 0 &rarr; land ride 0):\n\t\n\t\tStart water ride 0 at time waterStartTime[0] = 6. Finish at 6 + waterDuration[0] = 9.\n\t\tLand ride 0 opened at landStartTime[0] = 2. Start at time 9, finish at 9 + landDuration[0] = 13.\n\t\n\t\n\nPlan A gives the earliest finish time of 9.\n\nExample 2:\n\nInput: landStartTime = [5], landDuration = [3], waterStartTime = [1], waterDuration = [10]\n\nOutput: 14\n\nExplanation:​​​​​​​\n\n\tPlan A (water ride 0 &rarr; land ride 0):\n\t\n\t\tStart water ride 0 at time waterStartTime[0] = 1. Finish at 1 + waterDuration[0] = 11.\n\t\tLand ride 0 opened at landStartTime[0] = 5. Start immediately at 11 and finish at 11 + landDuration[0] = 14.\n\t\n\t\n\tPlan B (land ride 0 &rarr; water ride 0):\n\t\n\t\tStart land ride 0 at time landStartTime[0] = 5. Finish at 5 + landDuration[0] = 8.\n\t\tWater ride 0 opened at waterStartTime[0] = 1. Start immediately at 8 and finish at 8 + waterDuration[0] = 18.\n\t\n\t\n\nPlan A provides the earliest finish time of 14.​​​​​​​\n\n \nConstraints:\n\n\t1 <= n, m <= 100\n\tlandStartTime.length == landDuration.length == n\n\twaterStartTime.length == waterDuration.length == m\n\t1 <= landStartTime[i], landDuration[i], waterStartTime[j], waterDuration[j] <= 1000",
+  "example_testcases": "[2,8]\n[4,1]\n[6]\n[3]\n[5]\n[3]\n[1]\n[10]",
+  "sample_testcase": "[2,8]\n[4,1]\n[6]\n[3]",
   "tags": [
     "Array",
+    "Two Pointers",
+    "Binary Search",
     "Greedy",
     "Sorting"
   ],
   "hints": [
-    "If we consider costs from high to low, what is the maximum cost of a single candy that we can get for free?",
-    "How can we generalize this approach to maximize the costs of the candies we get for free?",
-    "Can “sorting” the array help us find the minimum cost?"
+    "Use brute force"
   ],
-  "starter_code": "class Solution:\n    def minimumCost(self, cost: List[int]) -> int:\n        ",
-  "starter_code_cpp": "class Solution {\npublic:\n    int minimumCost(vector<int>& cost) {\n        \n    }\n};",
+  "starter_code": "class Solution:\n    def earliestFinishTime(self, landStartTime: List[int], landDuration: List[int], waterStartTime: List[int], waterDuration: List[int]) -> int:\n        ",
+  "starter_code_cpp": "class Solution {\npublic:\n    int earliestFinishTime(vector<int>& landStartTime, vector<int>& landDuration, vector<int>& waterStartTime, vector<int>& waterDuration) {\n        \n    }\n};",
   "meta": {
-    "name": "minimumCost",
+    "name": "earliestFinishTime",
     "params": [
       {
-        "name": "cost",
+        "name": "landStartTime",
         "type": "integer[]"
+      },
+      {
+        "type": "integer[]",
+        "name": "landDuration"
+      },
+      {
+        "type": "integer[]",
+        "name": "waterStartTime"
+      },
+      {
+        "type": "integer[]",
+        "name": "waterDuration"
       }
     ],
     "return": {
