@@ -1,5 +1,5 @@
 {
-  "date": "2026-06-02",
+  "date": "2026-06-03",
   "steps": {
     "fetch": "\u2713",
     "solution": "\u2713",
@@ -8,8 +8,8 @@
     "video": "\u2713",
     "upload": "\u2713"
   },
-  "problem_title": "Earliest Finish Time for Land and Water Rides I",
-  "video_path": "output/videos/final_2026-06-02.mp4",
-  "youtube_url": "https://www.youtube.com/watch?v=9-lJxTiWJE4",
-  "duration_seconds": 124.7
+  "problem_title": "Earliest Finish Time for Land and Water Rides II",
+  "video_path": "output/videos/final_2026-06-03.mp4",
+  "youtube_url": "https://www.youtube.com/watch?v=jlQ9lOevRG0",
+  "duration_seconds": 202.7
 }
