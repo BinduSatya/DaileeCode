@@ -1,15 +1,18 @@
 class Solution {
 public:
-    int earliestFinishTime(vector<int>& landStartTime, vector<int>& landDuration, vector<int>& waterStartTime, vector<int>& waterDuration) {
-        int minTime = INT_MAX;
-        
-        for (int i = 0; i < landStartTime.size(); i++) {
-            for (int j = 0; j < waterStartTime.size(); j++) {
-                minTime = min(minTime, max(landStartTime[i] + landDuration[i], waterStartTime[j]) + waterDuration[j]);
-                minTime = min(minTime, max(waterStartTime[j] + waterDuration[j], landStartTime[i]) + landDuration[i]);
+    int totalWaviness(int num1, int num2) {
+        int total = 0;
+        for (int i = num1; i <= num2; i++) {
+            string str = to_string(i);
+            if (str.length() < 3) continue;
+            for (int j = 1; j < str.length() - 1; j++) {
+                if (str[j - 1] < str[j] && str[j] > str[j + 1]) {
+                    total++;
+                } else if (str[j - 1] > str[j] && str[j] < str[j + 1]) {
+                    total++;
+                }
             }
         }
-        
-        return minTime;
+        return total;
     }
 };

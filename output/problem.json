@@ -1,46 +1,33 @@
 {
-  "date": "2026-06-03",
-  "id": "3967",
-  "title": "Earliest Finish Time for Land and Water Rides II",
-  "slug": "earliest-finish-time-for-land-and-water-rides-ii",
+  "date": "2026-06-04",
+  "id": "4057",
+  "title": "Total Waviness of Numbers in Range I",
+  "slug": "total-waviness-of-numbers-in-range-i",
   "difficulty": "Medium",
-  "url": "https://leetcode.com/problems/earliest-finish-time-for-land-and-water-rides-ii/",
-  "description": "You are given two categories of theme park attractions: land rides and water rides.\n\n\tLand rides\n\n\t\n\t\tlandStartTime[i] &ndash; the earliest time the ith land ride can be boarded.\n\t\tlandDuration[i] &ndash; how long the ith land ride lasts.\n\t\n\t\n\tWater rides\n\t\n\t\twaterStartTime[j] &ndash; the earliest time the jth water ride can be boarded.\n\t\twaterDuration[j] &ndash; how long the jth water ride lasts.\n\t\n\t\n\nA tourist must experience exactly one ride from each category, in either order.\n\n\tA ride may be started at its opening time or any later moment.\n\tIf a ride is started at time t, it finishes at time t + duration.\n\tImmediately after finishing one ride the tourist may board the other (if it is already open) or wait until it opens.\n\nReturn the earliest possible time at which the tourist can finish both rides.\n\n \nExample 1:\n\nInput: landStartTime = [2,8], landDuration = [4,1], waterStartTime = [6], waterDuration = [3]\n\nOutput: 9\n\nExplanation:​​​​​​​\n\n\tPlan A (land ride 0 &rarr; water ride 0):\n\t\n\t\tStart land ride 0 at time landStartTime[0] = 2. Finish at 2 + landDuration[0] = 6.\n\t\tWater ride 0 opens at time waterStartTime[0] = 6. Start immediately at 6, finish at 6 + waterDuration[0] = 9.\n\t\n\t\n\tPlan B (water ride 0 &rarr; land ride 1):\n\t\n\t\tStart water ride 0 at time waterStartTime[0] = 6. Finish at 6 + waterDuration[0] = 9.\n\t\tLand ride 1 opens at landStartTime[1] = 8. Start at time 9, finish at 9 + landDuration[1] = 10.\n\t\n\t\n\tPlan C (land ride 1 &rarr; water ride 0):\n\t\n\t\tStart land ride 1 at time landStartTime[1] = 8. Finish at 8 + landDuration[1] = 9.\n\t\tWater ride 0 opened at waterStartTime[0] = 6. Start at time 9, finish at 9 + waterDuration[0] = 12.\n\t\n\t\n\tPlan D (water ride 0 &rarr; land ride 0):\n\t\n\t\tStart water ride 0 at time waterStartTime[0] = 6. Finish at 6 + waterDuration[0] = 9.\n\t\tLand ride 0 opened at landStartTime[0] = 2. Start at time 9, finish at 9 + landDuration[0] = 13.\n\t\n\t\n\nPlan A gives the earliest finish time of 9.\n\nExample 2:\n\nInput: landStartTime = [5], landDuration = [3], waterStartTime = [1], waterDuration = [10]\n\nOutput: 14\n\nExplanation:​​​​​​​\n\n\tPlan A (water ride 0 &rarr; land ride 0):\n\t\n\t\tStart water ride 0 at time waterStartTime[0] = 1. Finish at 1 + waterDuration[0] = 11.\n\t\tLand ride 0 opened at landStartTime[0] = 5. Start immediately at 11 and finish at 11 + landDuration[0] = 14.\n\t\n\t\n\tPlan B (land ride 0 &rarr; water ride 0):\n\t\n\t\tStart land ride 0 at time landStartTime[0] = 5. Finish at 5 + landDuration[0] = 8.\n\t\tWater ride 0 opened at waterStartTime[0] = 1. Start immediately at 8 and finish at 8 + waterDuration[0] = 18.\n\t\n\t\n\nPlan A provides the earliest finish time of 14.​​​​​​​\n\n \nConstraints:\n\n\t1 <= n, m <= 5 * 104\n\tlandStartTime.length == landDuration.length == n\n\twaterStartTime.length == waterDuration.length == m\n\t1 <= landStartTime[i], landDuration[i], waterStartTime[j], waterDuration[j] <= 105",
-  "example_testcases": "[2,8]\n[4,1]\n[6]\n[3]\n[5]\n[3]\n[1]\n[10]",
-  "sample_testcase": "[2,8]\n[4,1]\n[6]\n[3]",
+  "url": "https://leetcode.com/problems/total-waviness-of-numbers-in-range-i/",
+  "description": "You are given two integers num1 and num2 representing an inclusive range [num1, num2].\n\nThe waviness of a number is defined as the total count of its peaks and valleys:\n\n\tA digit is a peak if it is strictly greater than both of its immediate neighbors.\n\tA digit is a valley if it is strictly less than both of its immediate neighbors.\n\tThe first and last digits of a number cannot be peaks or valleys.\n\tAny number with fewer than 3 digits has a waviness of 0.\n\nReturn the total sum of waviness for all numbers in the range [num1, num2].\n \nExample 1:\n\nInput: num1 = 120, num2 = 130\n\nOutput: 3\n\nExplanation:\nIn the range [120, 130]:\n\n\t120: middle digit 2 is a peak, waviness = 1.\n\t121: middle digit 2 is a peak, waviness = 1.\n\t130: middle digit 3 is a peak, waviness = 1.\n\tAll other numbers in the range have a waviness of 0.\n\nThus, total waviness is 1 + 1 + 1 = 3.\n\nExample 2:\n\nInput: num1 = 198, num2 = 202\n\nOutput: 3\n\nExplanation:\nIn the range [198, 202]:\n\n\t198: middle digit 9 is a peak, waviness = 1.\n\t201: middle digit 0 is a valley, waviness = 1.\n\t202: middle digit 0 is a valley, waviness = 1.\n\tAll other numbers in the range have a waviness of 0.\n\nThus, total waviness is 1 + 1 + 1 = 3.\n\nExample 3:\n\nInput: num1 = 4848, num2 = 4848\n\nOutput: 2\n\nExplanation:\n\nNumber 4848: the second digit 8 is a peak, and the third digit 4 is a valley, giving a waviness of 2.\n\n \nConstraints:\n\n\t1 <= num1 <= num2 <= 105",
+  "example_testcases": "120\n130\n198\n202\n4848\n4848",
+  "sample_testcase": "120\n130",
   "tags": [
-    "Array",
-    "Two Pointers",
-    "Binary Search",
-    "Greedy",
-    "Sorting"
+    "Math",
+    "Dynamic Programming",
+    "Enumeration"
   ],
   "hints": [
-    "Sort each ride list by opening time and build a prefix minimum of ride durations and a suffix minimum of ride finish times (<code>start + duration</code>).",
-    "Try both orders, land then water and water then land. For each ride in the first list compute <code>finish1 = start1 + duration1</code>.",
-    "Binary‑search the second list (sorted by <code>start</code>) to split rides into those with <code>start <= finish1</code> and those with <code>start > finish1</code>. Use the prefix minimum duration on the early group to get an earliest finish of <code>finish1 + minDuration</code> and the suffix minimum finish time on the late group.",
-    "For each pairing take the smaller finish time and track the overall minimum."
+    "Use bruteforce"
   ],
-  "starter_code": "class Solution:\n    def earliestFinishTime(self, landStartTime: List[int], landDuration: List[int], waterStartTime: List[int], waterDuration: List[int]) -> int:\n        ",
-  "starter_code_cpp": "class Solution {\npublic:\n    int earliestFinishTime(vector<int>& landStartTime, vector<int>& landDuration, vector<int>& waterStartTime, vector<int>& waterDuration) {\n        \n    }\n};",
+  "starter_code": "class Solution:\n    def totalWaviness(self, num1: int, num2: int) -> int:\n        ",
+  "starter_code_cpp": "class Solution {\npublic:\n    int totalWaviness(int num1, int num2) {\n        \n    }\n};",
   "meta": {
-    "name": "earliestFinishTime",
+    "name": "totalWaviness",
     "params": [
       {
-        "name": "landStartTime",
-        "type": "integer[]"
+        "name": "num1",
+        "type": "integer"
       },
       {
-        "type": "integer[]",
-        "name": "landDuration"
-      },
-      {
-        "type": "integer[]",
-        "name": "waterStartTime"
-      },
-      {
-        "type": "integer[]",
-        "name": "waterDuration"
+        "type": "integer",
+        "name": "num2"
       }
     ],
     "return": {
