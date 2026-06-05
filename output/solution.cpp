@@ -1,17 +1,17 @@
 class Solution {
 public:
-    int totalWaviness(int num1, int num2) {
-        int total = 0;
-        for (int i = num1; i <= num2; i++) {
-            string str = to_string(i);
-            if (str.length() < 3) continue;
-            for (int j = 1; j < str.length() - 1; j++) {
-                if (str[j - 1] < str[j] && str[j] > str[j + 1]) {
-                    total++;
-                } else if (str[j - 1] > str[j] && str[j] < str[j + 1]) {
-                    total++;
-                }
+    long long totalWaviness(long long num1, long long num2) {
+        long long total = 0;
+        for (long long num = num1; num <= num2; num++) {
+            string str = to_string(num);
+            int n = str.size();
+            if (n < 3) continue;
+            int waviness = 0;
+            for (int i = 1; i < n - 1; i++) {
+                if (str[i - 1] < str[i] && str[i] > str[i + 1]) waviness++;
+                if (str[i - 1] > str[i] && str[i] < str[i + 1]) waviness++;
             }
+            total += waviness;
         }
         return total;
     }

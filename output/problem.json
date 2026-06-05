@@ -1,37 +1,37 @@
 {
-  "date": "2026-06-04",
-  "id": "4057",
-  "title": "Total Waviness of Numbers in Range I",
-  "slug": "total-waviness-of-numbers-in-range-i",
-  "difficulty": "Medium",
-  "url": "https://leetcode.com/problems/total-waviness-of-numbers-in-range-i/",
-  "description": "You are given two integers num1 and num2 representing an inclusive range [num1, num2].\n\nThe waviness of a number is defined as the total count of its peaks and valleys:\n\n\tA digit is a peak if it is strictly greater than both of its immediate neighbors.\n\tA digit is a valley if it is strictly less than both of its immediate neighbors.\n\tThe first and last digits of a number cannot be peaks or valleys.\n\tAny number with fewer than 3 digits has a waviness of 0.\n\nReturn the total sum of waviness for all numbers in the range [num1, num2].\n \nExample 1:\n\nInput: num1 = 120, num2 = 130\n\nOutput: 3\n\nExplanation:\nIn the range [120, 130]:\n\n\t120: middle digit 2 is a peak, waviness = 1.\n\t121: middle digit 2 is a peak, waviness = 1.\n\t130: middle digit 3 is a peak, waviness = 1.\n\tAll other numbers in the range have a waviness of 0.\n\nThus, total waviness is 1 + 1 + 1 = 3.\n\nExample 2:\n\nInput: num1 = 198, num2 = 202\n\nOutput: 3\n\nExplanation:\nIn the range [198, 202]:\n\n\t198: middle digit 9 is a peak, waviness = 1.\n\t201: middle digit 0 is a valley, waviness = 1.\n\t202: middle digit 0 is a valley, waviness = 1.\n\tAll other numbers in the range have a waviness of 0.\n\nThus, total waviness is 1 + 1 + 1 = 3.\n\nExample 3:\n\nInput: num1 = 4848, num2 = 4848\n\nOutput: 2\n\nExplanation:\n\nNumber 4848: the second digit 8 is a peak, and the third digit 4 is a valley, giving a waviness of 2.\n\n \nConstraints:\n\n\t1 <= num1 <= num2 <= 105",
+  "date": "2026-06-05",
+  "id": "4128",
+  "title": "Total Waviness of Numbers in Range II",
+  "slug": "total-waviness-of-numbers-in-range-ii",
+  "difficulty": "Hard",
+  "url": "https://leetcode.com/problems/total-waviness-of-numbers-in-range-ii/",
+  "description": "You are given two integers num1 and num2 representing an inclusive range [num1, num2].\n\nThe waviness of a number is defined as the total count of its peaks and valleys:\n\n\tA digit is a peak if it is strictly greater than both of its immediate neighbors.\n\tA digit is a valley if it is strictly less than both of its immediate neighbors.\n\tThe first and last digits of a number cannot be peaks or valleys.\n\tAny number with fewer than 3 digits has a waviness of 0.\n\nReturn the total sum of waviness for all numbers in the range [num1, num2].\n \nExample 1:\n\nInput: num1 = 120, num2 = 130\n\nOutput: 3\n\nExplanation:\n\nIn the range [120, 130]:\n\n\t120: middle digit 2 is a peak, waviness = 1.\n\t121: middle digit 2 is a peak, waviness = 1.\n\t130: middle digit 3 is a peak, waviness = 1.\n\tAll other numbers in the range have a waviness of 0.\n\nThus, total waviness is 1 + 1 + 1 = 3.\n\nExample 2:\n\nInput: num1 = 198, num2 = 202\n\nOutput: 3\n\nExplanation:\n\nIn the range [198, 202]:\n\n\t198: middle digit 9 is a peak, waviness = 1.\n\t201: middle digit 0 is a valley, waviness = 1.\n\t202: middle digit 0 is a valley, waviness = 1.\n\tAll other numbers in the range have a waviness of 0.\n\nThus, total waviness is 1 + 1 + 1 = 3.\n\nExample 3:\n\nInput: num1 = 4848, num2 = 4848\n\nOutput: 2\n\nExplanation:\n\nNumber 4848: the second digit 8 is a peak, and the third digit 4 is a valley, giving a waviness of 2.\n\n \nConstraints:\n\n\t1 <= num1 <= num2 <= 1015​​​​​​​",
   "example_testcases": "120\n130\n198\n202\n4848\n4848",
   "sample_testcase": "120\n130",
   "tags": [
     "Math",
-    "Dynamic Programming",
-    "Enumeration"
+    "Dynamic Programming"
   ],
   "hints": [
-    "Use bruteforce"
+    "Use digit dynamic programming",
+    "Build a digit-DP state <code>(position, tight, lastDigit, secondLastDigit)</code>"
   ],
   "starter_code": "class Solution:\n    def totalWaviness(self, num1: int, num2: int) -> int:\n        ",
-  "starter_code_cpp": "class Solution {\npublic:\n    int totalWaviness(int num1, int num2) {\n        \n    }\n};",
+  "starter_code_cpp": "class Solution {\npublic:\n    long long totalWaviness(long long num1, long long num2) {\n        \n    }\n};",
   "meta": {
     "name": "totalWaviness",
     "params": [
       {
         "name": "num1",
-        "type": "integer"
+        "type": "long"
       },
       {
-        "type": "integer",
+        "type": "long",
         "name": "num2"
       }
     ],
     "return": {
-      "type": "integer"
+      "type": "long"
     }
   }
 }

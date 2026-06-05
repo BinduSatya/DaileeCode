@@ -1,5 +1,5 @@
 {
-  "date": "2026-06-04",
+  "date": "2026-06-05",
   "steps": {
     "fetch": "\u2713",
     "solution": "\u2713",
@@ -8,8 +8,8 @@
     "video": "\u2713",
     "upload": "\u2713"
   },
-  "problem_title": "Total Waviness of Numbers in Range I",
-  "video_path": "output/videos/final_2026-06-04.mp4",
-  "youtube_url": "https://www.youtube.com/watch?v=Opwhsy6TUd0",
-  "duration_seconds": 204.5
+  "problem_title": "Total Waviness of Numbers in Range II",
+  "video_path": "output/videos/final_2026-06-05.mp4",
+  "youtube_url": "https://www.youtube.com/watch?v=TItsmZb3lCk",
+  "duration_seconds": 155.5
 }
