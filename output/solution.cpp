@@ -1,18 +1,27 @@
 class Solution {
 public:
-    long long totalWaviness(long long num1, long long num2) {
-        long long total = 0;
-        for (long long num = num1; num <= num2; num++) {
-            string str = to_string(num);
-            int n = str.size();
-            if (n < 3) continue;
-            int waviness = 0;
-            for (int i = 1; i < n - 1; i++) {
-                if (str[i - 1] < str[i] && str[i] > str[i + 1]) waviness++;
-                if (str[i - 1] > str[i] && str[i] < str[i + 1]) waviness++;
+    vector<int> leftRightDifference(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> answer(n);
+        
+        for (int i = 0; i < n; i++) {
+            int leftSum = 0;
+            int rightSum = 0;
+            
+            // Calculate leftSum
+            for (int j = 0; j < i; j++) {
+                leftSum += nums[j];
             }
-            total += waviness;
+            
+            // Calculate rightSum
+            for (int j = i + 1; j < n; j++) {
+                rightSum += nums[j];
+            }
+            
+            // Calculate absolute difference
+            answer[i] = abs(leftSum - rightSum);
         }
-        return total;
+        
+        return answer;
     }
 };
