@@ -1,27 +1,50 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
 class Solution {
 public:
-    vector<int> leftRightDifference(vector<int>& nums) {
-        int n = nums.size();
-        vector<int> answer(n);
+    TreeNode* createBinaryTree(vector<vector<int>>& descriptions) {
+        unordered_map<int, TreeNode*> nodes;
         
-        for (int i = 0; i < n; i++) {
-            int leftSum = 0;
-            int rightSum = 0;
+        for (auto& desc : descriptions) {
+            int parent = desc[0];
+            int child = desc[1];
+            bool isLeft = desc[2];
             
-            // Calculate leftSum
-            for (int j = 0; j < i; j++) {
-                leftSum += nums[j];
+            if (nodes.find(parent) == nodes.end()) {
+                nodes[parent] = new TreeNode(parent);
             }
             
-            // Calculate rightSum
-            for (int j = i + 1; j < n; j++) {
-                rightSum += nums[j];
+            if (nodes.find(child) == nodes.end()) {
+                nodes[child] = new TreeNode(child);
             }
             
-            // Calculate absolute difference
-            answer[i] = abs(leftSum - rightSum);
+            if (isLeft) {
+                nodes[parent]->left = nodes[child];
+            } else {
+                nodes[parent]->right = nodes[child];
+            }
         }
         
-        return answer;
+        unordered_set<int> children;
+        for (auto& desc : descriptions) {
+            children.insert(desc[1]);
+        }
+        
+        for (const auto& node : nodes) {
+            if (children.find(node.first) == children.end()) {
+                return node.second;
+            }
+        }
+        
+        return nullptr; 
     }
 };

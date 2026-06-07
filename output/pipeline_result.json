@@ -1,5 +1,5 @@
 {
-  "date": "2026-06-06",
+  "date": "2026-06-07",
   "steps": {
     "fetch": "\u2713",
     "solution": "\u2713",
@@ -8,8 +8,8 @@
     "video": "\u2713",
     "upload": "\u2713"
   },
-  "problem_title": "Left and Right Sum Differences",
-  "video_path": "output/videos/final_2026-06-06.mp4",
-  "youtube_url": "https://www.youtube.com/watch?v=oPAQglZvnOA",
-  "duration_seconds": 141.8
+  "problem_title": "Create Binary Tree From Descriptions",
+  "video_path": "output/videos/final_2026-06-07.mp4",
+  "youtube_url": "https://www.youtube.com/watch?v=G90Yy0ZqUtQ",
+  "duration_seconds": 183.5
 }
