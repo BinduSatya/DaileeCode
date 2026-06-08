@@ -1,36 +1,38 @@
 {
-  "date": "2026-06-07",
-  "id": "2306",
-  "title": "Create Binary Tree From Descriptions",
-  "slug": "create-binary-tree-from-descriptions",
+  "date": "2026-06-08",
+  "id": "2265",
+  "title": "Partition Array According to Given Pivot",
+  "slug": "partition-array-according-to-given-pivot",
   "difficulty": "Medium",
-  "url": "https://leetcode.com/problems/create-binary-tree-from-descriptions/",
-  "description": "You are given a 2D integer array descriptions where descriptions[i] = [parenti, childi, isLefti] indicates that parenti is the parent of childi in a binary tree of unique values. Furthermore,\n\n\tIf isLefti == 1, then childi is the left child of parenti.\n\tIf isLefti == 0, then childi is the right child of parenti.\n\nConstruct the binary tree described by descriptions and return its root.\n\nThe test cases will be generated such that the binary tree is valid.\n\n \nExample 1:\n\nInput: descriptions = [[20,15,1],[20,17,0],[50,20,1],[50,80,0],[80,19,1]]\nOutput: [50,20,80,15,17,19]\nExplanation: The root node is the node with value 50 since it has no parent.\nThe resulting binary tree is shown in the diagram.\n\nExample 2:\n\nInput: descriptions = [[1,2,1],[2,3,0],[3,4,1]]\nOutput: [1,2,null,null,3,4]\nExplanation: The root node is the node with value 1 since it has no parent.\nThe resulting binary tree is shown in the diagram.\n\n \nConstraints:\n\n\t1 <= descriptions.length <= 104\n\tdescriptions[i].length == 3\n\t1 <= parenti, childi <= 105\n\t0 <= isLefti <= 1\n\tThe binary tree described by descriptions is valid.",
-  "example_testcases": "[[20,15,1],[20,17,0],[50,20,1],[50,80,0],[80,19,1]]\n[[1,2,1],[2,3,0],[3,4,1]]",
-  "sample_testcase": "[[20,15,1],[20,17,0],[50,20,1],[50,80,0],[80,19,1]]",
+  "url": "https://leetcode.com/problems/partition-array-according-to-given-pivot/",
+  "description": "You are given a 0-indexed integer array nums and an integer pivot. Rearrange nums such that the following conditions are satisfied:\n\n\tEvery element less than pivot appears before every element greater than pivot.\n\tEvery element equal to pivot appears in between the elements less than and greater than pivot.\n\tThe relative order of the elements less than pivot and the elements greater than pivot is maintained.\n\t\n\t\tMore formally, consider every pi, pj where pi is the new position of the ith element and pj is the new position of the jth element. If i < j and both elements are smaller (or larger) than pivot, then pi < pj.\n\t\n\t\n\nReturn nums after the rearrangement.\n\n \nExample 1:\n\nInput: nums = [9,12,5,10,14,3,10], pivot = 10\nOutput: [9,5,3,10,10,12,14]\nExplanation: \nThe elements 9, 5, and 3 are less than the pivot so they are on the left side of the array.\nThe elements 12 and 14 are greater than the pivot so they are on the right side of the array.\nThe relative ordering of the elements less than and greater than pivot is also maintained. [9, 5, 3] and [12, 14] are the respective orderings.\n\nExample 2:\n\nInput: nums = [-3,4,3,2], pivot = 2\nOutput: [-3,2,4,3]\nExplanation: \nThe element -3 is less than the pivot so it is on the left side of the array.\nThe elements 4 and 3 are greater than the pivot so they are on the right side of the array.\nThe relative ordering of the elements less than and greater than pivot is also maintained. [-3] and [4, 3] are the respective orderings.\n\n \nConstraints:\n\n\t1 <= nums.length <= 105\n\t-106 <= nums[i] <= 106\n\tpivot equals to an element of nums.",
+  "example_testcases": "[9,12,5,10,14,3,10]\n10\n[-3,4,3,2]\n2",
+  "sample_testcase": "[9,12,5,10,14,3,10]\n10",
   "tags": [
     "Array",
-    "Hash Table",
-    "Tree",
-    "Binary Tree"
+    "Two Pointers",
+    "Simulation"
   ],
   "hints": [
-    "Could you represent and store the descriptions more efficiently?",
-    "Could you find the root node?",
-    "The node that is not a child in any of the descriptions is the root node."
+    "Could you put the elements smaller than the pivot and greater than the pivot in a separate list as in the sequence that they occur?",
+    "With the separate lists generated, could you then generate the result?"
   ],
-  "starter_code": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution:\n    def createBinaryTree(self, descriptions: List[List[int]]) -> Optional[TreeNode]:\n        ",
-  "starter_code_cpp": "/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode() : val(0), left(nullptr), right(nullptr) {}\n *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}\n *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}\n * };\n */\nclass Solution {\npublic:\n    TreeNode* createBinaryTree(vector<vector<int>>& descriptions) {\n        \n    }\n};",
+  "starter_code": "class Solution:\n    def pivotArray(self, nums: List[int], pivot: int) -> List[int]:\n        ",
+  "starter_code_cpp": "class Solution {\npublic:\n    vector<int> pivotArray(vector<int>& nums, int pivot) {\n        \n    }\n};",
   "meta": {
-    "name": "createBinaryTree",
+    "name": "pivotArray",
     "params": [
       {
-        "name": "descriptions",
-        "type": "integer[][]"
+        "name": "nums",
+        "type": "integer[]"
+      },
+      {
+        "type": "integer",
+        "name": "pivot"
       }
     ],
     "return": {
-      "type": "TreeNode"
+      "type": "integer[]"
     }
   }
 }
