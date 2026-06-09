@@ -1,14 +1,16 @@
 class Solution {
 public:
-    vector<int> pivotArray(vector<int>& nums, int pivot) {
-        vector<int> less, equal, greater;
-        for (int num : nums) {
-            if (num < pivot) less.push_back(num);
-            else if (num == pivot) equal.push_back(num);
-            else greater.push_back(num);
+    long long maxTotalValue(vector<int>& nums, int k) {
+        int n = nums.size();
+        long long res = 0;
+        for (int l = 0; l < n; l++) {
+            int mx = nums[l], mn = nums[l];
+            for (int r = l; r < n; r++) {
+                mx = max(mx, nums[r]);
+                mn = min(mn, nums[r]);
+                res = max(res, static_cast<long long>(mx - mn) * k);
+            }
         }
-        less.insert(less.end(), equal.begin(), equal.end());
-        less.insert(less.end(), greater.begin(), greater.end());
-        return less;
+        return res;
     }
 };
