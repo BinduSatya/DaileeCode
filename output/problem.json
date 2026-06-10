@@ -1,19 +1,23 @@
 {
-  "date": "2026-06-09",
-  "id": "4005",
-  "title": "Maximum Total Subarray Value I",
-  "slug": "maximum-total-subarray-value-i",
-  "difficulty": "Medium",
-  "url": "https://leetcode.com/problems/maximum-total-subarray-value-i/",
-  "description": "You are given an integer array nums of length n and an integer k.\n\nYou need to choose exactly k non-empty subarrays nums[l..r] of nums. Subarrays may overlap, and the exact same subarray (same l and r) can be chosen more than once.\n\nThe value of a subarray nums[l..r] is defined as: max(nums[l..r]) - min(nums[l..r]).\n\nThe total value is the sum of the values of all chosen subarrays.\n\nReturn the maximum possible total value you can achieve.\n\n \nExample 1:\n\nInput: nums = [1,3,2], k = 2\n\nOutput: 4\n\nExplanation:\n\nOne optimal approach is:\n\n\tChoose nums[0..1] = [1, 3]. The maximum is 3 and the minimum is 1, giving a value of 3 - 1 = 2.\n\tChoose nums[0..2] = [1, 3, 2]. The maximum is still 3 and the minimum is still 1, so the value is also 3 - 1 = 2.\n\nAdding these gives 2 + 2 = 4.\n\nExample 2:\n\nInput: nums = [4,2,5,1], k = 3\n\nOutput: 12\n\nExplanation:\n\nOne optimal approach is:\n\n\tChoose nums[0..3] = [4, 2, 5, 1]. The maximum is 5 and the minimum is 1, giving a value of 5 - 1 = 4.\n\tChoose nums[0..3] = [4, 2, 5, 1]. The maximum is 5 and the minimum is 1, so the value is also 4.\n\tChoose nums[2..3] = [5, 1]. The maximum is 5 and the minimum is 1, so the value is again 4.\n\nAdding these gives 4 + 4 + 4 = 12.\n\n \nConstraints:\n\n\t1 <= n == nums.length <= 5 * 10​​​​​​​4\n\t0 <= nums[i] <= 109\n\t1 <= k <= 105",
+  "date": "2026-06-10",
+  "id": "4007",
+  "title": "Maximum Total Subarray Value II",
+  "slug": "maximum-total-subarray-value-ii",
+  "difficulty": "Hard",
+  "url": "https://leetcode.com/problems/maximum-total-subarray-value-ii/",
+  "description": "You are given an integer array nums of length n and an integer k.\n\nYou must select exactly k distinct non-empty subarrays nums[l..r] of nums. Subarrays may overlap, but the exact same subarray (same l and r) cannot be chosen more than once.\n\nThe value of a subarray nums[l..r] is defined as: max(nums[l..r]) - min(nums[l..r]).\n\nThe total value is the sum of the values of all chosen subarrays.\n\nReturn the maximum possible total value you can achieve.\n\n \nExample 1:\n\nInput: nums = [1,3,2], k = 2\n\nOutput: 4\n\nExplanation:\n\nOne optimal approach is:\n\n\tChoose nums[0..1] = [1, 3]. The maximum is 3 and the minimum is 1, giving a value of 3 - 1 = 2.\n\tChoose nums[0..2] = [1, 3, 2]. The maximum is still 3 and the minimum is still 1, so the value is also 3 - 1 = 2.\n\nAdding these gives 2 + 2 = 4.\n\nExample 2:\n\nInput: nums = [4,2,5,1], k = 3\n\nOutput: 12\n\nExplanation:\n\nOne optimal approach is:\n\n\tChoose nums[0..3] = [4, 2, 5, 1]. The maximum is 5 and the minimum is 1, giving a value of 5 - 1 = 4.\n\tChoose nums[1..3] = [2, 5, 1]. The maximum is 5 and the minimum is 1, so the value is also 4.\n\tChoose nums[2..3] = [5, 1]. The maximum is 5 and the minimum is 1, so the value is again 4.\n\nAdding these gives 4 + 4 + 4 = 12.\n\n \nConstraints:\n\n\t1 <= n == nums.length <= 5 * 10​​​​​​​4\n\t0 <= nums[i] <= 109\n\t1 <= k <= min(105, n * (n + 1) / 2)",
   "example_testcases": "[1,3,2]\n2\n[4,2,5,1]\n3",
   "sample_testcase": "[1,3,2]\n2",
   "tags": [
     "Array",
-    "Greedy"
+    "Greedy",
+    "Segment Tree",
+    "Heap (Priority Queue)"
   ],
   "hints": [
-    "Choose the whole subarray <code>k</code> times."
+    "For fixed <code>l</code>, the sequence <code>v(l,r)=max(nums[l..r])−min(nums[l..r])</code> is non-increasing as <code>r</code> moves left.",
+    "Build RMQs (sparse tables) for range max/min so each <code>v(l,r)</code> is queryable in <code>O(1)</code>.",
+    "Use a max-heap with <code>v(l,n-1)</code> for all <code>l</code>; pop the largest <code>k</code> times, and after popping an entry from <code>(l,r)</code> push <code>(l,r-1)</code> if <code>r>l</code>."
   ],
   "starter_code": "class Solution:\n    def maxTotalValue(self, nums: List[int], k: int) -> int:\n        ",
   "starter_code_cpp": "class Solution {\npublic:\n    long long maxTotalValue(vector<int>& nums, int k) {\n        \n    }\n};",
