@@ -1,5 +1,5 @@
 {
-  "date": "2026-06-10",
+  "date": "2026-06-11",
   "steps": {
     "fetch": "\u2713",
     "solution": "\u2713",
@@ -8,8 +8,8 @@
     "video": "\u2713",
     "upload": "\u2713"
   },
-  "problem_title": "Maximum Total Subarray Value II",
-  "video_path": "output/videos/final_2026-06-10.mp4",
-  "youtube_url": "https://www.youtube.com/watch?v=6E8FAa2uXjM",
-  "duration_seconds": 139.7
+  "problem_title": "Number of Ways to Assign Edge Weights I",
+  "video_path": "output/videos/final_2026-06-11.mp4",
+  "youtube_url": "https://www.youtube.com/watch?v=_nJy0pnLi3U",
+  "duration_seconds": 148.6
 }
