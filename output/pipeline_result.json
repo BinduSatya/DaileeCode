@@ -1,5 +1,5 @@
 {
-  "date": "2026-06-12",
+  "date": "2026-06-13",
   "steps": {
     "fetch": "\u2713",
     "solution": "\u2713",
@@ -8,8 +8,8 @@
     "video": "\u2713",
     "upload": "\u2713"
   },
-  "problem_title": "Number of Ways to Assign Edge Weights II",
-  "video_path": "output/videos/final_2026-06-12.mp4",
-  "youtube_url": "https://www.youtube.com/watch?v=abt4OO5mu7o",
-  "duration_seconds": 158.3
+  "problem_title": "Weighted Word Mapping",
+  "video_path": "output/videos/final_2026-06-13.mp4",
+  "youtube_url": "https://www.youtube.com/watch?v=daCzG-EifGc",
+  "duration_seconds": 155.5
 }
