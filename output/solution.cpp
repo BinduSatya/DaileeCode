@@ -1,15 +1,31 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
 class Solution {
 public:
-    string mapWordWeights(vector<string>& words, vector<int>& weights) {
-        string result;
-        for (const auto& word : words) {
-            int weight = 0;
-            for (const auto& c : word) {
-                weight += weights[c - 'a'];
-            }
-            char mappedChar = 'a' + (25 - (weight % 26));
-            result.push_back(mappedChar);
+    int pairSum(ListNode* head) {
+        // Convert linked list to vector for easier access
+        std::vector<int> values;
+        while (head) {
+            values.push_back(head->val);
+            head = head->next;
         }
-        return result;
+
+        int maxSum = INT_MIN;  // Initialize with negative infinity
+        int n = values.size();
+
+        // Calculate sum of each pair and update maxSum
+        for (int i = 0; i < n / 2; i++) {
+            maxSum = std::max(maxSum, values[i] + values[n - 1 - i]);
+        }
+
+        return maxSum;
     }
 };

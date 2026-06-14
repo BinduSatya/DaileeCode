@@ -1,5 +1,5 @@
 {
-  "date": "2026-06-13",
+  "date": "2026-06-14",
   "steps": {
     "fetch": "\u2713",
     "solution": "\u2713",
@@ -8,8 +8,8 @@
     "video": "\u2713",
     "upload": "\u2713"
   },
-  "problem_title": "Weighted Word Mapping",
-  "video_path": "output/videos/final_2026-06-13.mp4",
-  "youtube_url": "https://www.youtube.com/watch?v=daCzG-EifGc",
-  "duration_seconds": 155.5
+  "problem_title": "Maximum Twin Sum of a Linked List",
+  "video_path": "output/videos/final_2026-06-14.mp4",
+  "youtube_url": "https://www.youtube.com/watch?v=9nCi165JWiU",
+  "duration_seconds": 141.7
 }
