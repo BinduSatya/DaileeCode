@@ -1,28 +1,25 @@
 {
-  "date": "2026-06-14",
-  "id": "2236",
-  "title": "Maximum Twin Sum of a Linked List",
-  "slug": "maximum-twin-sum-of-a-linked-list",
+  "date": "2026-06-15",
+  "id": "2216",
+  "title": "Delete the Middle Node of a Linked List",
+  "slug": "delete-the-middle-node-of-a-linked-list",
   "difficulty": "Medium",
-  "url": "https://leetcode.com/problems/maximum-twin-sum-of-a-linked-list/",
-  "description": "In a linked list of size n, where n is even, the ith node (0-indexed) of the linked list is known as the twin of the (n-1-i)th node, if 0 <= i <= (n / 2) - 1.\n\n\tFor example, if n = 4, then node 0 is the twin of node 3, and node 1 is the twin of node 2. These are the only nodes with twins for n = 4.\n\nThe twin sum is defined as the sum of a node and its twin.\n\nGiven the head of a linked list with even length, return the maximum twin sum of the linked list.\n\n \nExample 1:\n\nInput: head = [5,4,2,1]\nOutput: 6\nExplanation:\nNodes 0 and 1 are the twins of nodes 3 and 2, respectively. All have twin sum = 6.\nThere are no other nodes with twins in the linked list.\nThus, the maximum twin sum of the linked list is 6. \n\nExample 2:\n\nInput: head = [4,2,2,3]\nOutput: 7\nExplanation:\nThe nodes with twins present in this linked list are:\n- Node 0 is the twin of node 3 having a twin sum of 4 + 3 = 7.\n- Node 1 is the twin of node 2 having a twin sum of 2 + 2 = 4.\nThus, the maximum twin sum of the linked list is max(7, 4) = 7. \n\nExample 3:\n\nInput: head = [1,100000]\nOutput: 100001\nExplanation:\nThere is only one node with a twin in the linked list having twin sum of 1 + 100000 = 100001.\n\n \nConstraints:\n\n\tThe number of nodes in the list is an even integer in the range [2, 105].\n\t1 <= Node.val <= 105",
-  "example_testcases": "[5,4,2,1]\n[4,2,2,3]\n[1,100000]",
-  "sample_testcase": "[5,4,2,1]",
+  "url": "https://leetcode.com/problems/delete-the-middle-node-of-a-linked-list/",
+  "description": "You are given the head of a linked list. Delete the middle node, and return the head of the modified linked list.\n\nThe middle node of a linked list of size n is the &lfloor;n / 2&rfloor;th node from the start using 0-based indexing, where &lfloor;x&rfloor; denotes the largest integer less than or equal to x.\n\n\tFor n = 1, 2, 3, 4, and 5, the middle nodes are 0, 1, 1, 2, and 2, respectively.\n\n \nExample 1:\n\nInput: head = [1,3,4,7,1,2,6]\nOutput: [1,3,4,1,2,6]\nExplanation:\nThe above figure represents the given linked list. The indices of the nodes are written below.\nSince n = 7, node 3 with value 7 is the middle node, which is marked in red.\nWe return the new list after removing this node. \n\nExample 2:\n\nInput: head = [1,2,3,4]\nOutput: [1,2,4]\nExplanation:\nThe above figure represents the given linked list.\nFor n = 4, node 2 with value 3 is the middle node, which is marked in red.\n\nExample 3:\n\nInput: head = [2,1]\nOutput: [2]\nExplanation:\nThe above figure represents the given linked list.\nFor n = 2, node 1 with value 1 is the middle node, which is marked in red.\nNode 0 with value 2 is the only node remaining after removing node 1.\n\n \nConstraints:\n\n\tThe number of nodes in the list is in the range [1, 105].\n\t1 <= Node.val <= 105",
+  "example_testcases": "[1,3,4,7,1,2,6]\n[1,2,3,4]\n[2,1]",
+  "sample_testcase": "[1,3,4,7,1,2,6]",
   "tags": [
     "Linked List",
-    "Two Pointers",
-    "Stack"
+    "Two Pointers"
   ],
   "hints": [
-    "How can \"reversing\" a part of the linked list help find the answer?",
-    "We know that the nodes of the first half are twins of nodes in the second half, so try dividing the linked list in half and reverse the second half.",
-    "How can two pointers be used to find every twin sum optimally?",
-    "Use two different pointers pointing to the first nodes of the two halves of the linked list. The second pointer will point to the first node of the reversed half, which is the (n-1-i)th node in the original linked list. By moving both pointers forward at the same time, we find all twin sums."
+    "If a point with a speed s moves n units in a given time, a point with speed 2 * s will move 2 * n units at the same time. Can you use this to find the middle node of a linked list?",
+    "If you are given the middle node, the node before it, and the node after it, how can you modify the linked list?"
   ],
-  "starter_code": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution:\n    def pairSum(self, head: Optional[ListNode]) -> int:\n        ",
-  "starter_code_cpp": "/**\n * Definition for singly-linked list.\n * struct ListNode {\n *     int val;\n *     ListNode *next;\n *     ListNode() : val(0), next(nullptr) {}\n *     ListNode(int x) : val(x), next(nullptr) {}\n *     ListNode(int x, ListNode *next) : val(x), next(next) {}\n * };\n */\nclass Solution {\npublic:\n    int pairSum(ListNode* head) {\n        \n    }\n};",
+  "starter_code": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution:\n    def deleteMiddle(self, head: Optional[ListNode]) -> Optional[ListNode]:\n        ",
+  "starter_code_cpp": "/**\n * Definition for singly-linked list.\n * struct ListNode {\n *     int val;\n *     ListNode *next;\n *     ListNode() : val(0), next(nullptr) {}\n *     ListNode(int x) : val(x), next(nullptr) {}\n *     ListNode(int x, ListNode *next) : val(x), next(next) {}\n * };\n */\nclass Solution {\npublic:\n    ListNode* deleteMiddle(ListNode* head) {\n        \n    }\n};",
   "meta": {
-    "name": "pairSum",
+    "name": "deleteMiddle",
     "params": [
       {
         "name": "head",
@@ -30,7 +27,7 @@
       }
     ],
     "return": {
-      "type": "integer"
+      "type": "ListNode"
     }
   }
 }

@@ -10,22 +10,35 @@
  */
 class Solution {
 public:
-    int pairSum(ListNode* head) {
-        // Convert linked list to vector for easier access
-        std::vector<int> values;
-        while (head) {
-            values.push_back(head->val);
-            head = head->next;
+    ListNode* deleteMiddle(ListNode* head) {
+        // Handle edge cases
+        if (!head) return nullptr;
+        if (!head->next) return nullptr;
+
+        // Initialize slow and fast pointers
+        ListNode* slow = head;
+        ListNode* fast = head;
+
+        // Initialize a node to keep track of the node before the middle node
+        ListNode* prevSlow = nullptr;
+
+        // Find the middle node
+        while (fast->next && fast->next->next) {
+            prevSlow = slow;
+            slow = slow->next;
+            fast = fast->next->next;
         }
 
-        int maxSum = INT_MIN;  // Initialize with negative infinity
-        int n = values.size();
-
-        // Calculate sum of each pair and update maxSum
-        for (int i = 0; i < n / 2; i++) {
-            maxSum = std::max(maxSum, values[i] + values[n - 1 - i]);
+        // If the middle node is the second node, then it's part of a 2-node list or the second half of an odd-length list
+        if (slow == head) {
+            return head->next;
+        } else if (slow->next) {
+            prevSlow->next = slow->next;
+        } else {
+            // If the middle node is the last node, then it's the only node or the second node in a 2-node list
+            prevSlow->next = nullptr;
         }
 
-        return maxSum;
+        return head;
     }
 };
