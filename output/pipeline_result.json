@@ -1,5 +1,5 @@
 {
-  "date": "2026-06-15",
+  "date": "2026-06-16",
   "steps": {
     "fetch": "\u2713",
     "solution": "\u2713",
@@ -8,8 +8,8 @@
     "video": "\u2713",
     "upload": "\u2713"
   },
-  "problem_title": "Delete the Middle Node of a Linked List",
-  "video_path": "output/videos/final_2026-06-15.mp4",
-  "youtube_url": "https://www.youtube.com/watch?v=0TP1OHMT6ls",
-  "duration_seconds": 104.4
+  "problem_title": "Process String with Special Operations I",
+  "video_path": "output/videos/final_2026-06-16.mp4",
+  "youtube_url": "https://www.youtube.com/watch?v=uoMvpVXjZFs",
+  "duration_seconds": 162.6
 }

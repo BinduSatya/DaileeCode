@@ -1,33 +1,32 @@
 {
-  "date": "2026-06-15",
-  "id": "2216",
-  "title": "Delete the Middle Node of a Linked List",
-  "slug": "delete-the-middle-node-of-a-linked-list",
+  "date": "2026-06-16",
+  "id": "3931",
+  "title": "Process String with Special Operations I",
+  "slug": "process-string-with-special-operations-i",
   "difficulty": "Medium",
-  "url": "https://leetcode.com/problems/delete-the-middle-node-of-a-linked-list/",
-  "description": "You are given the head of a linked list. Delete the middle node, and return the head of the modified linked list.\n\nThe middle node of a linked list of size n is the &lfloor;n / 2&rfloor;th node from the start using 0-based indexing, where &lfloor;x&rfloor; denotes the largest integer less than or equal to x.\n\n\tFor n = 1, 2, 3, 4, and 5, the middle nodes are 0, 1, 1, 2, and 2, respectively.\n\n \nExample 1:\n\nInput: head = [1,3,4,7,1,2,6]\nOutput: [1,3,4,1,2,6]\nExplanation:\nThe above figure represents the given linked list. The indices of the nodes are written below.\nSince n = 7, node 3 with value 7 is the middle node, which is marked in red.\nWe return the new list after removing this node. \n\nExample 2:\n\nInput: head = [1,2,3,4]\nOutput: [1,2,4]\nExplanation:\nThe above figure represents the given linked list.\nFor n = 4, node 2 with value 3 is the middle node, which is marked in red.\n\nExample 3:\n\nInput: head = [2,1]\nOutput: [2]\nExplanation:\nThe above figure represents the given linked list.\nFor n = 2, node 1 with value 1 is the middle node, which is marked in red.\nNode 0 with value 2 is the only node remaining after removing node 1.\n\n \nConstraints:\n\n\tThe number of nodes in the list is in the range [1, 105].\n\t1 <= Node.val <= 105",
-  "example_testcases": "[1,3,4,7,1,2,6]\n[1,2,3,4]\n[2,1]",
-  "sample_testcase": "[1,3,4,7,1,2,6]",
+  "url": "https://leetcode.com/problems/process-string-with-special-operations-i/",
+  "description": "You are given a string s consisting of lowercase English letters and the special characters: *, #, and %.\n\nBuild a new string result by processing s according to the following rules from left to right:\n\n\tIf the letter is a lowercase English letter append it to result.\n\tA '*' removes the last character from result, if it exists.\n\tA '#' duplicates the current result and appends it to itself.\n\tA '%' reverses the current result.\n\nReturn the final string result after processing all characters in s.\n\n \nExample 1:\n\nInput: s = \"a#b%*\"\n\nOutput: \"ba\"\n\nExplanation:\n\n\t\n\t\t\n\t\t\ti\n\t\t\ts[i]\n\t\t\tOperation\n\t\t\tCurrent result\n\t\t\n\t\n\t\n\t\t\n\t\t\t0\n\t\t\t'a'\n\t\t\tAppend 'a'\n\t\t\t\"a\"\n\t\t\n\t\t\n\t\t\t1\n\t\t\t'#'\n\t\t\tDuplicate result\n\t\t\t\"aa\"\n\t\t\n\t\t\n\t\t\t2\n\t\t\t'b'\n\t\t\tAppend 'b'\n\t\t\t\"aab\"\n\t\t\n\t\t\n\t\t\t3\n\t\t\t'%'\n\t\t\tReverse result\n\t\t\t\"baa\"\n\t\t\n\t\t\n\t\t\t4\n\t\t\t'*'\n\t\t\tRemove the last character\n\t\t\t\"ba\"\n\t\t\n\t\n\nThus, the final result is \"ba\".\n\nExample 2:\n\nInput: s = \"z*#\"\n\nOutput: \"\"\n\nExplanation:\n\n\t\n\t\t\n\t\t\ti\n\t\t\ts[i]\n\t\t\tOperation\n\t\t\tCurrent result\n\t\t\n\t\n\t\n\t\t\n\t\t\t0\n\t\t\t'z'\n\t\t\tAppend 'z'\n\t\t\t\"z\"\n\t\t\n\t\t\n\t\t\t1\n\t\t\t'*'\n\t\t\tRemove the last character\n\t\t\t\"\"\n\t\t\n\t\t\n\t\t\t2\n\t\t\t'#'\n\t\t\tDuplicate the string\n\t\t\t\"\"\n\t\t\n\t\n\nThus, the final result is \"\".\n\n \nConstraints:\n\n\t1 <= s.length <= 20\n\ts consists of only lowercase English letters and special characters *, #, and %.",
+  "example_testcases": "\"a#b%*\"\n\"z*#\"",
+  "sample_testcase": "\"a#b%*\"",
   "tags": [
-    "Linked List",
-    "Two Pointers"
+    "String",
+    "Simulation"
   ],
   "hints": [
-    "If a point with a speed s moves n units in a given time, a point with speed 2 * s will move 2 * n units at the same time. Can you use this to find the middle node of a linked list?",
-    "If you are given the middle node, the node before it, and the node after it, how can you modify the linked list?"
+    "Simulate as described"
   ],
-  "starter_code": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution:\n    def deleteMiddle(self, head: Optional[ListNode]) -> Optional[ListNode]:\n        ",
-  "starter_code_cpp": "/**\n * Definition for singly-linked list.\n * struct ListNode {\n *     int val;\n *     ListNode *next;\n *     ListNode() : val(0), next(nullptr) {}\n *     ListNode(int x) : val(x), next(nullptr) {}\n *     ListNode(int x, ListNode *next) : val(x), next(next) {}\n * };\n */\nclass Solution {\npublic:\n    ListNode* deleteMiddle(ListNode* head) {\n        \n    }\n};",
+  "starter_code": "class Solution:\n    def processStr(self, s: str) -> str:\n        ",
+  "starter_code_cpp": "class Solution {\npublic:\n    string processStr(string s) {\n        \n    }\n};",
   "meta": {
-    "name": "deleteMiddle",
+    "name": "processStr",
     "params": [
       {
-        "name": "head",
-        "type": "ListNode"
+        "name": "s",
+        "type": "string"
       }
     ],
     "return": {
-      "type": "ListNode"
+      "type": "string"
     }
   }
 }
