@@ -1,12 +1,11 @@
 class Solution {
 public:
-    string processStr(string s) {
+    char processStr(string s, long long k) {
         string result = "";
+        
         for (char c : s) {
             if (c == '*') {
-                if (!result.empty()) {
-                    result.pop_back();
-                }
+                if (!result.empty()) result.pop_back();
             } else if (c == '#') {
                 result += result;
             } else if (c == '%') {
@@ -15,6 +14,8 @@ public:
                 result += c;
             }
         }
-        return result;
+        
+        if (k >= result.size()) return '.';
+        return result[k];
     }
 };
