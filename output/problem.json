@@ -1,37 +1,36 @@
 {
-  "date": "2026-06-17",
-  "id": "3939",
-  "title": "Process String with Special Operations II",
-  "slug": "process-string-with-special-operations-ii",
-  "difficulty": "Hard",
-  "url": "https://leetcode.com/problems/process-string-with-special-operations-ii/",
-  "description": "You are given a string s consisting of lowercase English letters and the special characters: '*', '#', and '%'.\n\nYou are also given an integer k.\n\nBuild a new string result by processing s according to the following rules from left to right:\n\n\tIf the letter is a lowercase English letter append it to result.\n\tA '*' removes the last character from result, if it exists.\n\tA '#' duplicates the current result and appends it to itself.\n\tA '%' reverses the current result.\n\nReturn the kth character of the final string result. If k is out of the bounds of result, return '.'.\n\n \nExample 1:\n\nInput: s = \"a#b%*\", k = 1\n\nOutput: \"a\"\n\nExplanation:\n\n\t\n\t\t\n\t\t\ti\n\t\t\ts[i]\n\t\t\tOperation\n\t\t\tCurrent result\n\t\t\n\t\n\t\n\t\t\n\t\t\t0\n\t\t\t'a'\n\t\t\tAppend 'a'\n\t\t\t\"a\"\n\t\t\n\t\t\n\t\t\t1\n\t\t\t'#'\n\t\t\tDuplicate result\n\t\t\t\"aa\"\n\t\t\n\t\t\n\t\t\t2\n\t\t\t'b'\n\t\t\tAppend 'b'\n\t\t\t\"aab\"\n\t\t\n\t\t\n\t\t\t3\n\t\t\t'%'\n\t\t\tReverse result\n\t\t\t\"baa\"\n\t\t\n\t\t\n\t\t\t4\n\t\t\t'*'\n\t\t\tRemove the last character\n\t\t\t\"ba\"\n\t\t\n\t\n\nThe final result is \"ba\". The character at index k = 1 is 'a'.\n\nExample 2:\n\nInput: s = \"cd%#*#\", k = 3\n\nOutput: \"d\"\n\nExplanation:\n\n\t\n\t\t\n\t\t\ti\n\t\t\ts[i]\n\t\t\tOperation\n\t\t\tCurrent result\n\t\t\n\t\n\t\n\t\t\n\t\t\t0\n\t\t\t'c'\n\t\t\tAppend 'c'\n\t\t\t\"c\"\n\t\t\n\t\t\n\t\t\t1\n\t\t\t'd'\n\t\t\tAppend 'd'\n\t\t\t\"cd\"\n\t\t\n\t\t\n\t\t\t2\n\t\t\t'%'\n\t\t\tReverse result\n\t\t\t\"dc\"\n\t\t\n\t\t\n\t\t\t3\n\t\t\t'#'\n\t\t\tDuplicate result\n\t\t\t\"dcdc\"\n\t\t\n\t\t\n\t\t\t4\n\t\t\t'*'\n\t\t\tRemove the last character\n\t\t\t\"dcd\"\n\t\t\n\t\t\n\t\t\t5\n\t\t\t'#'\n\t\t\tDuplicate result\n\t\t\t\"dcddcd\"\n\t\t\n\t\n\nThe final result is \"dcddcd\". The character at index k = 3 is 'd'.\n\nExample 3:\n\nInput: s = \"z*#\", k = 0\n\nOutput: \".\"\n\nExplanation:\n\n\t\n\t\t\n\t\t\ti\n\t\t\ts[i]\n\t\t\tOperation\n\t\t\tCurrent result\n\t\t\n\t\n\t\n\t\t\n\t\t\t0\n\t\t\t'z'\n\t\t\tAppend 'z'\n\t\t\t\"z\"\n\t\t\n\t\t\n\t\t\t1\n\t\t\t'*'\n\t\t\tRemove the last character\n\t\t\t\"\"\n\t\t\n\t\t\n\t\t\t2\n\t\t\t'#'\n\t\t\tDuplicate the string\n\t\t\t\"\"\n\t\t\n\t\n\nThe final result is \"\". Since index k = 0 is out of bounds, the output is '.'.\n\n \nConstraints:\n\n\t1 <= s.length <= 105\n\ts consists of only lowercase English letters and special characters '*', '#', and '%'.\n\t0 <= k <= 1015\n\tThe length of result after processing s will not exceed 1015.",
-  "example_testcases": "\"a#b%*\"\n1\n\"cd%#*#\"\n3\n\"z*#\"\n0",
-  "sample_testcase": "\"a#b%*\"\n1",
+  "date": "2026-06-18",
+  "id": "1446",
+  "title": "Angle Between Hands of a Clock",
+  "slug": "angle-between-hands-of-a-clock",
+  "difficulty": "Medium",
+  "url": "https://leetcode.com/problems/angle-between-hands-of-a-clock/",
+  "description": "Given two numbers, hour and minutes, return the smaller angle (in degrees) formed between the hour and the minute hand.\n\nAnswers within 10-5 of the actual value will be accepted as correct.\n\n \nExample 1:\n\nInput: hour = 12, minutes = 30\nOutput: 165\n\nExample 2:\n\nInput: hour = 3, minutes = 30\nOutput: 75\n\nExample 3:\n\nInput: hour = 3, minutes = 15\nOutput: 7.5\n\n \nConstraints:\n\n\t1 <= hour <= 12\n\t0 <= minutes <= 59",
+  "example_testcases": "12\n30\n3\n30\n3\n15",
+  "sample_testcase": "12\n30",
   "tags": [
-    "String",
-    "Simulation"
+    "Math"
   ],
   "hints": [
-    "Track the length of the string after each operation on <code>s</code>.",
-    "Walk backwards through <code>s</code>, undoing each # by using modulus on the tracked lengths, and undoing each % by mirroring across the midpoint, to pinpoint the <code>k</code>th character."
+    "The tricky part is determining how the minute hand affects the position of the hour hand.",
+    "Calculate the angles separately then find the difference."
   ],
-  "starter_code": "class Solution:\n    def processStr(self, s: str, k: int) -> str:\n        ",
-  "starter_code_cpp": "class Solution {\npublic:\n    char processStr(string s, long long k) {\n        \n    }\n};",
+  "starter_code": "class Solution:\n    def angleClock(self, hour: int, minutes: int) -> float:\n        ",
+  "starter_code_cpp": "class Solution {\npublic:\n    double angleClock(int hour, int minutes) {\n        \n    }\n};",
   "meta": {
-    "name": "processStr",
+    "name": "angleClock",
     "params": [
       {
-        "name": "s",
-        "type": "string"
+        "name": "hour",
+        "type": "integer"
       },
       {
-        "type": "long",
-        "name": "k"
+        "type": "integer",
+        "name": "minutes"
       }
     ],
     "return": {
-      "type": "character"
+      "type": "double"
     }
   }
 }
