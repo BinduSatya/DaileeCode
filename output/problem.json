@@ -1,36 +1,33 @@
 {
-  "date": "2026-06-18",
-  "id": "1446",
-  "title": "Angle Between Hands of a Clock",
-  "slug": "angle-between-hands-of-a-clock",
-  "difficulty": "Medium",
-  "url": "https://leetcode.com/problems/angle-between-hands-of-a-clock/",
-  "description": "Given two numbers, hour and minutes, return the smaller angle (in degrees) formed between the hour and the minute hand.\n\nAnswers within 10-5 of the actual value will be accepted as correct.\n\n \nExample 1:\n\nInput: hour = 12, minutes = 30\nOutput: 165\n\nExample 2:\n\nInput: hour = 3, minutes = 30\nOutput: 75\n\nExample 3:\n\nInput: hour = 3, minutes = 15\nOutput: 7.5\n\n \nConstraints:\n\n\t1 <= hour <= 12\n\t0 <= minutes <= 59",
-  "example_testcases": "12\n30\n3\n30\n3\n15",
-  "sample_testcase": "12\n30",
+  "date": "2026-06-19",
+  "id": "1833",
+  "title": "Find the Highest Altitude",
+  "slug": "find-the-highest-altitude",
+  "difficulty": "Easy",
+  "url": "https://leetcode.com/problems/find-the-highest-altitude/",
+  "description": "There is a biker going on a road trip. The road trip consists of n + 1 points at different altitudes. The biker starts his trip on point 0 with altitude equal 0.\n\nYou are given an integer array gain of length n where gain[i] is the net gain in altitude between points i​​​​​​ and i + 1 for all (0 <= i < n). Return the highest altitude of a point.\n\n \nExample 1:\n\nInput: gain = [-5,1,5,0,-7]\nOutput: 1\nExplanation: The altitudes are [0,-5,-4,1,1,-6]. The highest is 1.\n\nExample 2:\n\nInput: gain = [-4,-3,-2,-1,4,3,2]\nOutput: 0\nExplanation: The altitudes are [0,-4,-7,-9,-10,-6,-3,-1]. The highest is 0.\n\n \nConstraints:\n\n\tn == gain.length\n\t1 <= n <= 100\n\t-100 <= gain[i] <= 100",
+  "example_testcases": "[-5,1,5,0,-7]\n[-4,-3,-2,-1,4,3,2]",
+  "sample_testcase": "[-5,1,5,0,-7]",
   "tags": [
-    "Math"
+    "Array",
+    "Prefix Sum"
   ],
   "hints": [
-    "The tricky part is determining how the minute hand affects the position of the hour hand.",
-    "Calculate the angles separately then find the difference."
+    "Let's note that the altitude of an element is the sum of gains of all the elements behind it",
+    "Getting the altitudes can be done by getting the prefix sum array of the given array"
   ],
-  "starter_code": "class Solution:\n    def angleClock(self, hour: int, minutes: int) -> float:\n        ",
-  "starter_code_cpp": "class Solution {\npublic:\n    double angleClock(int hour, int minutes) {\n        \n    }\n};",
+  "starter_code": "class Solution:\n    def largestAltitude(self, gain: List[int]) -> int:\n        ",
+  "starter_code_cpp": "class Solution {\npublic:\n    int largestAltitude(vector<int>& gain) {\n        \n    }\n};",
   "meta": {
-    "name": "angleClock",
+    "name": "largestAltitude",
     "params": [
       {
-        "name": "hour",
-        "type": "integer"
-      },
-      {
-        "type": "integer",
-        "name": "minutes"
+        "name": "gain",
+        "type": "integer[]"
       }
     ],
     "return": {
-      "type": "double"
+      "type": "integer"
     }
   }
 }

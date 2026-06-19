@@ -1,5 +1,5 @@
 {
-  "date": "2026-06-18",
+  "date": "2026-06-19",
   "steps": {
     "fetch": "\u2713",
     "solution": "\u2713",
@@ -8,8 +8,8 @@
     "video": "\u2713",
     "upload": "\u2713"
   },
-  "problem_title": "Angle Between Hands of a Clock",
-  "video_path": "output/videos/final_2026-06-18.mp4",
-  "youtube_url": "https://www.youtube.com/watch?v=0H-IrFUU0Jw",
-  "duration_seconds": 141.3
+  "problem_title": "Find the Highest Altitude",
+  "video_path": "output/videos/final_2026-06-19.mp4",
+  "youtube_url": "https://www.youtube.com/watch?v=nSFoBGM7fQs",
+  "duration_seconds": 132.1
 }
