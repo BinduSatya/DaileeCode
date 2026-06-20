@@ -1,29 +1,34 @@
 {
-  "date": "2026-06-19",
-  "id": "1833",
-  "title": "Find the Highest Altitude",
-  "slug": "find-the-highest-altitude",
-  "difficulty": "Easy",
-  "url": "https://leetcode.com/problems/find-the-highest-altitude/",
-  "description": "There is a biker going on a road trip. The road trip consists of n + 1 points at different altitudes. The biker starts his trip on point 0 with altitude equal 0.\n\nYou are given an integer array gain of length n where gain[i] is the net gain in altitude between points i​​​​​​ and i + 1 for all (0 <= i < n). Return the highest altitude of a point.\n\n \nExample 1:\n\nInput: gain = [-5,1,5,0,-7]\nOutput: 1\nExplanation: The altitudes are [0,-5,-4,1,1,-6]. The highest is 1.\n\nExample 2:\n\nInput: gain = [-4,-3,-2,-1,4,3,2]\nOutput: 0\nExplanation: The altitudes are [0,-4,-7,-9,-10,-6,-3,-1]. The highest is 0.\n\n \nConstraints:\n\n\tn == gain.length\n\t1 <= n <= 100\n\t-100 <= gain[i] <= 100",
-  "example_testcases": "[-5,1,5,0,-7]\n[-4,-3,-2,-1,4,3,2]",
-  "sample_testcase": "[-5,1,5,0,-7]",
+  "date": "2026-06-20",
+  "id": "1968",
+  "title": "Maximum Building Height",
+  "slug": "maximum-building-height",
+  "difficulty": "Hard",
+  "url": "https://leetcode.com/problems/maximum-building-height/",
+  "description": "You want to build n new buildings in a city. The new buildings will be built in a line and are labeled from 1 to n.\n\nHowever, there are city restrictions on the heights of the new buildings:\n\n\tThe height of each building must be a non-negative integer.\n\tThe height of the first building must be 0.\n\tThe height difference between any two adjacent buildings cannot exceed 1.\n\nAdditionally, there are city restrictions on the maximum height of specific buildings. These restrictions are given as a 2D integer array restrictions where restrictions[i] = [idi, maxHeighti] indicates that building idi must have a height less than or equal to maxHeighti.\n\nIt is guaranteed that each building will appear at most once in restrictions, and building 1 will not be in restrictions.\n\nReturn the maximum possible height of the tallest building.\n\n \nExample 1:\n\nInput: n = 5, restrictions = [[2,1],[4,1]]\nOutput: 2\nExplanation: The green area in the image indicates the maximum allowed height for each building.\nWe can build the buildings with heights [0,1,2,1,2], and the tallest building has a height of 2.\n\nExample 2:\n\nInput: n = 6, restrictions = []\nOutput: 5\nExplanation: The green area in the image indicates the maximum allowed height for each building.\nWe can build the buildings with heights [0,1,2,3,4,5], and the tallest building has a height of 5.\n\nExample 3:\n\nInput: n = 10, restrictions = [[5,3],[2,5],[7,4],[10,3]]\nOutput: 5\nExplanation: The green area in the image indicates the maximum allowed height for each building.\nWe can build the buildings with heights [0,1,2,3,3,4,4,5,4,3], and the tallest building has a height of 5.\n\n \nConstraints:\n\n\t2 <= n <= 109\n\t0 <= restrictions.length <= min(n - 1, 105)\n\t2 <= idi <= n\n\tidi is unique.\n\t0 <= maxHeighti <= 109",
+  "example_testcases": "5\n[[2,1],[4,1]]\n6\n[]\n10\n[[5,3],[2,5],[7,4],[10,3]]",
+  "sample_testcase": "5\n[[2,1],[4,1]]",
   "tags": [
     "Array",
-    "Prefix Sum"
+    "Math",
+    "Sorting"
   ],
   "hints": [
-    "Let's note that the altitude of an element is the sum of gains of all the elements behind it",
-    "Getting the altitudes can be done by getting the prefix sum array of the given array"
+    "Is it possible to find the max height if given the height range of a particular building?",
+    "You can find the height range of a restricted building by doing 2 passes from the left and right."
   ],
-  "starter_code": "class Solution:\n    def largestAltitude(self, gain: List[int]) -> int:\n        ",
-  "starter_code_cpp": "class Solution {\npublic:\n    int largestAltitude(vector<int>& gain) {\n        \n    }\n};",
+  "starter_code": "class Solution:\n    def maxBuilding(self, n: int, restrictions: List[List[int]]) -> int:\n        ",
+  "starter_code_cpp": "class Solution {\npublic:\n    int maxBuilding(int n, vector<vector<int>>& restrictions) {\n        \n    }\n};",
   "meta": {
-    "name": "largestAltitude",
+    "name": "maxBuilding",
     "params": [
       {
-        "name": "gain",
-        "type": "integer[]"
+        "name": "n",
+        "type": "integer"
+      },
+      {
+        "type": "integer[][]",
+        "name": "restrictions"
       }
     ],
     "return": {
