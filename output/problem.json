@@ -1,34 +1,35 @@
 {
-  "date": "2026-06-20",
-  "id": "1968",
-  "title": "Maximum Building Height",
-  "slug": "maximum-building-height",
-  "difficulty": "Hard",
-  "url": "https://leetcode.com/problems/maximum-building-height/",
-  "description": "You want to build n new buildings in a city. The new buildings will be built in a line and are labeled from 1 to n.\n\nHowever, there are city restrictions on the heights of the new buildings:\n\n\tThe height of each building must be a non-negative integer.\n\tThe height of the first building must be 0.\n\tThe height difference between any two adjacent buildings cannot exceed 1.\n\nAdditionally, there are city restrictions on the maximum height of specific buildings. These restrictions are given as a 2D integer array restrictions where restrictions[i] = [idi, maxHeighti] indicates that building idi must have a height less than or equal to maxHeighti.\n\nIt is guaranteed that each building will appear at most once in restrictions, and building 1 will not be in restrictions.\n\nReturn the maximum possible height of the tallest building.\n\n \nExample 1:\n\nInput: n = 5, restrictions = [[2,1],[4,1]]\nOutput: 2\nExplanation: The green area in the image indicates the maximum allowed height for each building.\nWe can build the buildings with heights [0,1,2,1,2], and the tallest building has a height of 2.\n\nExample 2:\n\nInput: n = 6, restrictions = []\nOutput: 5\nExplanation: The green area in the image indicates the maximum allowed height for each building.\nWe can build the buildings with heights [0,1,2,3,4,5], and the tallest building has a height of 5.\n\nExample 3:\n\nInput: n = 10, restrictions = [[5,3],[2,5],[7,4],[10,3]]\nOutput: 5\nExplanation: The green area in the image indicates the maximum allowed height for each building.\nWe can build the buildings with heights [0,1,2,3,3,4,4,5,4,3], and the tallest building has a height of 5.\n\n \nConstraints:\n\n\t2 <= n <= 109\n\t0 <= restrictions.length <= min(n - 1, 105)\n\t2 <= idi <= n\n\tidi is unique.\n\t0 <= maxHeighti <= 109",
-  "example_testcases": "5\n[[2,1],[4,1]]\n6\n[]\n10\n[[5,3],[2,5],[7,4],[10,3]]",
-  "sample_testcase": "5\n[[2,1],[4,1]]",
+  "date": "2026-06-21",
+  "id": "1961",
+  "title": "Maximum Ice Cream Bars",
+  "slug": "maximum-ice-cream-bars",
+  "difficulty": "Medium",
+  "url": "https://leetcode.com/problems/maximum-ice-cream-bars/",
+  "description": "It is a sweltering summer day, and a boy wants to buy some ice cream bars.\n\nAt the store, there are n ice cream bars. You are given an array costs of length n, where costs[i] is the price of the ith ice cream bar in coins. The boy initially has coins coins to spend, and he wants to buy as many ice cream bars as possible. \n\nNote: The boy can buy the ice cream bars in any order.\n\nReturn the maximum number of ice cream bars the boy can buy with coins coins.\n\nYou must solve the problem by counting sort.\n\n \nExample 1:\n\nInput: costs = [1,3,2,4,1], coins = 7\nOutput: 4\nExplanation: The boy can buy ice cream bars at indices 0,1,2,4 for a total price of 1 + 3 + 2 + 1 = 7.\n\nExample 2:\n\nInput: costs = [10,6,8,7,7,8], coins = 5\nOutput: 0\nExplanation: The boy cannot afford any of the ice cream bars.\n\nExample 3:\n\nInput: costs = [1,6,3,1,2,5], coins = 20\nOutput: 6\nExplanation: The boy can buy all the ice cream bars for a total price of 1 + 6 + 3 + 1 + 2 + 5 = 18.\n\n \nConstraints:\n\n\tcosts.length == n\n\t1 <= n <= 105\n\t1 <= costs[i] <= 105\n\t1 <= coins <= 108",
+  "example_testcases": "[1,3,2,4,1]\n7\n[10,6,8,7,7,8]\n5\n[1,6,3,1,2,5]\n20",
+  "sample_testcase": "[1,3,2,4,1]\n7",
   "tags": [
     "Array",
-    "Math",
-    "Sorting"
+    "Greedy",
+    "Sorting",
+    "Counting Sort"
   ],
   "hints": [
-    "Is it possible to find the max height if given the height range of a particular building?",
-    "You can find the height range of a restricted building by doing 2 passes from the left and right."
+    "It is always optimal to buy the least expensive ice cream bar first.",
+    "Sort the prices so that the cheapest ice cream bar comes first."
   ],
-  "starter_code": "class Solution:\n    def maxBuilding(self, n: int, restrictions: List[List[int]]) -> int:\n        ",
-  "starter_code_cpp": "class Solution {\npublic:\n    int maxBuilding(int n, vector<vector<int>>& restrictions) {\n        \n    }\n};",
+  "starter_code": "class Solution:\n    def maxIceCream(self, costs: List[int], coins: int) -> int:\n        ",
+  "starter_code_cpp": "class Solution {\npublic:\n    int maxIceCream(vector<int>& costs, int coins) {\n        \n    }\n};",
   "meta": {
-    "name": "maxBuilding",
+    "name": "maxIceCream",
     "params": [
       {
-        "name": "n",
-        "type": "integer"
+        "name": "costs",
+        "type": "integer[]"
       },
       {
-        "type": "integer[][]",
-        "name": "restrictions"
+        "type": "integer",
+        "name": "coins"
       }
     ],
     "return": {

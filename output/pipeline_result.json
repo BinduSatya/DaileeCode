@@ -1,5 +1,5 @@
 {
-  "date": "2026-06-20",
+  "date": "2026-06-21",
   "steps": {
     "fetch": "\u2713",
     "solution": "\u2713",
@@ -8,8 +8,8 @@
     "video": "\u2713",
     "upload": "\u2713"
   },
-  "problem_title": "Maximum Building Height",
-  "video_path": "output/videos/final_2026-06-20.mp4",
-  "youtube_url": "https://www.youtube.com/watch?v=YZanQK1FwP0",
-  "duration_seconds": 153.3
+  "problem_title": "Maximum Ice Cream Bars",
+  "video_path": "output/videos/final_2026-06-21.mp4",
+  "youtube_url": "https://www.youtube.com/watch?v=35rS6FXF6xc",
+  "duration_seconds": 144.3
 }
