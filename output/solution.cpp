@@ -1,16 +1,13 @@
 class Solution {
 public:
-    int maxIceCream(vector<int>& costs, int coins) {
-        sort(costs.begin(), costs.end());
-        int count = 0;
-        for (int cost : costs) {
-            if (cost <= coins) {
-                coins -= cost;
-                count++;
-            } else {
-                break;
-            }
+    int maxNumberOfBalloons(string text) {
+        // Count frequency of each character in the string
+        unordered_map<char, int> freq;
+        for (char c : text) {
+            freq[c]++;
         }
-        return count;
+        
+        // Calculate the maximum number of "balloon" instances
+        return min({freq['b'], freq['a'], freq['l'] / 2, freq['o'] / 2, freq['n']});
     }
 };
