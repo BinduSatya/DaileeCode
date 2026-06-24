@@ -1,30 +1,31 @@
+#include <vector>
+using namespace std;
+
 const int MOD = 1e9 + 7;
+
 class Solution {
 public:
-    int numberOfArrays(int n, int l, int r) {
-        vector<vector<long long>> dp(n, vector<long long>(2, 0));
-        dp[0][0] = r - l + 1;
-        dp[1][0] = r - l;
-        
-        // Compute dp values for n >= 2
-        for (int i = 1; i < n; i++) {
-            vector<vector<long long>> next(2, vector<long long>(2, 0));
-            for (int prevInc = 0; prevInc < 2; prevInc++) {
-                for (int prevDec = 0; prevDec < 2; prevDec++) {
-                    for (int j = l; j <= r; j++) {
-                        if (prevInc == 1 && prevDec == 0 && j < l + i) next[0][0] = (next[0][0] + dp[i-1][0]) % MOD; 
-                        if (prevInc == 0 && prevDec == 1 && j > r - i) next[1][1] = (next[1][1] + dp[i-1][1]) % MOD; 
-                        if (prevInc == 0 && prevDec == 0 && j > l + i - 1 && j < r - i + 1) next[0][1] = (next[0][1] + dp[i-1][0]) % MOD;
-                        if (prevInc == 1 && prevDec == 1 && j > l + i - 1 && j < r - i + 1) next[1][0] = (next[1][0] + dp[i-1][1]) % MOD;
-                    }
-                }
+    int numberOfZigZagArrays(int n, int lower, int upper) {
+        long long dp[2][2] = {0}; // 0 for decreasing, 1 for increasing
+        for (int i = lower; i <= upper; i++) {
+            long long newDp[2][2] = {0};
+            if (!dp[0][0] && !dp[0][1] && !dp[1][0] && !dp[1][1]) {
+                newDp[0][0] = (upper - i < 1 ? 0 : upper - i);
+                newDp[0][1] = (i - lower < 1 ? 0 : i - lower);
+                newDp[1][0] = (upper - i < 1 ? 0 : upper - i);
+                newDp[1][1] = (i - lower < 1 ? 0 : i - lower);
+            } else {
+                newDp[0][0] = (dp[0][1] + dp[1][1]) % MOD;
+                newDp[0][1] = (dp[0][0] + dp[1][0]) % MOD;
+                newDp[1][0] = (dp[0][1] + dp[1][1]) % MOD;
+                newDp[1][1] = (dp[0][0] + dp[1][0]) % MOD;
             }
-            dp = next;
+            dp[0][0] = newDp[0][0];
+            dp[0][1] = newDp[0][1];
+            dp[1][0] = newDp[1][0];
+            dp[1][1] = newDp[1][1];
         }
-        
-        // Compute final answer
-        long long res = (dp[0][0] + dp[0][1] + dp[1][0] + dp[1][1]) % MOD;
-        
-        return res;
+        long long ans = (dp[0][0] + dp[0][1] + dp[1][0] + dp[1][1]) % MOD;
+        return ans;
     }
 };
