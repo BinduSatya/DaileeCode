@@ -1,39 +1,38 @@
 {
-  "date": "2026-06-24",
-  "id": "3964",
-  "title": "Number of ZigZag Arrays II",
-  "slug": "number-of-zigzag-arrays-ii",
-  "difficulty": "Hard",
-  "url": "https://leetcode.com/problems/number-of-zigzag-arrays-ii/",
-  "description": "You are given three integers n, l, and r.\n\nA ZigZag array of length n is defined as follows:\n\n\tEach element lies in the range [l, r].\n\tNo two adjacent elements are equal.\n\tNo three consecutive elements form a strictly increasing or strictly decreasing sequence.\n\nReturn the total number of valid ZigZag arrays.\n\nSince the answer may be large, return it modulo 109 + 7.\n\nA sequence is said to be strictly increasing if each element is strictly greater than its previous one (if exists).\n\nA sequence is said to be strictly decreasing if each element is strictly smaller than its previous one (if exists).\n\n \nExample 1:\n\nInput: n = 3, l = 4, r = 5\n\nOutput: 2\n\nExplanation:\n\nThere are only 2 valid ZigZag arrays of length n = 3 using values in the range [4, 5]:\n\n\t[4, 5, 4]\n\t[5, 4, 5]\n\nExample 2:\n\nInput: n = 3, l = 1, r = 3\n\nOutput: 10\n\nExplanation:\n\n​​​​​​​There are 10 valid ZigZag arrays of length n = 3 using values in the range [1, 3]:\n\n\t[1, 2, 1], [1, 3, 1], [1, 3, 2]\n\t[2, 1, 2], [2, 1, 3], [2, 3, 1], [2, 3, 2]\n\t[3, 1, 2], [3, 1, 3], [3, 2, 3]\n\nAll arrays meet the ZigZag conditions.\n\n \nConstraints:\n\n\t3 <= n <= 109\n\t1 <= l < r <= 75​​​​​​​",
-  "example_testcases": "3\n4\n5\n3\n1\n3",
-  "sample_testcase": "3\n4\n5",
+  "date": "2026-06-25",
+  "id": "4074",
+  "title": "Count Subarrays With Majority Element I",
+  "slug": "count-subarrays-with-majority-element-i",
+  "difficulty": "Medium",
+  "url": "https://leetcode.com/problems/count-subarrays-with-majority-element-i/",
+  "description": "You are given an integer array nums and an integer target.\n\nReturn the number of subarrays of nums in which target is the majority element.\n\nThe majority element of a subarray is the element that appears strictly more than half of the times in that subarray.\n\n \nExample 1:\n\nInput: nums = [1,2,2,3], target = 2\n\nOutput: 5\n\nExplanation:\n\nValid subarrays with target = 2 as the majority element:\n\n\tnums[1..1] = [2]\n\tnums[2..2] = [2]\n\tnums[1..2] = [2,2]\n\tnums[0..2] = [1,2,2]\n\tnums[1..3] = [2,2,3]\n\nSo there are 5 such subarrays.\n\nExample 2:\n\nInput: nums = [1,1,1,1], target = 1\n\nOutput: 10\n\nExplanation: \n\n​​​​​​​All 10 subarrays have 1 as the majority element.\n\nExample 3:\n\nInput: nums = [1,2,3], target = 4\n\nOutput: 0\n\nExplanation:\n\ntarget = 4 does not appear in nums at all. Therefore, there cannot be any subarray where 4 is the majority element. Hence the answer is 0.\n\n \nConstraints:\n\n\t1 <= nums.length <= 1000\n\t1 <= nums[i] <= 10​​​​​​​9\n\t1 <= target <= 109",
+  "example_testcases": "[1,2,2,3]\n2\n[1,1,1,1]\n1\n[1,2,3]\n4",
+  "sample_testcase": "[1,2,2,3]\n2",
   "tags": [
-    "Math",
-    "Dynamic Programming"
+    "Array",
+    "Hash Table",
+    "Divide and Conquer",
+    "Segment Tree",
+    "Merge Sort",
+    "Counting",
+    "Prefix Sum"
   ],
   "hints": [
-    "Use matrix exponentiation",
-    "Encode states in a vector of length <code>2*m</code> where <code>m = r - l + 1</code>: first <code>m</code> entries = \"next compare = down\" for values, next <code>m</code> = \"next compare = up\".",
-    "Build a transition matrix <code>T</code> (size <code>2*m × 2*m</code>): from an <code>up,x</code> state go to <code>down,y</code> for every <code>y > x</code>, and from <code>down,x</code> go to <code>up,y</code> for every <code>y < x</code>.",
-    "Use fast matrix exponentiation to compute <code>T^(n-1)</code>, apply it to the initial vector (ones in the block for starting <code>up</code> and separately for starting <code>down</code>), sum final entries, and add both results (for <code>n=1</code> return <code>m</code>)."
+    "Use brute force",
+    "Count all subarrays where <code>2 * count(target) > length</code>"
   ],
-  "starter_code": "class Solution:\n    def zigZagArrays(self, n: int, l: int, r: int) -> int:\n        ",
-  "starter_code_cpp": "class Solution {\npublic:\n    int zigZagArrays(int n, int l, int r) {\n        \n    }\n};",
+  "starter_code": "class Solution:\n    def countMajoritySubarrays(self, nums: List[int], target: int) -> int:\n        ",
+  "starter_code_cpp": "class Solution {\npublic:\n    int countMajoritySubarrays(vector<int>& nums, int target) {\n        \n    }\n};",
   "meta": {
-    "name": "zigZagArrays",
+    "name": "countMajoritySubarrays",
     "params": [
       {
-        "name": "n",
-        "type": "integer"
+        "name": "nums",
+        "type": "integer[]"
       },
       {
         "type": "integer",
-        "name": "l"
-      },
-      {
-        "type": "integer",
-        "name": "r"
+        "name": "target"
       }
     ],
     "return": {
