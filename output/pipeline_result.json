@@ -1,5 +1,5 @@
 {
-  "date": "2026-06-26",
+  "date": "2026-06-27",
   "steps": {
     "fetch": "\u2713",
     "solution": "\u2713",
@@ -8,8 +8,8 @@
     "video": "\u2713",
     "upload": "\u2713"
   },
-  "problem_title": "Count Subarrays With Majority Element II",
-  "video_path": "output/videos/final_2026-06-26.mp4",
-  "youtube_url": "https://www.youtube.com/watch?v=5QOVDIxW2I4",
-  "duration_seconds": 108.1
+  "problem_title": "Find the Maximum Number of Elements in Subset",
+  "video_path": "output/videos/final_2026-06-27.mp4",
+  "youtube_url": "https://www.youtube.com/watch?v=a_g4uwIRD-o",
+  "duration_seconds": 151.1
 }
