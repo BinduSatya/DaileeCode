@@ -1,30 +1,11 @@
 class Solution {
 public:
-    int maximumLength(vector<int>& nums) {
-        unordered_map<int, int> frequency;
-        int maxLength = 0;
-        
-        for (int num : nums) {
-            frequency[num]++;
-            int length = 1;
-            int k = num;
-            
-            while (k % 2 == 0) {
-                k /= 2;
-                if (frequency[k] > 0) {
-                    length++;
-                } else {
-                    break;
-                }
-            }
-            
-            if (k == 1) {
-                maxLength = max(maxLength, 2 * length - 1);
-            } else {
-                maxLength = max(maxLength, length);
-            }
+    int maximumElementAfterDecrementingAndRearranging(vector<int>& arr) {
+        sort(arr.begin(), arr.end());
+        int max_val = 1;
+        for (int i = 1; i < arr.size(); i++) {
+            max_val = min(max_val + 1, arr[i]);
         }
-        
-        return maxLength;
+        return max_val;
     }
 };
