@@ -1,11 +1,12 @@
 class Solution {
 public:
-    int maximumElementAfterDecrementingAndRearranging(vector<int>& arr) {
-        sort(arr.begin(), arr.end());
-        int max_val = 1;
-        for (int i = 1; i < arr.size(); i++) {
-            max_val = min(max_val + 1, arr[i]);
+    int numOfStrings(vector<string>& patterns, string word) {
+        int count = 0;
+        for (const string& pattern : patterns) {
+            if (word.find(pattern) != string::npos) {
+                count++;
+            }
         }
-        return max_val;
+        return count;
     }
 };
