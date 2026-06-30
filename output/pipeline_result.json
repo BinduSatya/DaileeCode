@@ -1,5 +1,5 @@
 {
-  "date": "2026-06-29",
+  "date": "2026-06-30",
   "steps": {
     "fetch": "\u2713",
     "solution": "\u2713",
@@ -8,8 +8,8 @@
     "video": "\u2713",
     "upload": "\u2713"
   },
-  "problem_title": "Number of Strings That Appear as Substrings in Word",
-  "video_path": "output/videos/final_2026-06-29.mp4",
-  "youtube_url": "https://www.youtube.com/watch?v=GGBeYgY59wc",
-  "duration_seconds": 189.7
+  "problem_title": "Number of Substrings Containing All Three Characters",
+  "video_path": "output/videos/final_2026-06-30.mp4",
+  "youtube_url": "https://www.youtube.com/watch?v=3tlhJ98WWew",
+  "duration_seconds": 171.8
 }
