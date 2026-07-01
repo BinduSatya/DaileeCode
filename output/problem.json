@@ -1,30 +1,35 @@
 {
-  "date": "2026-06-30",
-  "id": "1460",
-  "title": "Number of Substrings Containing All Three Characters",
-  "slug": "number-of-substrings-containing-all-three-characters",
+  "date": "2026-07-01",
+  "id": "2914",
+  "title": "Find the Safest Path in a Grid",
+  "slug": "find-the-safest-path-in-a-grid",
   "difficulty": "Medium",
-  "url": "https://leetcode.com/problems/number-of-substrings-containing-all-three-characters/",
-  "description": "Given a string s consisting only of characters a, b and c.\n\nReturn the number of substrings containing at least one occurrence of all these characters a, b and c.\n\n \nExample 1:\n\nInput: s = \"abcabc\"\nOutput: 10\nExplanation: The substrings containing at least one occurrence of the characters a, b and c are \"abc\", \"abca\", \"abcab\", \"abcabc\", \"bca\", \"bcab\", \"bcabc\", \"cab\", \"cabc\" and \"abc\" (again). \n\nExample 2:\n\nInput: s = \"aaacb\"\nOutput: 3\nExplanation: The substrings containing at least one occurrence of the characters a, b and c are \"aaacb\", \"aacb\" and \"acb\". \n\nExample 3:\n\nInput: s = \"abc\"\nOutput: 1\n\n \nConstraints:\n\n\t3 <= s.length <= 5 x 10^4\n\ts only consists of a, b or c characters.",
-  "example_testcases": "\"abcabc\"\n\"aaacb\"\n\"abc\"",
-  "sample_testcase": "\"abcabc\"",
+  "url": "https://leetcode.com/problems/find-the-safest-path-in-a-grid/",
+  "description": "You are given a 0-indexed 2D matrix grid of size n x n, where (r, c) represents:\n\n\tA cell containing a thief if grid[r][c] = 1\n\tAn empty cell if grid[r][c] = 0\n\nYou are initially positioned at cell (0, 0). In one move, you can move to any adjacent cell in the grid, including cells containing thieves.\n\nThe safeness factor of a path on the grid is defined as the minimum manhattan distance from any cell in the path to any thief in the grid.\n\nReturn the maximum safeness factor of all paths leading to cell (n - 1, n - 1).\n\nAn adjacent cell of cell (r, c), is one of the cells (r, c + 1), (r, c - 1), (r + 1, c) and (r - 1, c) if it exists.\n\nThe Manhattan distance between two cells (a, b) and (x, y) is equal to |a - x| + |b - y|, where |val| denotes the absolute value of val.\n\n \nExample 1:\n\nInput: grid = [[1,0,0],[0,0,0],[0,0,1]]\nOutput: 0\nExplanation: All paths from (0, 0) to (n - 1, n - 1) go through the thieves in cells (0, 0) and (n - 1, n - 1).\n\nExample 2:\n\nInput: grid = [[0,0,1],[0,0,0],[0,0,0]]\nOutput: 2\nExplanation: The path depicted in the picture above has a safeness factor of 2 since:\n- The closest cell of the path to the thief at cell (0, 2) is cell (0, 0). The distance between them is | 0 - 0 | + | 0 - 2 | = 2.\nIt can be shown that there are no other paths with a higher safeness factor.\n\nExample 3:\n\nInput: grid = [[0,0,0,1],[0,0,0,0],[0,0,0,0],[1,0,0,0]]\nOutput: 2\nExplanation: The path depicted in the picture above has a safeness factor of 2 since:\n- The closest cell of the path to the thief at cell (0, 3) is cell (1, 2). The distance between them is | 0 - 1 | + | 3 - 2 | = 2.\n- The closest cell of the path to the thief at cell (3, 0) is cell (3, 2). The distance between them is | 3 - 3 | + | 0 - 2 | = 2.\nIt can be shown that there are no other paths with a higher safeness factor.\n\n \nConstraints:\n\n\t1 <= grid.length == n <= 400\n\tgrid[i].length == n\n\tgrid[i][j] is either 0 or 1.\n\tThere is at least one thief in the grid.",
+  "example_testcases": "[[1,0,0],[0,0,0],[0,0,1]]\n[[0,0,1],[0,0,0],[0,0,0]]\n[[0,0,0,1],[0,0,0,0],[0,0,0,0],[1,0,0,0]]",
+  "sample_testcase": "[[1,0,0],[0,0,0],[0,0,1]]",
   "tags": [
-    "Hash Table",
-    "String",
-    "Sliding Window"
+    "Array",
+    "Binary Search",
+    "Breadth-First Search",
+    "Union-Find",
+    "Heap (Priority Queue)",
+    "Matrix"
   ],
   "hints": [
-    "For each position we simply need to find the first occurrence of a/b/c on or after this position.",
-    "So we can pre-compute three link-list of indices of each a, b, and c."
+    "Consider using both BFS and binary search together.",
+    "Launch a BFS starting from all the cells containing thieves to calculate d[x][y] which is the smallest Manhattan distance from (x, y) to the nearest grid that contains thieves.",
+    "To check if the bottom-right cell of the grid can be reached through a path of safeness factor v, eliminate all cells (x, y) such that grid[x][y]  < v. if (0, 0) and (n - 1, n - 1) are still connected, there exists a path between (0, 0) and (n - 1, n - 1) of safeness factor v.",
+    "Binary search over the final safeness factor v."
   ],
-  "starter_code": "class Solution:\n    def numberOfSubstrings(self, s: str) -> int:\n        ",
-  "starter_code_cpp": "class Solution {\npublic:\n    int numberOfSubstrings(string s) {\n        \n    }\n};",
+  "starter_code": "class Solution:\n    def maximumSafenessFactor(self, grid: List[List[int]]) -> int:\n        ",
+  "starter_code_cpp": "class Solution {\npublic:\n    int maximumSafenessFactor(vector<vector<int>>& grid) {\n        \n    }\n};",
   "meta": {
-    "name": "numberOfSubstrings",
+    "name": "maximumSafenessFactor",
     "params": [
       {
-        "name": "s",
-        "type": "string"
+        "name": "grid",
+        "type": "list<list<integer>>"
       }
     ],
     "return": {
