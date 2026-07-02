@@ -1,5 +1,5 @@
 {
-  "date": "2026-07-01",
+  "date": "2026-07-02",
   "steps": {
     "fetch": "\u2713",
     "solution": "\u2713",
@@ -8,8 +8,8 @@
     "video": "\u2713",
     "upload": "\u2713"
   },
-  "problem_title": "Find the Safest Path in a Grid",
-  "video_path": "output/videos/final_2026-07-01.mp4",
-  "youtube_url": "https://www.youtube.com/watch?v=9lHylJKV79o",
-  "duration_seconds": 174.6
+  "problem_title": "Find a Safe Walk Through a Grid",
+  "video_path": "output/videos/final_2026-07-02.mp4",
+  "youtube_url": "https://www.youtube.com/watch?v=rojj5OgoqxA",
+  "duration_seconds": 139.7
 }

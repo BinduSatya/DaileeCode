@@ -1,39 +1,40 @@
 {
-  "date": "2026-07-01",
-  "id": "2914",
-  "title": "Find the Safest Path in a Grid",
-  "slug": "find-the-safest-path-in-a-grid",
+  "date": "2026-07-02",
+  "id": "3558",
+  "title": "Find a Safe Walk Through a Grid",
+  "slug": "find-a-safe-walk-through-a-grid",
   "difficulty": "Medium",
-  "url": "https://leetcode.com/problems/find-the-safest-path-in-a-grid/",
-  "description": "You are given a 0-indexed 2D matrix grid of size n x n, where (r, c) represents:\n\n\tA cell containing a thief if grid[r][c] = 1\n\tAn empty cell if grid[r][c] = 0\n\nYou are initially positioned at cell (0, 0). In one move, you can move to any adjacent cell in the grid, including cells containing thieves.\n\nThe safeness factor of a path on the grid is defined as the minimum manhattan distance from any cell in the path to any thief in the grid.\n\nReturn the maximum safeness factor of all paths leading to cell (n - 1, n - 1).\n\nAn adjacent cell of cell (r, c), is one of the cells (r, c + 1), (r, c - 1), (r + 1, c) and (r - 1, c) if it exists.\n\nThe Manhattan distance between two cells (a, b) and (x, y) is equal to |a - x| + |b - y|, where |val| denotes the absolute value of val.\n\n \nExample 1:\n\nInput: grid = [[1,0,0],[0,0,0],[0,0,1]]\nOutput: 0\nExplanation: All paths from (0, 0) to (n - 1, n - 1) go through the thieves in cells (0, 0) and (n - 1, n - 1).\n\nExample 2:\n\nInput: grid = [[0,0,1],[0,0,0],[0,0,0]]\nOutput: 2\nExplanation: The path depicted in the picture above has a safeness factor of 2 since:\n- The closest cell of the path to the thief at cell (0, 2) is cell (0, 0). The distance between them is | 0 - 0 | + | 0 - 2 | = 2.\nIt can be shown that there are no other paths with a higher safeness factor.\n\nExample 3:\n\nInput: grid = [[0,0,0,1],[0,0,0,0],[0,0,0,0],[1,0,0,0]]\nOutput: 2\nExplanation: The path depicted in the picture above has a safeness factor of 2 since:\n- The closest cell of the path to the thief at cell (0, 3) is cell (1, 2). The distance between them is | 0 - 1 | + | 3 - 2 | = 2.\n- The closest cell of the path to the thief at cell (3, 0) is cell (3, 2). The distance between them is | 3 - 3 | + | 0 - 2 | = 2.\nIt can be shown that there are no other paths with a higher safeness factor.\n\n \nConstraints:\n\n\t1 <= grid.length == n <= 400\n\tgrid[i].length == n\n\tgrid[i][j] is either 0 or 1.\n\tThere is at least one thief in the grid.",
-  "example_testcases": "[[1,0,0],[0,0,0],[0,0,1]]\n[[0,0,1],[0,0,0],[0,0,0]]\n[[0,0,0,1],[0,0,0,0],[0,0,0,0],[1,0,0,0]]",
-  "sample_testcase": "[[1,0,0],[0,0,0],[0,0,1]]",
+  "url": "https://leetcode.com/problems/find-a-safe-walk-through-a-grid/",
+  "description": "You are given an m x n binary matrix grid and an integer health.\n\nYou start on the upper-left corner (0, 0) and would like to get to the lower-right corner (m - 1, n - 1).\n\nYou can move up, down, left, or right from one cell to another adjacent cell as long as your health remains positive.\n\nCells (i, j) with grid[i][j] = 1 are considered unsafe and reduce your health by 1.\n\nReturn true if you can reach the final cell with a health value of 1 or more, and false otherwise.\n\n \nExample 1:\n\nInput: grid = [[0,1,0,0,0],[0,1,0,1,0],[0,0,0,1,0]], health = 1\n\nOutput: true\n\nExplanation:\n\nThe final cell can be reached safely by walking along the gray cells below.\n\nExample 2:\n\nInput: grid = [[0,1,1,0,0,0],[1,0,1,0,0,0],[0,1,1,1,0,1],[0,0,1,0,1,0]], health = 3\n\nOutput: false\n\nExplanation:\n\nA minimum of 4 health points is needed to reach the final cell safely.\n\nExample 3:\n\nInput: grid = [[1,1,1],[1,0,1],[1,1,1]], health = 5\n\nOutput: true\n\nExplanation:\n\nThe final cell can be reached safely by walking along the gray cells below.\n\nAny path that does not go through the cell (1, 1) is unsafe since your health will drop to 0 when reaching the final cell.\n\n \nConstraints:\n\n\tm == grid.length\n\tn == grid[i].length\n\t1 <= m, n <= 50\n\t2 <= m * n\n\t1 <= health <= m + n\n\tgrid[i][j] is either 0 or 1.",
+  "example_testcases": "[[0,1,0,0,0],[0,1,0,1,0],[0,0,0,1,0]]\n1\n[[0,1,1,0,0,0],[1,0,1,0,0,0],[0,1,1,1,0,1],[0,0,1,0,1,0]]\n3\n[[1,1,1],[1,0,1],[1,1,1]]\n5",
+  "sample_testcase": "[[0,1,0,0,0],[0,1,0,1,0],[0,0,0,1,0]]\n1",
   "tags": [
     "Array",
-    "Binary Search",
     "Breadth-First Search",
-    "Union-Find",
+    "Graph Theory",
     "Heap (Priority Queue)",
-    "Matrix"
+    "Matrix",
+    "Shortest Path"
   ],
   "hints": [
-    "Consider using both BFS and binary search together.",
-    "Launch a BFS starting from all the cells containing thieves to calculate d[x][y] which is the smallest Manhattan distance from (x, y) to the nearest grid that contains thieves.",
-    "To check if the bottom-right cell of the grid can be reached through a path of safeness factor v, eliminate all cells (x, y) such that grid[x][y]  < v. if (0, 0) and (n - 1, n - 1) are still connected, there exists a path between (0, 0) and (n - 1, n - 1) of safeness factor v.",
-    "Binary search over the final safeness factor v."
+    "Use 01 BFS."
   ],
-  "starter_code": "class Solution:\n    def maximumSafenessFactor(self, grid: List[List[int]]) -> int:\n        ",
-  "starter_code_cpp": "class Solution {\npublic:\n    int maximumSafenessFactor(vector<vector<int>>& grid) {\n        \n    }\n};",
+  "starter_code": "class Solution:\n    def findSafeWalk(self, grid: List[List[int]], health: int) -> bool:\n        ",
+  "starter_code_cpp": "class Solution {\npublic:\n    bool findSafeWalk(vector<vector<int>>& grid, int health) {\n        \n    }\n};",
   "meta": {
-    "name": "maximumSafenessFactor",
+    "name": "findSafeWalk",
     "params": [
       {
         "name": "grid",
         "type": "list<list<integer>>"
+      },
+      {
+        "type": "integer",
+        "name": "health"
       }
     ],
     "return": {
-      "type": "integer"
+      "type": "boolean"
     }
   }
 }
