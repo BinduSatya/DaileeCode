@@ -1,41 +1,57 @@
 class Solution {
 public:
-    bool findSafeWalk(vector<vector<int>>& grid, int health) {
-        int m = grid.size();
-        int n = grid[0].size();
-        int maxHealth = m + n;
-        vector<vector<bool>> dp(m, vector<bool>(n, false));
-        dp[0][0] = true;
-        
-        // Try to reach every cell in the first row
-        for (int i = 1; i < n; ++i) {
-            if (grid[0][i] == 0 && dp[0][i-1]) {
-                dp[0][i] = true;
-            } else if (grid[0][i] == 1 && dp[0][i-1] && health > 1) {
-                dp[0][i] = true;
+    int findMaxPathScore(vector<vector<int>>& edges, vector<bool>& online, long long k) {
+        int n = online.size();
+        vector<vector<pair<int, int>>> g(n);
+        for (auto& edge : edges) {
+            if (online[edge[0]] && online[edge[1]]) {
+                g[edge[0]].emplace_back(edge[1], edge[2]);
             }
         }
         
-        // Try to reach every cell in the first column
-        for (int i = 1; i < m; ++i) {
-            if (grid[i][0] == 0 && dp[i-1][0]) {
-                dp[i][0] = true;
-            } else if (grid[i][0] == 1 && dp[i-1][0] && health > 1) {
-                dp[i][0] = true;
-            }
-        }
+        vector<long long> dis(n, LLONG_MAX);
+        dis[n - 1] = 0;
+        priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<>> pq;
+        pq.emplace(0, n - 1);
         
-        // Fill the rest of the dp table
-        for (int i = 1; i < m; ++i) {
-            for (int j = 1; j < n; ++j) {
-                if (grid[i][j] == 0) {
-                    dp[i][j] = (dp[i-1][j] || dp[i][j-1]);
-                } else {
-                    dp[i][j] = (dp[i-1][j] || dp[i][j-1]) && health > 1;
+        while (!pq.empty()) {
+            auto [d, v] = pq.top();
+            pq.pop();
+            if (d > dis[v]) continue;
+            for (auto& [u, w] : g[v]) {
+                if (dis[u] > dis[v] + w) {
+                    dis[u] = dis[v] + w;
+                    pq.emplace(dis[u], u);
                 }
             }
         }
         
-        return dp[m-1][n-1];
+        if (dis[0] > k) return -1;
+        
+        int l = 0, r = 1e9 + 7;
+        while (l < r) {
+            int m = l + r + 1 >> 1;
+            vector<long long> d(n, LLONG_MAX);
+            d[n - 1] = 0;
+            priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<>> q;
+            q.emplace(0, n - 1);
+            
+            while (!q.empty()) {
+                auto [cur, v] = q.top();
+                q.pop();
+                if (cur > d[v]) continue;
+                for (auto& [u, w] : g[v]) {
+                    if (d[u] > d[v] + w && w >= m) {
+                        d[u] = d[v] + w;
+                        q.emplace(d[u], u);
+                    }
+                }
+            }
+            
+            if (d[0] <= k) l = m;
+            else r = m - 1;
+        }
+        
+        return l;
     }
 };

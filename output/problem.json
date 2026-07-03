@@ -1,40 +1,47 @@
 {
-  "date": "2026-07-02",
-  "id": "3558",
-  "title": "Find a Safe Walk Through a Grid",
-  "slug": "find-a-safe-walk-through-a-grid",
-  "difficulty": "Medium",
-  "url": "https://leetcode.com/problems/find-a-safe-walk-through-a-grid/",
-  "description": "You are given an m x n binary matrix grid and an integer health.\n\nYou start on the upper-left corner (0, 0) and would like to get to the lower-right corner (m - 1, n - 1).\n\nYou can move up, down, left, or right from one cell to another adjacent cell as long as your health remains positive.\n\nCells (i, j) with grid[i][j] = 1 are considered unsafe and reduce your health by 1.\n\nReturn true if you can reach the final cell with a health value of 1 or more, and false otherwise.\n\n \nExample 1:\n\nInput: grid = [[0,1,0,0,0],[0,1,0,1,0],[0,0,0,1,0]], health = 1\n\nOutput: true\n\nExplanation:\n\nThe final cell can be reached safely by walking along the gray cells below.\n\nExample 2:\n\nInput: grid = [[0,1,1,0,0,0],[1,0,1,0,0,0],[0,1,1,1,0,1],[0,0,1,0,1,0]], health = 3\n\nOutput: false\n\nExplanation:\n\nA minimum of 4 health points is needed to reach the final cell safely.\n\nExample 3:\n\nInput: grid = [[1,1,1],[1,0,1],[1,1,1]], health = 5\n\nOutput: true\n\nExplanation:\n\nThe final cell can be reached safely by walking along the gray cells below.\n\nAny path that does not go through the cell (1, 1) is unsafe since your health will drop to 0 when reaching the final cell.\n\n \nConstraints:\n\n\tm == grid.length\n\tn == grid[i].length\n\t1 <= m, n <= 50\n\t2 <= m * n\n\t1 <= health <= m + n\n\tgrid[i][j] is either 0 or 1.",
-  "example_testcases": "[[0,1,0,0,0],[0,1,0,1,0],[0,0,0,1,0]]\n1\n[[0,1,1,0,0,0],[1,0,1,0,0,0],[0,1,1,1,0,1],[0,0,1,0,1,0]]\n3\n[[1,1,1],[1,0,1],[1,1,1]]\n5",
-  "sample_testcase": "[[0,1,0,0,0],[0,1,0,1,0],[0,0,0,1,0]]\n1",
+  "date": "2026-07-03",
+  "id": "3919",
+  "title": "Network Recovery Pathways",
+  "slug": "network-recovery-pathways",
+  "difficulty": "Hard",
+  "url": "https://leetcode.com/problems/network-recovery-pathways/",
+  "description": "You are given a directed acyclic graph of n nodes numbered from 0 to n &minus; 1. This is represented by a 2D array edges of length m, where edges[i] = [ui, vi, costi] indicates a one‑way communication from node ui to node vi with a recovery cost of costi.\n\nSome nodes may be offline. You are given a boolean array online where online[i] = true means node i is online. Nodes 0 and n &minus; 1 are always online.\n\nA path from 0 to n &minus; 1 is valid if:\n\n\tAll intermediate nodes on the path are online.\n\tThe total recovery cost of all edges on the path does not exceed k.\n\nFor each valid path, define its score as the minimum edge‑cost along that path.\n\nReturn the maximum path score (i.e., the largest minimum-edge cost) among all valid paths. If no valid path exists, return -1.\n\n \nExample 1:\n\nInput: edges = [[0,1,5],[1,3,10],[0,2,3],[2,3,4]], online = [true,true,true,true], k = 10\n\nOutput: 3\n\nExplanation:\n\n\t\n\tThe graph has two possible routes from node 0 to node 3:\n\n\t\n\t\t\n\t\tPath 0 &rarr; 1 &rarr; 3\n\n\t\t\n\t\t\t\n\t\t\tTotal cost = 5 + 10 = 15, which exceeds k (15 > 10), so this path is invalid.\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\tPath 0 &rarr; 2 &rarr; 3\n\n\t\t\n\t\t\t\n\t\t\tTotal cost = 3 + 4 = 7 <= k, so this path is valid.\n\t\t\t\n\t\t\t\n\t\t\tThe minimum edge‐cost along this path is min(3, 4) = 3.\n\t\t\t\n\t\t\n\t\t\n\t\n\t\n\t\n\tThere are no other valid paths. Hence, the maximum among all valid path‐scores is 3.\n\t\n\nExample 2:\n\nInput: edges = [[0,1,7],[1,4,5],[0,2,6],[2,3,6],[3,4,2],[2,4,6]], online = [true,true,true,false,true], k = 12\n\nOutput: 6\n\nExplanation:\n\n\t\n\tNode 3 is offline, so any path passing through 3 is invalid.\n\t\n\t\n\tConsider the remaining routes from 0 to 4:\n\n\t\n\t\t\n\t\tPath 0 &rarr; 1 &rarr; 4\n\n\t\t\n\t\t\t\n\t\t\tTotal cost = 7 + 5 = 12 <= k, so this path is valid.\n\t\t\t\n\t\t\t\n\t\t\tThe minimum edge‐cost along this path is min(7, 5) = 5.\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\tPath 0 &rarr; 2 &rarr; 3 &rarr; 4\n\n\t\t\n\t\t\t\n\t\t\tNode 3 is offline, so this path is invalid regardless of cost.\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\tPath 0 &rarr; 2 &rarr; 4\n\n\t\t\n\t\t\t\n\t\t\tTotal cost = 6 + 6 = 12 <= k, so this path is valid.\n\t\t\t\n\t\t\t\n\t\t\tThe minimum edge‐cost along this path is min(6, 6) = 6.\n\t\t\t\n\t\t\n\t\t\n\t\n\t\n\t\n\tAmong the two valid paths, their scores are 5 and 6. Therefore, the answer is 6.\n\t\n\n \nConstraints:\n\n\tn == online.length\n\t2 <= n <= 5 * 104\n\t0 <= m == edges.length <= min(105, n * (n - 1) / 2)\n\tedges[i] = [ui, vi, costi]\n\t0 <= ui, vi < n\n\tui != vi\n\t0 <= costi <= 109\n\t0 <= k <= 5 * 1013\n\tonline[i] is either true or false, and both online[0] and online[n &minus; 1] are true.\n\tThe given graph is a directed acyclic graph.",
+  "example_testcases": "[[0,1,5],[1,3,10],[0,2,3],[2,3,4]]\n[true,true,true,true]\n10\n[[0,1,7],[1,4,5],[0,2,6],[2,3,6],[3,4,2],[2,4,6]]\n[true,true,true,false,true]\n12",
+  "sample_testcase": "[[0,1,5],[1,3,10],[0,2,3],[2,3,4]]\n[true,true,true,true]\n10",
   "tags": [
     "Array",
-    "Breadth-First Search",
+    "Binary Search",
+    "Dynamic Programming",
     "Graph Theory",
+    "Topological Sort",
     "Heap (Priority Queue)",
-    "Matrix",
     "Shortest Path"
   ],
   "hints": [
-    "Use 01 BFS."
+    "Use binary search on <code>ans</code>.",
+    "Check if a particular <code>ans</code> is possible by including only the edges with weights ≥ <code>mid</code> (the current binary‐search pivot).",
+    "Implement the check function using either <code>Dijkstra</code> or DP (via topological sorting, since the graph is a DAG)."
   ],
-  "starter_code": "class Solution:\n    def findSafeWalk(self, grid: List[List[int]], health: int) -> bool:\n        ",
-  "starter_code_cpp": "class Solution {\npublic:\n    bool findSafeWalk(vector<vector<int>>& grid, int health) {\n        \n    }\n};",
+  "starter_code": "class Solution:\n    def findMaxPathScore(self, edges: List[List[int]], online: List[bool], k: int) -> int:\n        ",
+  "starter_code_cpp": "class Solution {\npublic:\n    int findMaxPathScore(vector<vector<int>>& edges, vector<bool>& online, long long k) {\n        \n    }\n};",
   "meta": {
-    "name": "findSafeWalk",
+    "name": "findMaxPathScore",
     "params": [
       {
-        "name": "grid",
-        "type": "list<list<integer>>"
+        "name": "edges",
+        "type": "integer[][]"
       },
       {
-        "type": "integer",
-        "name": "health"
+        "type": "boolean[]",
+        "name": "online"
+      },
+      {
+        "type": "long",
+        "name": "k"
       }
     ],
     "return": {
-      "type": "boolean"
+      "type": "integer"
     }
   }
 }
