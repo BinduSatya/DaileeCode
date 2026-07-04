@@ -1,43 +1,36 @@
 {
-  "date": "2026-07-03",
-  "id": "3919",
-  "title": "Network Recovery Pathways",
-  "slug": "network-recovery-pathways",
-  "difficulty": "Hard",
-  "url": "https://leetcode.com/problems/network-recovery-pathways/",
-  "description": "You are given a directed acyclic graph of n nodes numbered from 0 to n &minus; 1. This is represented by a 2D array edges of length m, where edges[i] = [ui, vi, costi] indicates a one‑way communication from node ui to node vi with a recovery cost of costi.\n\nSome nodes may be offline. You are given a boolean array online where online[i] = true means node i is online. Nodes 0 and n &minus; 1 are always online.\n\nA path from 0 to n &minus; 1 is valid if:\n\n\tAll intermediate nodes on the path are online.\n\tThe total recovery cost of all edges on the path does not exceed k.\n\nFor each valid path, define its score as the minimum edge‑cost along that path.\n\nReturn the maximum path score (i.e., the largest minimum-edge cost) among all valid paths. If no valid path exists, return -1.\n\n \nExample 1:\n\nInput: edges = [[0,1,5],[1,3,10],[0,2,3],[2,3,4]], online = [true,true,true,true], k = 10\n\nOutput: 3\n\nExplanation:\n\n\t\n\tThe graph has two possible routes from node 0 to node 3:\n\n\t\n\t\t\n\t\tPath 0 &rarr; 1 &rarr; 3\n\n\t\t\n\t\t\t\n\t\t\tTotal cost = 5 + 10 = 15, which exceeds k (15 > 10), so this path is invalid.\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\tPath 0 &rarr; 2 &rarr; 3\n\n\t\t\n\t\t\t\n\t\t\tTotal cost = 3 + 4 = 7 <= k, so this path is valid.\n\t\t\t\n\t\t\t\n\t\t\tThe minimum edge‐cost along this path is min(3, 4) = 3.\n\t\t\t\n\t\t\n\t\t\n\t\n\t\n\t\n\tThere are no other valid paths. Hence, the maximum among all valid path‐scores is 3.\n\t\n\nExample 2:\n\nInput: edges = [[0,1,7],[1,4,5],[0,2,6],[2,3,6],[3,4,2],[2,4,6]], online = [true,true,true,false,true], k = 12\n\nOutput: 6\n\nExplanation:\n\n\t\n\tNode 3 is offline, so any path passing through 3 is invalid.\n\t\n\t\n\tConsider the remaining routes from 0 to 4:\n\n\t\n\t\t\n\t\tPath 0 &rarr; 1 &rarr; 4\n\n\t\t\n\t\t\t\n\t\t\tTotal cost = 7 + 5 = 12 <= k, so this path is valid.\n\t\t\t\n\t\t\t\n\t\t\tThe minimum edge‐cost along this path is min(7, 5) = 5.\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\tPath 0 &rarr; 2 &rarr; 3 &rarr; 4\n\n\t\t\n\t\t\t\n\t\t\tNode 3 is offline, so this path is invalid regardless of cost.\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\tPath 0 &rarr; 2 &rarr; 4\n\n\t\t\n\t\t\t\n\t\t\tTotal cost = 6 + 6 = 12 <= k, so this path is valid.\n\t\t\t\n\t\t\t\n\t\t\tThe minimum edge‐cost along this path is min(6, 6) = 6.\n\t\t\t\n\t\t\n\t\t\n\t\n\t\n\t\n\tAmong the two valid paths, their scores are 5 and 6. Therefore, the answer is 6.\n\t\n\n \nConstraints:\n\n\tn == online.length\n\t2 <= n <= 5 * 104\n\t0 <= m == edges.length <= min(105, n * (n - 1) / 2)\n\tedges[i] = [ui, vi, costi]\n\t0 <= ui, vi < n\n\tui != vi\n\t0 <= costi <= 109\n\t0 <= k <= 5 * 1013\n\tonline[i] is either true or false, and both online[0] and online[n &minus; 1] are true.\n\tThe given graph is a directed acyclic graph.",
-  "example_testcases": "[[0,1,5],[1,3,10],[0,2,3],[2,3,4]]\n[true,true,true,true]\n10\n[[0,1,7],[1,4,5],[0,2,6],[2,3,6],[3,4,2],[2,4,6]]\n[true,true,true,false,true]\n12",
-  "sample_testcase": "[[0,1,5],[1,3,10],[0,2,3],[2,3,4]]\n[true,true,true,true]\n10",
+  "date": "2026-07-04",
+  "id": "2582",
+  "title": "Minimum Score of a Path Between Two Cities",
+  "slug": "minimum-score-of-a-path-between-two-cities",
+  "difficulty": "Medium",
+  "url": "https://leetcode.com/problems/minimum-score-of-a-path-between-two-cities/",
+  "description": "You are given a positive integer n representing n cities numbered from 1 to n. You are also given a 2D array roads where roads[i] = [ai, bi, distancei] indicates that there is a bidirectional road between cities ai and bi with a distance equal to distancei. The cities graph is not necessarily connected.\n\nThe score of a path between two cities is defined as the minimum distance of a road in this path.\n\nReturn the minimum possible score of a path between cities 1 and n.\n\nNote:\n\n\tA path is a sequence of roads between two cities.\n\tIt is allowed for a path to contain the same road multiple times, and you can visit cities 1 and n multiple times along the path.\n\tThe test cases are generated such that there is at least one path between 1 and n.\n\n \nExample 1:\n\nInput: n = 4, roads = [[1,2,9],[2,3,6],[2,4,5],[1,4,7]]\nOutput: 5\nExplanation: The path from city 1 to 4 with the minimum score is: 1 -> 2 -> 4. The score of this path is min(9,5) = 5.\nIt can be shown that no other path has less score.\n\nExample 2:\n\nInput: n = 4, roads = [[1,2,2],[1,3,4],[3,4,7]]\nOutput: 2\nExplanation: The path from city 1 to 4 with the minimum score is: 1 -> 2 -> 1 -> 3 -> 4. The score of this path is min(2,2,4,7) = 2.\n\n \nConstraints:\n\n\t2 <= n <= 105\n\t1 <= roads.length <= 105\n\troads[i].length == 3\n\t1 <= ai, bi <= n\n\tai != bi\n\t1 <= distancei <= 104\n\tThere are no repeated edges.\n\tThere is at least one path between 1 and n.",
+  "example_testcases": "4\n[[1,2,9],[2,3,6],[2,4,5],[1,4,7]]\n4\n[[1,2,2],[1,3,4],[3,4,7]]",
+  "sample_testcase": "4\n[[1,2,9],[2,3,6],[2,4,5],[1,4,7]]",
   "tags": [
-    "Array",
-    "Binary Search",
-    "Dynamic Programming",
-    "Graph Theory",
-    "Topological Sort",
-    "Heap (Priority Queue)",
-    "Shortest Path"
+    "Depth-First Search",
+    "Breadth-First Search",
+    "Union-Find",
+    "Graph Theory"
   ],
   "hints": [
-    "Use binary search on <code>ans</code>.",
-    "Check if a particular <code>ans</code> is possible by including only the edges with weights ≥ <code>mid</code> (the current binary‐search pivot).",
-    "Implement the check function using either <code>Dijkstra</code> or DP (via topological sorting, since the graph is a DAG)."
+    "Can you solve the problem if the whole graph is connected?",
+    "Notice that if the graph is connected, you can always use any edge of the graph in your path.",
+    "How to solve the general problem in a similar way? Remove all the nodes that are not connected to 1 and n, then apply the previous solution in the new graph."
   ],
-  "starter_code": "class Solution:\n    def findMaxPathScore(self, edges: List[List[int]], online: List[bool], k: int) -> int:\n        ",
-  "starter_code_cpp": "class Solution {\npublic:\n    int findMaxPathScore(vector<vector<int>>& edges, vector<bool>& online, long long k) {\n        \n    }\n};",
+  "starter_code": "class Solution:\n    def minScore(self, n: int, roads: List[List[int]]) -> int:\n        ",
+  "starter_code_cpp": "class Solution {\npublic:\n    int minScore(int n, vector<vector<int>>& roads) {\n        \n    }\n};",
   "meta": {
-    "name": "findMaxPathScore",
+    "name": "minScore",
     "params": [
       {
-        "name": "edges",
-        "type": "integer[][]"
+        "name": "n",
+        "type": "integer"
       },
       {
-        "type": "boolean[]",
-        "name": "online"
-      },
-      {
-        "type": "long",
-        "name": "k"
+        "type": "integer[][]",
+        "name": "roads"
       }
     ],
     "return": {

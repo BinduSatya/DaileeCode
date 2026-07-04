@@ -1,57 +1,43 @@
 class Solution {
 public:
-    int findMaxPathScore(vector<vector<int>>& edges, vector<bool>& online, long long k) {
-        int n = online.size();
-        vector<vector<pair<int, int>>> g(n);
-        for (auto& edge : edges) {
-            if (online[edge[0]] && online[edge[1]]) {
-                g[edge[0]].emplace_back(edge[1], edge[2]);
+    int minScore(int n, vector<vector<int>>& roads) {
+        // Sort roads in ascending order of distances
+        sort(roads.begin(), roads.end(), [](const vector<int>& a, const vector<int>& b) {
+            return a[2] < b[2];
+        });
+
+        // Initialize Union-Find data structure
+        vector<int> parent(n + 1);
+        for (int i = 1; i <= n; i++) {
+            parent[i] = i;
+        }
+
+        // Function to find the parent of a node
+        auto find = [&](int x, vector<int>& parent) -> int {
+            if (parent[x] != x) {
+                parent[x] = find(parent[x], parent);
+            }
+            return parent[x];
+        };
+
+        // Function to union two nodes
+        auto unionNodes = [&](int x, int y, vector<int>& parent) {
+            int rootX = find(x, parent);
+            int rootY = find(y, parent);
+            if (rootX != rootY) {
+                parent[rootX] = rootY;
+            }
+        };
+
+        // Iterate over sorted roads and union nodes
+        int minScore = INT_MAX;
+        for (const auto& road : roads) {
+            if (find(1, parent) != find(n, parent)) {
+                unionNodes(road[0], road[1], parent);
+                minScore = min(minScore, road[2]);
             }
         }
-        
-        vector<long long> dis(n, LLONG_MAX);
-        dis[n - 1] = 0;
-        priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<>> pq;
-        pq.emplace(0, n - 1);
-        
-        while (!pq.empty()) {
-            auto [d, v] = pq.top();
-            pq.pop();
-            if (d > dis[v]) continue;
-            for (auto& [u, w] : g[v]) {
-                if (dis[u] > dis[v] + w) {
-                    dis[u] = dis[v] + w;
-                    pq.emplace(dis[u], u);
-                }
-            }
-        }
-        
-        if (dis[0] > k) return -1;
-        
-        int l = 0, r = 1e9 + 7;
-        while (l < r) {
-            int m = l + r + 1 >> 1;
-            vector<long long> d(n, LLONG_MAX);
-            d[n - 1] = 0;
-            priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<>> q;
-            q.emplace(0, n - 1);
-            
-            while (!q.empty()) {
-                auto [cur, v] = q.top();
-                q.pop();
-                if (cur > d[v]) continue;
-                for (auto& [u, w] : g[v]) {
-                    if (d[u] > d[v] + w && w >= m) {
-                        d[u] = d[v] + w;
-                        q.emplace(d[u], u);
-                    }
-                }
-            }
-            
-            if (d[0] <= k) l = m;
-            else r = m - 1;
-        }
-        
-        return l;
+
+        return minScore;
     }
 };
