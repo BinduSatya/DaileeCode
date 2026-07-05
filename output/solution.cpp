@@ -1,43 +1,53 @@
 class Solution {
 public:
-    int minScore(int n, vector<vector<int>>& roads) {
-        // Sort roads in ascending order of distances
-        sort(roads.begin(), roads.end(), [](const vector<int>& a, const vector<int>& b) {
-            return a[2] < b[2];
-        });
-
-        // Initialize Union-Find data structure
-        vector<int> parent(n + 1);
-        for (int i = 1; i <= n; i++) {
-            parent[i] = i;
+    vector<int> pathsWithMaxScore(vector<string>& board) {
+        int n = board.size();
+        vector<vector<vector<int>>> dp(n, vector<vector<int>>(n, vector<int>(2, 0)));
+        
+        dp[n - 1][n - 1][0] = board[n - 1][n - 1] == 'S' ? 0 : board[n - 1][n - 1] - '0';
+        dp[n - 1][n - 1][1] = 1;
+        
+        for (int i = n - 1; i >= 0; --i) {
+            for (int j = n - 1; j >= 0; --j) {
+                if (i == n - 1 && j == n - 1) continue;
+                if (board[i][j] == 'X' || board[i][j] == 'E') {
+                    dp[i][j][1] = 0;
+                    if (board[i][j] == 'E') {
+                        dp[i][j][0] = 0;
+                    }
+                    continue;
+                }
+                
+                vector<int> maxScoreAndCount(2, 0);
+                if (i + 1 < n && dp[i + 1][j][0] > maxScoreAndCount[0]) {
+                    maxScoreAndCount[0] = dp[i + 1][j][0];
+                    maxScoreAndCount[1] = dp[i + 1][j][1];
+                }
+                else if (i + 1 < n && dp[i + 1][j][0] == maxScoreAndCount[0]) {
+                    maxScoreAndCount[1] = (maxScoreAndCount[1] + dp[i + 1][j][1]) % 1000000007;
+                }
+                
+                if (j + 1 < n && dp[i][j + 1][0] > maxScoreAndCount[0]) {
+                    maxScoreAndCount[0] = dp[i][j + 1][0];
+                    maxScoreAndCount[1] = dp[i][j + 1][1];
+                }
+                else if (j + 1 < n && dp[i][j + 1][0] == maxScoreAndCount[0]) {
+                    maxScoreAndCount[1] = (maxScoreAndCount[1] + dp[i][j + 1][1]) % 1000000007;
+                }
+                
+                if (i + 1 < n && j + 1 < n && dp[i + 1][j + 1][0] > maxScoreAndCount[0]) {
+                    maxScoreAndCount[0] = dp[i + 1][j + 1][0];
+                    maxScoreAndCount[1] = dp[i + 1][j + 1][1];
+                }
+                else if (i + 1 < n && j + 1 < n && dp[i + 1][j + 1][0] == maxScoreAndCount[0]) {
+                    maxScoreAndCount[1] = (maxScoreAndCount[1] + dp[i + 1][j + 1][1]) % 1000000007;
+                }
+                
+                dp[i][j][0] = maxScoreAndCount[0] + board[i][j] - '0';
+                dp[i][j][1] = maxScoreAndCount[1];
+            }
         }
-
-        // Function to find the parent of a node
-        auto find = [&](int x, vector<int>& parent) -> int {
-            if (parent[x] != x) {
-                parent[x] = find(parent[x], parent);
-            }
-            return parent[x];
-        };
-
-        // Function to union two nodes
-        auto unionNodes = [&](int x, int y, vector<int>& parent) {
-            int rootX = find(x, parent);
-            int rootY = find(y, parent);
-            if (rootX != rootY) {
-                parent[rootX] = rootY;
-            }
-        };
-
-        // Iterate over sorted roads and union nodes
-        int minScore = INT_MAX;
-        for (const auto& road : roads) {
-            if (find(1, parent) != find(n, parent)) {
-                unionNodes(road[0], road[1], parent);
-                minScore = min(minScore, road[2]);
-            }
-        }
-
-        return minScore;
+        
+        return {dp[0][0][0], dp[0][0][1]};
     }
 };

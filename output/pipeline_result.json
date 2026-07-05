@@ -1,5 +1,5 @@
 {
-  "date": "2026-07-04",
+  "date": "2026-07-05",
   "steps": {
     "fetch": "\u2713",
     "solution": "\u2713",
@@ -8,8 +8,8 @@
     "video": "\u2713",
     "upload": "\u2713"
   },
-  "problem_title": "Minimum Score of a Path Between Two Cities",
-  "video_path": "output/videos/final_2026-07-04.mp4",
-  "youtube_url": "https://www.youtube.com/watch?v=bpdAmwc2Zc4",
-  "duration_seconds": 158.0
+  "problem_title": "Number of Paths with Max Score",
+  "video_path": "output/videos/final_2026-07-05.mp4",
+  "youtube_url": "https://www.youtube.com/watch?v=5WrOWxAaU4M",
+  "duration_seconds": 164.6
 }
