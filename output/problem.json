@@ -1,34 +1,33 @@
 {
-  "date": "2026-07-05",
-  "id": "1234",
-  "title": "Number of Paths with Max Score",
-  "slug": "number-of-paths-with-max-score",
-  "difficulty": "Hard",
-  "url": "https://leetcode.com/problems/number-of-paths-with-max-score/",
-  "description": "You are given a square board of characters. You can move on the board starting at the bottom right square marked with the character 'S'.\r\n\r\nYou need to reach the top left square marked with the character 'E'. The rest of the squares are labeled either with a numeric character 1, 2, ..., 9 or with an obstacle 'X'. In one move you can go up, left or up-left (diagonally) only if there is no obstacle there.\r\n\r\nReturn a list of two integers: the first integer is the maximum sum of numeric characters you can collect, and the second is the number of such paths that you can take to get that maximum sum, taken modulo 10^9 + 7.\r\n\r\nIn case there is no path, return [0, 0].\r\n\r\n \r\nExample 1:\r\nInput: board = [\"E23\",\"2X2\",\"12S\"]\r\nOutput: [7,1]\r\nExample 2:\r\nInput: board = [\"E12\",\"1X1\",\"21S\"]\r\nOutput: [4,2]\r\nExample 3:\r\nInput: board = [\"E11\",\"XXX\",\"11S\"]\r\nOutput: [0,0]\r\n\r\n \r\nConstraints:\r\n\r\n\r\n\t2 <= board.length == board[i].length <= 100",
-  "example_testcases": "[\"E23\",\"2X2\",\"12S\"]\r\n[\"E12\",\"1X1\",\"21S\"]\r\n[\"E11\",\"XXX\",\"11S\"]\r",
-  "sample_testcase": "[\"E23\",\"2X2\",\"12S\"]\r",
+  "date": "2026-07-06",
+  "id": "1222",
+  "title": "Remove Covered Intervals",
+  "slug": "remove-covered-intervals",
+  "difficulty": "Medium",
+  "url": "https://leetcode.com/problems/remove-covered-intervals/",
+  "description": "Given an array intervals where intervals[i] = [li, ri] represent the interval [li, ri), remove all intervals that are covered by another interval in the list.\n\nThe interval [a, b) is covered by the interval [c, d) if and only if c <= a and b <= d.\n\nReturn the number of remaining intervals.\n\n \nExample 1:\n\nInput: intervals = [[1,4],[3,6],[2,8]]\nOutput: 2\nExplanation: Interval [3,6] is covered by [2,8], therefore it is removed.\n\nExample 2:\n\nInput: intervals = [[1,4],[2,3]]\nOutput: 1\n\n \nConstraints:\n\n\t1 <= intervals.length <= 1000\n\tintervals[i].length == 2\n\t0 <= li < ri <= 105\n\tAll the given intervals are unique.",
+  "example_testcases": "[[1,4],[3,6],[2,8]]\n[[1,4],[2,3]]",
+  "sample_testcase": "[[1,4],[3,6],[2,8]]",
   "tags": [
     "Array",
-    "Dynamic Programming",
-    "Matrix"
+    "Sorting"
   ],
   "hints": [
-    "Use dynamic programming to find the path with the max score.",
-    "Use another dynamic programming array to count the number of paths with max score."
+    "How to check if an interval is covered by another?",
+    "Compare each interval to all others and check if it is covered by any interval."
   ],
-  "starter_code": "class Solution:\n    def pathsWithMaxScore(self, board: List[str]) -> List[int]:\n        ",
-  "starter_code_cpp": "class Solution {\npublic:\n    vector<int> pathsWithMaxScore(vector<string>& board) {\n        \n    }\n};",
+  "starter_code": "class Solution:\n    def removeCoveredIntervals(self, intervals: List[List[int]]) -> int:\n        ",
+  "starter_code_cpp": "class Solution {\npublic:\n    int removeCoveredIntervals(vector<vector<int>>& intervals) {\n        \n    }\n};",
   "meta": {
-    "name": "pathsWithMaxScore",
+    "name": "removeCoveredIntervals",
     "params": [
       {
-        "name": "board",
-        "type": "list<string>"
+        "name": "intervals",
+        "type": "integer[][]"
       }
     ],
     "return": {
-      "type": "integer[]"
+      "type": "integer"
     }
   }
 }
