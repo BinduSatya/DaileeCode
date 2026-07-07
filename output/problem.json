@@ -1,33 +1,31 @@
 {
-  "date": "2026-07-06",
-  "id": "1222",
-  "title": "Remove Covered Intervals",
-  "slug": "remove-covered-intervals",
-  "difficulty": "Medium",
-  "url": "https://leetcode.com/problems/remove-covered-intervals/",
-  "description": "Given an array intervals where intervals[i] = [li, ri] represent the interval [li, ri), remove all intervals that are covered by another interval in the list.\n\nThe interval [a, b) is covered by the interval [c, d) if and only if c <= a and b <= d.\n\nReturn the number of remaining intervals.\n\n \nExample 1:\n\nInput: intervals = [[1,4],[3,6],[2,8]]\nOutput: 2\nExplanation: Interval [3,6] is covered by [2,8], therefore it is removed.\n\nExample 2:\n\nInput: intervals = [[1,4],[2,3]]\nOutput: 1\n\n \nConstraints:\n\n\t1 <= intervals.length <= 1000\n\tintervals[i].length == 2\n\t0 <= li < ri <= 105\n\tAll the given intervals are unique.",
-  "example_testcases": "[[1,4],[3,6],[2,8]]\n[[1,4],[2,3]]",
-  "sample_testcase": "[[1,4],[3,6],[2,8]]",
+  "date": "2026-07-07",
+  "id": "4135",
+  "title": "Concatenate Non-Zero Digits and Multiply by Sum I",
+  "slug": "concatenate-non-zero-digits-and-multiply-by-sum-i",
+  "difficulty": "Easy",
+  "url": "https://leetcode.com/problems/concatenate-non-zero-digits-and-multiply-by-sum-i/",
+  "description": "You are given an integer n.\n\nForm a new integer x by concatenating all the non-zero digits of n in their original order. If there are no non-zero digits, x = 0.\n\nLet sum be the sum of digits in x.\n\nReturn an integer representing the value of x * sum.\n\n \nExample 1:\n\nInput: n = 10203004\n\nOutput: 12340\n\nExplanation:\n\n\tThe non-zero digits are 1, 2, 3, and 4. Thus, x = 1234.\n\tThe sum of digits is sum = 1 + 2 + 3 + 4 = 10.\n\tTherefore, the answer is x * sum = 1234 * 10 = 12340.\n\nExample 2:\n\nInput: n = 1000\n\nOutput: 1\n\nExplanation:\n\n\tThe non-zero digit is 1, so x = 1 and sum = 1.\n\tTherefore, the answer is x * sum = 1 * 1 = 1.\n\n \nConstraints:\n\n\t0 <= n <= 109",
+  "example_testcases": "10203004\n1000",
+  "sample_testcase": "10203004",
   "tags": [
-    "Array",
-    "Sorting"
+    "Math"
   ],
   "hints": [
-    "How to check if an interval is covered by another?",
-    "Compare each interval to all others and check if it is covered by any interval."
+    "Simulate as described"
   ],
-  "starter_code": "class Solution:\n    def removeCoveredIntervals(self, intervals: List[List[int]]) -> int:\n        ",
-  "starter_code_cpp": "class Solution {\npublic:\n    int removeCoveredIntervals(vector<vector<int>>& intervals) {\n        \n    }\n};",
+  "starter_code": "class Solution:\n    def sumAndMultiply(self, n: int) -> int:\n        ",
+  "starter_code_cpp": "class Solution {\npublic:\n    long long sumAndMultiply(int n) {\n        \n    }\n};",
   "meta": {
-    "name": "removeCoveredIntervals",
+    "name": "sumAndMultiply",
     "params": [
       {
-        "name": "intervals",
-        "type": "integer[][]"
+        "name": "n",
+        "type": "integer"
       }
     ],
     "return": {
-      "type": "integer"
+      "type": "long"
     }
   }
 }

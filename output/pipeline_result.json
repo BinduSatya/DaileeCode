@@ -1,5 +1,5 @@
 {
-  "date": "2026-07-06",
+  "date": "2026-07-07",
   "steps": {
     "fetch": "\u2713",
     "solution": "\u2713",
@@ -8,8 +8,8 @@
     "video": "\u2713",
     "upload": "\u2713"
   },
-  "problem_title": "Remove Covered Intervals",
-  "video_path": "output/videos/final_2026-07-06.mp4",
-  "youtube_url": "https://www.youtube.com/watch?v=ey5dG5bbjkk",
-  "duration_seconds": 146.2
+  "problem_title": "Concatenate Non-Zero Digits and Multiply by Sum I",
+  "video_path": "output/videos/final_2026-07-07.mp4",
+  "youtube_url": "https://www.youtube.com/watch?v=Nb5Y-nShl_s",
+  "duration_seconds": 129.1
 }
