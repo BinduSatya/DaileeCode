@@ -1,31 +1,40 @@
 {
-  "date": "2026-07-07",
-  "id": "4135",
-  "title": "Concatenate Non-Zero Digits and Multiply by Sum I",
-  "slug": "concatenate-non-zero-digits-and-multiply-by-sum-i",
-  "difficulty": "Easy",
-  "url": "https://leetcode.com/problems/concatenate-non-zero-digits-and-multiply-by-sum-i/",
-  "description": "You are given an integer n.\n\nForm a new integer x by concatenating all the non-zero digits of n in their original order. If there are no non-zero digits, x = 0.\n\nLet sum be the sum of digits in x.\n\nReturn an integer representing the value of x * sum.\n\n \nExample 1:\n\nInput: n = 10203004\n\nOutput: 12340\n\nExplanation:\n\n\tThe non-zero digits are 1, 2, 3, and 4. Thus, x = 1234.\n\tThe sum of digits is sum = 1 + 2 + 3 + 4 = 10.\n\tTherefore, the answer is x * sum = 1234 * 10 = 12340.\n\nExample 2:\n\nInput: n = 1000\n\nOutput: 1\n\nExplanation:\n\n\tThe non-zero digit is 1, so x = 1 and sum = 1.\n\tTherefore, the answer is x * sum = 1 * 1 = 1.\n\n \nConstraints:\n\n\t0 <= n <= 109",
-  "example_testcases": "10203004\n1000",
-  "sample_testcase": "10203004",
+  "date": "2026-07-08",
+  "id": "4136",
+  "title": "Concatenate Non-Zero Digits and Multiply by Sum II",
+  "slug": "concatenate-non-zero-digits-and-multiply-by-sum-ii",
+  "difficulty": "Medium",
+  "url": "https://leetcode.com/problems/concatenate-non-zero-digits-and-multiply-by-sum-ii/",
+  "description": "You are given a string s of length m consisting of digits. You are also given a 2D integer array queries, where queries[i] = [li, ri].\n\nFor each queries[i], extract the substring s[li..ri]. Then, perform the following:\n\n\tForm a new integer x by concatenating all the non-zero digits from the substring in their original order. If there are no non-zero digits, x = 0.\n\tLet sum be the sum of digits in x. The answer is x * sum.\n\nReturn an array of integers answer where answer[i] is the answer to the ith query.\n\nSince the answers may be very large, return them modulo 109 + 7.\n\n \nExample 1:\n\nInput: s = \"10203004\", queries = [[0,7],[1,3],[4,6]]\n\nOutput: [12340, 4, 9]\n\nExplanation:\n\n\ts[0..7] = \"10203004\"\n\n\t\n\t\tx = 1234\n\t\tsum = 1 + 2 + 3 + 4 = 10\n\t\tTherefore, answer is 1234 * 10 = 12340.\n\t\n\t\n\ts[1..3] = \"020\"\n\t\n\t\tx = 2\n\t\tsum = 2\n\t\tTherefore, the answer is 2 * 2 = 4.\n\t\n\t\n\ts[4..6] = \"300\"\n\t\n\t\tx = 3\n\t\tsum = 3\n\t\tTherefore, the answer is 3 * 3 = 9.\n\t\n\t\n\nExample 2:\n\nInput: s = \"1000\", queries = [[0,3],[1,1]]\n\nOutput: [1, 0]\n\nExplanation:\n\n\ts[0..3] = \"1000\"\n\n\t\n\t\tx = 1\n\t\tsum = 1\n\t\tTherefore, the answer is 1 * 1 = 1.\n\t\n\t\n\ts[1..1] = \"0\"\n\t\n\t\tx = 0\n\t\tsum = 0\n\t\tTherefore, the answer is 0 * 0 = 0.\n\t\n\t\n\nExample 3:\n\nInput: s = \"9876543210\", queries = [[0,9]]\n\nOutput: [444444137]\n\nExplanation:\n\n\ts[0..9] = \"9876543210\"\n\n\t\n\t\tx = 987654321\n\t\tsum = 9 + 8 + 7 + 6 + 5 + 4 + 3 + 2 + 1 = 45\n\t\tTherefore, the answer is 987654321 * 45 = 44444444445.\n\t\tWe return 44444444445 modulo (109 + 7) = 444444137.\n\t\n\t\n\n \nConstraints:\n\n\t1 <= m == s.length <= 105\n\ts consists of digits only.\n\t1 <= queries.length <= 105\n\tqueries[i] = [li, ri]\n\t0 <= li <= ri < m",
+  "example_testcases": "\"10203004\"\n[[0,7],[1,3],[4,6]]\n\"1000\"\n[[0,3],[1,1]]\n\"9876543210\"\n[[0,9]]",
+  "sample_testcase": "\"10203004\"\n[[0,7],[1,3],[4,6]]",
   "tags": [
-    "Math"
+    "Math",
+    "String",
+    "Prefix Sum"
   ],
   "hints": [
-    "Simulate as described"
+    "Track only nonzero digits: store their values and positions and keep a prefix sum for digit sums.",
+    "Also build prefix concatenation values <code>P</code>, <code>pow10</code>, and set <code>mod = 10<sup>9</sup>+7</code> so any compressed substring number is obtainable from prefixes.",
+    "Map each query <code>[l, r]</code> to the compressed list using precomputed mapping arrays (first nonzero at or after <code>i</code>",
+    "If the mapped range is empty return <code>0</code>; otherwise get <code>x</code> from <code>P</code>, get <code>sum</code> from the digit-prefix, and return <code>(x * sum) % mod</code>."
   ],
-  "starter_code": "class Solution:\n    def sumAndMultiply(self, n: int) -> int:\n        ",
-  "starter_code_cpp": "class Solution {\npublic:\n    long long sumAndMultiply(int n) {\n        \n    }\n};",
+  "starter_code": "class Solution:\n    def sumAndMultiply(self, s: str, queries: List[List[int]]) -> List[int]:\n        ",
+  "starter_code_cpp": "class Solution {\npublic:\n    vector<int> sumAndMultiply(string s, vector<vector<int>>& queries) {\n        \n    }\n};",
   "meta": {
     "name": "sumAndMultiply",
     "params": [
       {
-        "name": "n",
-        "type": "integer"
+        "name": "s",
+        "type": "string"
+      },
+      {
+        "type": "integer[][]",
+        "name": "queries"
       }
     ],
     "return": {
-      "type": "long"
+      "type": "integer[]"
     }
   }
 }

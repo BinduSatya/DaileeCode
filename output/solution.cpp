@@ -1,18 +1,28 @@
 class Solution {
 public:
-    long long sumAndMultiply(int n) {
-        string x = "";
-        int sum = 0;
-
-        while (n > 0) {
-            int digit = n % 10;
-            if (digit != 0) {
-                x = to_string(digit) + x;
-                sum += digit;
+    vector<int> sumAndMultiply(string s, vector<vector<int>>& queries) {
+        vector<int> result;
+        int mod = 1e9 + 7;
+        
+        for (auto& query : queries) {
+            string x = "";
+            int sum = 0;
+            
+            for (int i = query[0]; i <= query[1]; i++) {
+                if (s[i] != '0') {
+                    x += s[i];
+                    sum += s[i] - '0';
+                }
             }
-            n /= 10;
+            
+            int answer = 0;
+            if (x != "") {
+                answer = stoi(x) % mod * sum % mod;
+            }
+            
+            result.push_back(answer);
         }
-
-        return (x.empty() ? 0 : stol(x)) * (x.empty() ? 0 : sum);
+        
+        return result;
     }
 };
