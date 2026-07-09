@@ -1,28 +1,45 @@
+class UnionFind {
+public:
+    vector<int> parent;
+    UnionFind(int n) {
+        parent.resize(n);
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+        }
+    }
+
+    int find(int x) {
+        if (parent[x] != x) {
+            parent[x] = find(parent[x]);
+        }
+        return parent[x];
+    }
+
+    void unionNodes(int x, int y) {
+        int rootX = find(x);
+        int rootY = find(y);
+        if (rootX != rootY) {
+            parent[rootX] = rootY;
+        }
+    }
+};
+
 class Solution {
 public:
-    vector<int> sumAndMultiply(string s, vector<vector<int>>& queries) {
-        vector<int> result;
-        int mod = 1e9 + 7;
-        
-        for (auto& query : queries) {
-            string x = "";
-            int sum = 0;
-            
-            for (int i = query[0]; i <= query[1]; i++) {
-                if (s[i] != '0') {
-                    x += s[i];
-                    sum += s[i] - '0';
+    vector<bool> areConnected(int n, vector<int>& nums, int threshold, vector<vector<int>>& queries) {
+        UnionFind uf(n);
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                if (abs(nums[i] - nums[j]) <= threshold) {
+                    uf.unionNodes(i, j);
                 }
             }
-            
-            int answer = 0;
-            if (x != "") {
-                answer = stoi(x) % mod * sum % mod;
-            }
-            
-            result.push_back(answer);
         }
         
+        vector<bool> result;
+        for (auto& query : queries) {
+            result.push_back(uf.find(query[0]) == uf.find(query[1]));
+        }
         return result;
     }
 };
