@@ -1,52 +1,40 @@
 {
-  "date": "2026-07-10",
-  "id": "3852",
-  "title": "Path Existence Queries in a Graph II",
-  "slug": "path-existence-queries-in-a-graph-ii",
-  "difficulty": "Hard",
-  "url": "https://leetcode.com/problems/path-existence-queries-in-a-graph-ii/",
-  "description": "You are given an integer n representing the number of nodes in a graph, labeled from 0 to n - 1.\n\nYou are also given an integer array nums of length n and an integer maxDiff.\n\nAn undirected edge exists between nodes i and j if the absolute difference between nums[i] and nums[j] is at most maxDiff (i.e., |nums[i] - nums[j]| <= maxDiff).\n\nYou are also given a 2D integer array queries. For each queries[i] = [ui, vi], find the minimum distance between nodes ui and vi. If no path exists between the two nodes, return -1 for that query.\n\nReturn an array answer, where answer[i] is the result of the ith query.\n\nNote: The edges between the nodes are unweighted.\n\n \nExample 1:\n\nInput: n = 5, nums = [1,8,3,4,2], maxDiff = 3, queries = [[0,3],[2,4]]\n\nOutput: [1,1]\n\nExplanation:\n\nThe resulting graph is:\n\n\t\n\t\t\n\t\t\tQuery\n\t\t\tShortest Path\n\t\t\tMinimum Distance\n\t\t\n\t\t\n\t\t\t[0, 3]\n\t\t\t0 &rarr; 3\n\t\t\t1\n\t\t\n\t\t\n\t\t\t[2, 4]\n\t\t\t2 &rarr; 4\n\t\t\t1\n\t\t\n\t\n\nThus, the output is [1, 1].\n\nExample 2:\n\nInput: n = 5, nums = [5,3,1,9,10], maxDiff = 2, queries = [[0,1],[0,2],[2,3],[4,3]]\n\nOutput: [1,2,-1,1]\n\nExplanation:\n\nThe resulting graph is:\n\n\t\n\t\t\n\t\t\tQuery\n\t\t\tShortest Path\n\t\t\tMinimum Distance\n\t\t\n\t\t\n\t\t\t[0, 1]\n\t\t\t0 &rarr; 1\n\t\t\t1\n\t\t\n\t\t\n\t\t\t[0, 2]\n\t\t\t0 &rarr; 1 &rarr; 2\n\t\t\t2\n\t\t\n\t\t\n\t\t\t[2, 3]\n\t\t\tNone\n\t\t\t-1\n\t\t\n\t\t\n\t\t\t[4, 3]\n\t\t\t3 &rarr; 4\n\t\t\t1\n\t\t\n\t\n\nThus, the output is [1, 2, -1, 1].\n\nExample 3:\n\nInput: n = 3, nums = [3,6,1], maxDiff = 1, queries = [[0,0],[0,1],[1,2]]\n\nOutput: [0,-1,-1]\n\nExplanation:\n\nThere are no edges between any two nodes because:\n\n\tNodes 0 and 1: |nums[0] - nums[1]| = |3 - 6| = 3 > 1\n\tNodes 0 and 2: |nums[0] - nums[2]| = |3 - 1| = 2 > 1\n\tNodes 1 and 2: |nums[1] - nums[2]| = |6 - 1| = 5 > 1\n\nThus, no node can reach any other node, and the output is [0, -1, -1].\n\n \nConstraints:\n\n\t1 <= n == nums.length <= 105\n\t0 <= nums[i] <= 105\n\t0 <= maxDiff <= 105\n\t1 <= queries.length <= 105\n\tqueries[i] == [ui, vi]\n\t0 <= ui, vi < n",
-  "example_testcases": "5\n[1,8,3,4,2]\n3\n[[0,3],[2,4]]\n5\n[5,3,1,9,10]\n2\n[[0,1],[0,2],[2,3],[4,3]]\n3\n[3,6,1]\n1\n[[0,0],[0,1],[1,2]]",
-  "sample_testcase": "5\n[1,8,3,4,2]\n3\n[[0,3],[2,4]]",
+  "date": "2026-07-11",
+  "id": "2793",
+  "title": "Count the Number of Complete Components",
+  "slug": "count-the-number-of-complete-components",
+  "difficulty": "Medium",
+  "url": "https://leetcode.com/problems/count-the-number-of-complete-components/",
+  "description": "You are given an integer n. There is an undirected graph with n vertices, numbered from 0 to n - 1. You are given a 2D integer array edges where edges[i] = [ai, bi] denotes that there exists an undirected edge connecting vertices ai and bi.\n\nReturn the number of complete connected components of the graph.\n\nA connected component is a subgraph of a graph in which there exists a path between any two vertices, and no vertex of the subgraph shares an edge with a vertex outside of the subgraph.\n\nA connected component is said to be complete if there exists an edge between every pair of its vertices.\n\n \nExample 1:\n\nInput: n = 6, edges = [[0,1],[0,2],[1,2],[3,4]]\nOutput: 3\nExplanation: From the picture above, one can see that all of the components of this graph are complete.\n\nExample 2:\n\nInput: n = 6, edges = [[0,1],[0,2],[1,2],[3,4],[3,5]]\nOutput: 1\nExplanation: The component containing vertices 0, 1, and 2 is complete since there is an edge between every pair of two vertices. On the other hand, the component containing vertices 3, 4, and 5 is not complete since there is no edge between vertices 4 and 5. Thus, the number of complete components in this graph is 1.\n\n \nConstraints:\n\n\t1 <= n <= 50\n\t0 <= edges.length <= n * (n - 1) / 2\n\tedges[i].length == 2\n\t0 <= ai, bi <= n - 1\n\tai != bi\n\tThere are no repeated edges.",
+  "example_testcases": "6\n[[0,1],[0,2],[1,2],[3,4]]\n6\n[[0,1],[0,2],[1,2],[3,4],[3,5]]",
+  "sample_testcase": "6\n[[0,1],[0,2],[1,2],[3,4]]",
   "tags": [
-    "Array",
-    "Two Pointers",
-    "Binary Search",
-    "Dynamic Programming",
-    "Greedy",
-    "Bit Manipulation",
-    "Graph Theory",
-    "Sorting"
+    "Depth-First Search",
+    "Breadth-First Search",
+    "Union-Find",
+    "Graph Theory"
   ],
   "hints": [
-    "Sort the nodes according to <code>nums[i]</code>.",
-    "Can we use binary jumping?",
-    "Use binary jumping with a sparse table data structure."
+    "Find the connected components of an undirected graph using depth-first search (DFS) or breadth-first search (BFS).",
+    "For each connected component, count the number of nodes and edges in the component.",
+    "A connected component is complete if and only if the number of edges in the component is equal to m*(m-1)/2, where m is the number of nodes in the component."
   ],
-  "starter_code": "class Solution:\n    def pathExistenceQueries(self, n: int, nums: List[int], maxDiff: int, queries: List[List[int]]) -> List[int]:\n        ",
-  "starter_code_cpp": "class Solution {\npublic:\n    vector<int> pathExistenceQueries(int n, vector<int>& nums, int maxDiff, vector<vector<int>>& queries) {\n        \n    }\n};",
+  "starter_code": "class Solution:\n    def countCompleteComponents(self, n: int, edges: List[List[int]]) -> int:\n        ",
+  "starter_code_cpp": "class Solution {\npublic:\n    int countCompleteComponents(int n, vector<vector<int>>& edges) {\n        \n    }\n};",
   "meta": {
-    "name": "pathExistenceQueries",
+    "name": "countCompleteComponents",
     "params": [
       {
         "name": "n",
         "type": "integer"
       },
       {
-        "type": "integer[]",
-        "name": "nums"
-      },
-      {
-        "type": "integer",
-        "name": "maxDiff"
-      },
-      {
         "type": "integer[][]",
-        "name": "queries"
+        "name": "edges"
       }
     ],
     "return": {
-      "type": "integer[]"
+      "type": "integer"
     }
   }
 }

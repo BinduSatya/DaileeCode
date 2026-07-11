@@ -1,51 +1,46 @@
 class Solution {
 public:
-    vector<int> shortestPath(int n, vector<int>& nums, int maxDiff, vector<vector<int>>& queries) {
-        vector<unordered_map<int, int>> graph(n);
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (i != j && abs(nums[i] - nums[j]) <= maxDiff) {
-                    graph[i][j] = 1;
-                }
-            }
+    int countCompleteComponents(int n, vector<vector<int>>& edges) {
+        vector<vector<int>> graph(n);
+        for (auto& edge : edges) {
+            graph[edge[0]].push_back(edge[1]);
+            graph[edge[1]].push_back(edge[0]);
         }
         
-        vector<int> results;
-        for (auto& query : queries) {
-            int start = query[0], end = query[1];
-            if (start == end) {
-                results.push_back(0);
-                continue;
-            }
-            
-            queue<pair<int, int>> q;
-            q.push({start, 0});
-            vector<bool> visited(n, false);
-            visited[start] = true;
-            
-            bool found = false;
-            while (!q.empty()) {
-                auto [node, dist] = q.front();
-                q.pop();
+        vector<bool> visited(n, false);
+        int count = 0;
+        
+        for (int i = 0; i < n; i++) {
+            if (!visited[i]) {
+                vector<int> component;
+                dfs(graph, i, visited, component);
                 
-                for (auto& neighbor : graph[node]) {
-                    if (!visited[neighbor.first]) {
-                        visited[neighbor.first] = true;
-                        if (neighbor.first == end) {
-                            results.push_back(dist + 1);
-                            found = true;
+                bool isComplete = true;
+                for (int u : component) {
+                    for (int v : component) {
+                        if (u != v && find(graph[u].begin(), graph[u].end(), v) == graph[u].end()) {
+                            isComplete = false;
                             break;
                         }
-                        q.push({neighbor.first, dist + 1});
                     }
+                    if (!isComplete) break;
                 }
                 
-                if (found) break;
+                if (isComplete) count++;
             }
-            
-            if (!found) results.push_back(-1);
         }
         
-        return results;
+        return count;
+    }
+    
+    void dfs(vector<vector<int>>& graph, int node, vector<bool>& visited, vector<int>& component) {
+        visited[node] = true;
+        component.push_back(node);
+        
+        for (int neighbor : graph[node]) {
+            if (!visited[neighbor]) {
+                dfs(graph, neighbor, visited, component);
+            }
+        }
     }
 };
