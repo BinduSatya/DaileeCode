@@ -1,5 +1,5 @@
 {
-  "date": "2026-07-11",
+  "date": "2026-07-12",
   "steps": {
     "fetch": "\u2713",
     "solution": "\u2713",
@@ -8,8 +8,8 @@
     "video": "\u2713",
     "upload": "\u2713"
   },
-  "problem_title": "Count the Number of Complete Components",
-  "video_path": "output/videos/final_2026-07-11.mp4",
-  "youtube_url": "https://www.youtube.com/watch?v=ORCYCsmOwQE",
-  "duration_seconds": 142.2
+  "problem_title": "Rank Transform of an Array",
+  "video_path": "output/videos/final_2026-07-12.mp4",
+  "youtube_url": "https://www.youtube.com/watch?v=3daFQRuYLk4",
+  "duration_seconds": 240.8
 }

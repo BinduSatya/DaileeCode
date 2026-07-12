@@ -1,40 +1,34 @@
 {
-  "date": "2026-07-11",
-  "id": "2793",
-  "title": "Count the Number of Complete Components",
-  "slug": "count-the-number-of-complete-components",
-  "difficulty": "Medium",
-  "url": "https://leetcode.com/problems/count-the-number-of-complete-components/",
-  "description": "You are given an integer n. There is an undirected graph with n vertices, numbered from 0 to n - 1. You are given a 2D integer array edges where edges[i] = [ai, bi] denotes that there exists an undirected edge connecting vertices ai and bi.\n\nReturn the number of complete connected components of the graph.\n\nA connected component is a subgraph of a graph in which there exists a path between any two vertices, and no vertex of the subgraph shares an edge with a vertex outside of the subgraph.\n\nA connected component is said to be complete if there exists an edge between every pair of its vertices.\n\n \nExample 1:\n\nInput: n = 6, edges = [[0,1],[0,2],[1,2],[3,4]]\nOutput: 3\nExplanation: From the picture above, one can see that all of the components of this graph are complete.\n\nExample 2:\n\nInput: n = 6, edges = [[0,1],[0,2],[1,2],[3,4],[3,5]]\nOutput: 1\nExplanation: The component containing vertices 0, 1, and 2 is complete since there is an edge between every pair of two vertices. On the other hand, the component containing vertices 3, 4, and 5 is not complete since there is no edge between vertices 4 and 5. Thus, the number of complete components in this graph is 1.\n\n \nConstraints:\n\n\t1 <= n <= 50\n\t0 <= edges.length <= n * (n - 1) / 2\n\tedges[i].length == 2\n\t0 <= ai, bi <= n - 1\n\tai != bi\n\tThere are no repeated edges.",
-  "example_testcases": "6\n[[0,1],[0,2],[1,2],[3,4]]\n6\n[[0,1],[0,2],[1,2],[3,4],[3,5]]",
-  "sample_testcase": "6\n[[0,1],[0,2],[1,2],[3,4]]",
+  "date": "2026-07-12",
+  "id": "1256",
+  "title": "Rank Transform of an Array",
+  "slug": "rank-transform-of-an-array",
+  "difficulty": "Easy",
+  "url": "https://leetcode.com/problems/rank-transform-of-an-array/",
+  "description": "Given an array of integers arr, replace each element with its rank.\n\nThe rank represents how large the element is. The rank has the following rules:\n\n\tRank is an integer starting from 1.\n\tThe larger the element, the larger the rank. If two elements are equal, their rank must be the same.\n\tRank should be as small as possible.\n\n \nExample 1:\n\nInput: arr = [40,10,20,30]\nOutput: [4,1,2,3]\nExplanation: 40 is the largest element. 10 is the smallest. 20 is the second smallest. 30 is the third smallest.\n\nExample 2:\n\nInput: arr = [100,100,100]\nOutput: [1,1,1]\nExplanation: Same elements share the same rank.\n\nExample 3:\n\nInput: arr = [37,12,28,9,100,56,80,5,12]\nOutput: [5,3,4,2,8,6,7,1,3]\n\n \nConstraints:\n\n\t0 <= arr.length <= 105\n\t-109 <= arr[i] <= 109",
+  "example_testcases": "[40,10,20,30]\n[100,100,100]\n[37,12,28,9,100,56,80,5,12]",
+  "sample_testcase": "[40,10,20,30]",
   "tags": [
-    "Depth-First Search",
-    "Breadth-First Search",
-    "Union-Find",
-    "Graph Theory"
+    "Array",
+    "Hash Table",
+    "Sorting"
   ],
   "hints": [
-    "Find the connected components of an undirected graph using depth-first search (DFS) or breadth-first search (BFS).",
-    "For each connected component, count the number of nodes and edges in the component.",
-    "A connected component is complete if and only if the number of edges in the component is equal to m*(m-1)/2, where m is the number of nodes in the component."
+    "Use a temporary array to copy the array and sort it.",
+    "The rank of each element is the number of unique elements smaller than it in the sorted array plus one."
   ],
-  "starter_code": "class Solution:\n    def countCompleteComponents(self, n: int, edges: List[List[int]]) -> int:\n        ",
-  "starter_code_cpp": "class Solution {\npublic:\n    int countCompleteComponents(int n, vector<vector<int>>& edges) {\n        \n    }\n};",
+  "starter_code": "class Solution:\n    def arrayRankTransform(self, arr: List[int]) -> List[int]:\n        ",
+  "starter_code_cpp": "class Solution {\npublic:\n    vector<int> arrayRankTransform(vector<int>& arr) {\n        \n    }\n};",
   "meta": {
-    "name": "countCompleteComponents",
+    "name": "arrayRankTransform",
     "params": [
       {
-        "name": "n",
-        "type": "integer"
-      },
-      {
-        "type": "integer[][]",
-        "name": "edges"
+        "name": "arr",
+        "type": "integer[]"
       }
     ],
     "return": {
-      "type": "integer"
+      "type": "integer[]"
     }
   }
 }
